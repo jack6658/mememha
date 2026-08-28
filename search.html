@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -144,6 +144,7 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 <script>
 window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":103043,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":58314,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46799,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46013,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49462,"id":545315}];
 function doSearch(){
+  if(!_lbUser){alert('请先登录账号，登录后才能搜索知识卡');openUserPanel();return;}
   var v=document.getElementById('q').value.trim();
   var cards=window.CARDS||[];
   var res=document.getElementById('res'),none=document.getElementById('none'),hint=document.getElementById('hint');
@@ -164,6 +165,7 @@ function doSearch(){
 }
 var pendingTimer=null;
 function scheduleSearch(){
+  if(!_lbUser){alert('请先登录账号，登录后才能搜索知识卡');openUserPanel();return;}
   if(pendingTimer)clearTimeout(pendingTimer);
   var hint=document.getElementById('hint');
   if(hint)hint.textContent='⏳ 正在扫描…';
@@ -527,6 +529,31 @@ var canvas=document.getElementById('fx');if(!canvas)return;var ctx=canvas.getCon
 function tick(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(125,211,252,0.4)';ctx.fill();});requestAnimationFrame(tick);}
 tick();
 window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
+</script>
+<script><!-- AUTH_V2_OVERRIDES -->
+(function(){
+  var AUTH_DOMAIN='llyzyvkydvcvlcnnvpox.supabase.local';
+  function authClient(){if(!_lbSupabase&&window.supabase&&_lbConfig.url&&_lbConfig.key)_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);return _lbSupabase;}
+  function esc(x){return String(x||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function normalizeName(n){return String(n||'').trim().toLowerCase();}
+  function syntheticEmail(n){return 'u_'+encodeURIComponent(normalizeName(n)).replace(/%/g,'_')+'@llyzyvkydvcvlcnnvpox.supabase.local';}
+  function authForm(){return '<div style="max-width:380px;margin:0 auto;text-align:center"><div style="font-size:38px">🔐</div><h3 style="color:#ffd76a;margin:8px 0">账号登录</h3><p style="color:#aeb9d4;font-size:12px;margin-bottom:14px">登录后才能搜索、阅读卡片和同步存档</p><input class="name-input" id="authName" placeholder="用户名" maxlength="20"><input class="name-input" id="authPass" type="password" placeholder="密码（至少6位）" minlength="6"><button class="save-btn" onclick="authSubmit(false)">登录</button><button class="logout-btn" onclick="authSubmit(true)">注册新账号</button></div>';}
+  window.authSubmit=async function(reg){var n=(document.getElementById('authName').value||'').trim(),pw=document.getElementById('authPass').value||'',el=document.getElementById('userInfo');if(!n||!pw){alert('请输入用户名和密码');return;}if(pw.length<6){alert('密码至少需要6位');return;}var sb=authClient();if(!sb){alert('数据库连接未初始化');return;}el.innerHTML='<p style="text-align:center;color:#aeb9d4">处理中...</p>';try{if(reg){var exists=await sb.from('users').select('user_id').ilike('user_name',n).limit(1);if(exists.error)throw exists.error;if(exists.data&&exists.data.length){throw new Error('用户名已被注册');}var a=await sb.auth.signUp({email:syntheticEmail(n),password:pw});if(a.error)throw a.error;if(!a.data.user)throw new Error('注册未完成，请检查 Supabase Auth 设置');var uid=a.data.user.id;var u=await sb.from('users').upsert({user_id:uid,user_name:n,avatar:'😀|#ffd76a'},{onConflict:'user_id'});if(u.error)throw u.error;_lbUser=uid;_lbUserData={user_id:uid,user_name:n,avatar:'😀|#ffd76a'};await syncCurrentUser();alert('注册成功，用户名就是「'+n+'」');renderUserProfile();}else{var a=await sb.auth.signInWithPassword({email:syntheticEmail(n),password:pw});if(a.error)throw a.error;var uid=a.data.user.id;_lbUser=uid;var u=await sb.from('users').select('*').eq('user_id',uid).maybeSingle();if(u.error)throw u.error;if(!u.data)throw new Error('账号资料不存在');_lbUserData=u.data;localStorage.setItem('lb_uid',uid);await restoreAllCloudSaves();alert('登录成功，云端存档已同步');renderUserProfile();}}catch(e){el.innerHTML=authForm();alert((reg?'注册失败：':'登录失败：')+(e.message||e));}};
+  window.loadUserProfileData=async function(){var sb=authClient();if(!sb)return;var se=await sb.auth.getSession();var u=se.data&&se.data.session&&se.data.session.user;if(!u){_lbUser=null;_lbUserData=null;return;} _lbUser=u.id;localStorage.setItem('lb_uid',u.id);var r=await sb.from('users').select('*').eq('user_id',u.id).maybeSingle();if(r.data)_lbUserData=r.data;};
+  window.loadUserProfile=async function(){var el=document.getElementById('userInfo');if(!el)return;await loadUserProfileData();if(!_lbUser){el.innerHTML=authForm();return;}renderUserProfile();};
+  window.renderUserProfile=function(){var el=document.getElementById('userInfo'),d=_lbUserData||{},x=getCurrentData();el.innerHTML='<div style="text-align:center"><div style="font-size:64px">'+esc((d.avatar||'😀').split('|')[0])+'</div><h3 style="color:#ffd76a">'+esc(d.user_name)+'</h3><p style="color:#7dd3fc;font-size:12px">✅ 已登录 · 云端存档同步中</p><div style="text-align:left;background:rgba(255,255,255,.05);padding:14px;border-radius:12px;margin:14px 0;color:#aeb9d4;font-size:13px">📖 浏览 '+x.totalPages+' 页<br>✅ 答对 '+x.correct+' 题<br>🎯 完成 '+x.completed+' 套</div><button class="logout-btn" onclick="logoutUser()">退出登录</button></div>';};
+  window.logoutUser=async function(){var sb=authClient();if(sb)await sb.auth.signOut({scope:'local'});localStorage.removeItem('lb_uid');Object.keys(localStorage).forEach(function(k){if(k!=='theme'&&k.indexOf('sb-')!==0&&k.indexOf('supabase')!==0)localStorage.removeItem(k);});_lbUser=null;_lbUserData=null;location.href='../search.html';};
+  window.initLeaderboard=async function(){var sb=authClient();if(!sb)return;var q=await sb.auth.getSession();var u=q.data&&q.data.session&&q.data.session.user;_lbUser=u?u.id:null;if(u){var pr=await sb.from('users').select('*').eq('user_id',u.id).maybeSingle();if(pr.data)_lbUserData=pr.data;await syncCurrentUser();}await refreshLeaderboard();};
+  window.refreshLeaderboard=async function(){var sb=authClient();if(!sb)return;var r=await sb.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);if(r.error){document.getElementById('lbContent').innerHTML='<p style="color:#f87171">排行榜读取失败：'+esc(r.error.message)+'</p>';return;}renderLeaderboard(r.data||[]);};
+  if(window.supabase&&_lbConfig.url){_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);_lbSupabase.auth.onAuthStateChange(function(e){if(e==='SIGNED_OUT'){_lbUser=null;_lbUserData=null;}});}
+})();
+</script>
+<script>
+/* AUTH_AUTO_INIT_V2: restore Supabase Auth session before search is usable */
+(function(){
+  async function start(){try{if(window._lbSupabase&&window._lbSupabase.auth){await window.loadUserProfileData();}else if(window.supabase&&window._lbConfig){window._lbSupabase=window.supabase.createClient(window._lbConfig.url,window._lbConfig.key);await window.loadUserProfileData();}if(new URLSearchParams(location.search).get('login')==='1')window.openUserPanel();}catch(e){console.warn('auth session init failed',e);}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
 </script>
 </body>
 </html>

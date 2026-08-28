@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>生物必修一 · 分子与细胞 · 星空知识图谱</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{--bg:#05070f;--bg2:#0b1026;--panel:rgba(18,24,46,.72);--card:rgba(16,21,40,.62);--ink:#dfe8f7;--muted:#7d8db3;--line:rgba(125,141,179,.22);--acc:#7dd3fc;--acc2:#a78bfa;--gold:#fcd34d;--green:#6ee7b7;--red:#fca5a5;--pink:#f9a8d4;--or:#fdba74;--glass:rgba(255,255,255,.05);--star:rgba(255,255,255,.55)}
+[data-theme="light"]{--bg:#eef2f9;--bg2:#dfe7f5;--panel:rgba(255,255,255,.82);--card:rgba(255,255,255,.92);--ink:#1f2a44;--muted:#5a6b8c;--line:rgba(90,107,140,.25);--acc:#0284c7;--acc2:#7c3aed;--gold:#b45309;--green:#047857;--red:#b91c1c;--pink:#be185d;--or:#c2410c;--glass:rgba(0,0,0,.04);--star:rgba(0,0,0,.18)}
+body{background:linear-gradient(160deg,var(--bg),var(--bg2));color:var(--ink);font-family:"Segoe UI","Noto Serif SC","Songti SC","Microsoft YaHei",sans-serif;line-height:1.75;font-size:14.5px;min-height:100dvh;overflow-x:hidden;transition:background .4s}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1px 1px at 20% 30%,var(--star),transparent 60%),radial-gradient(1px 1px at 70% 15%,var(--star),transparent 60%),radial-gradient(1.5px 1.5px at 40% 70%,var(--star),transparent 60%),radial-gradient(1px 1px at 85% 60%,var(--star),transparent 60%),radial-gradient(1px 1px at 10% 85%,var(--star),transparent 60%),radial-gradient(1.5px 1.5px at 55% 45%,var(--star),transparent 60%),radial-gradient(1px 1px at 90% 88%,var(--star),transparent 60%),radial-gradient(1px 1px at 30% 8%,var(--star),transparent 60%);opacity:.8;animation:twinkle 4s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.45}to{opacity:.95}}
+#progBar{position:fixed;top:0;left:0;height:3px;width:0%;z-index:200;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 0 12px rgba(125,211,252,.6)}
+::selection{background:rgba(125,211,252,.35)}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+header.hero{position:sticky;top:0;z-index:80;background:var(--panel);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 18px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.hero-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+header.hero h1{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+header.hero h1 .sub{font-size:11.5px;color:var(--muted);font-weight:500}
+.ctrls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:4px;cursor:pointer;border:1px solid var(--line);background:var(--glass);color:var(--ink);padding:7px 12px;border-radius:10px;font-size:12.5px;font-weight:600;transition:.18s;font-family:inherit;white-space:nowrap;user-select:none;backdrop-filter:blur(6px)}
+.btn:hover{border-color:var(--acc);box-shadow:0 0 12px rgba(125,211,252,.25);transform:translateY(-1px)}
+.btn.sm{font-size:11.5px;padding:5px 9px}
+.btn.gost{background:transparent}
+.btn.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.wrap{display:flex;gap:18px;max-width:1180px;margin:0 auto;padding:18px 16px 80px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px));position:relative;z-index:1}
+aside{width:250px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;position:sticky;top:74px;align-self:flex-start;max-height:calc(100dvh - 90px);overflow-y:auto}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;backdrop-filter:blur(10px)}
+.panel .pt{font-size:11px;color:var(--muted);letter-spacing:2px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+#graphWrap svg{width:100%;height:auto;display:block}
+#graphWrap .gnode{cursor:pointer}
+#graphWrap .gnode circle{transition:.2s}
+#graphWrap .gnode:hover circle{filter:brightness(1.4)}
+#graphWrap .gtext{font-size:8px;fill:var(--ink);font-weight:700;pointer-events:none;text-anchor:middle;dominant-baseline:central}
+#graphWrap .gedge{stroke:var(--acc);opacity:.22}
+#tagCloud{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid var(--line);background:var(--glass);color:var(--muted);cursor:pointer;transition:.15s;font-family:inherit}
+.tag:hover{color:var(--acc);border-color:var(--acc)}
+.tag.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+main{flex:1;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;padding:15px 16px;backdrop-filter:blur(10px);transition:border-color .25s,box-shadow .25s,opacity .3s;animation:fadeUp .45s ease-out}
+.card:hover{border-color:rgba(125,211,252,.45)}
+.card.hidden-by-filter{display:none}
+.card.pulse{animation:pulse 1.2s ease}
+@keyframes pulse{0%,50%{border-color:var(--acc);box-shadow:0 0 0 4px rgba(125,211,252,.35)}100%{}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-hd{display:flex;align-items:flex-start;gap:10px}
+.node-dot{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--acc),var(--acc2));color:#05070f;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12.5px;box-shadow:0 0 14px rgba(125,211,252,.4)}
+.hd-t{flex:1;min-width:0}
+.hd-t h3{font-size:15px;font-weight:700;line-height:1.45}
+.hd-meta{display:flex;align-items:center;gap:6px;margin-top:2px;flex-wrap:wrap}
+.sec-chip{font-size:10px;color:var(--acc2);background:rgba(167,139,250,.12);padding:1px 7px;border-radius:99px}
+.review-badge{font-size:10px;font-weight:700;padding:1px 8px;border-radius:99px;display:none}
+.review-badge.due{display:inline-block;background:rgba(252,211,77,.14);color:var(--gold);border:1px solid rgba(252,211,77,.35)}
+.card-tools{display:flex;gap:4px;flex-shrink:0}
+.tagrow{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0 3px}
+.blocks{display:flex;flex-direction:column;gap:10px;margin-top:5px}
+.bt{border-radius:10px;padding:10px 13px;border-left:3px solid var(--muted);background:var(--glass)}
+.bt h4{font-size:12.5px;font-weight:700;margin-bottom:6px}
+.bt.b-core{border-left-color:var(--acc)} .bt.b-core h4{color:var(--acc)}
+.bt.b-kao{border-left-color:var(--gold)} .bt.b-kao h4{color:var(--gold)}
+.bt.b-nan{border-left-color:var(--pink)} .bt.b-nan h4{color:var(--pink)}
+.bt.b-trap{border-left-color:var(--red)} .bt.b-trap h4{color:var(--red)}
+.bt.b-table{border-left-color:var(--green)} .bt.b-table h4{color:var(--green)}
+.bt .its p{margin:0 0 6px;line-height:1.85;font-size:13px}
+.bt .its p:last-child{margin-bottom:0}
+.bt .hl{color:var(--gold);font-weight:700}
+.bt .g{color:var(--green);font-weight:700}
+.bt .r{color:var(--red);font-weight:700}
+.bt .p{color:var(--pink);font-weight:700}
+.bt code{background:rgba(125,211,252,.12);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--acc);font-family:Consolas,monospace}
+.tbl-wrap{overflow-x:auto;margin:4px 0 2px;border:1px solid var(--line);border-radius:9px;background:var(--glass)}
+.tbl-wrap table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
+.tbl-wrap th,.tbl-wrap td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl-wrap th{background:rgba(125,211,252,.08);color:var(--acc);font-weight:700;font-size:11px;white-space:nowrap}
+.tbl-wrap tr:last-child td{border-bottom:none}
+.tbl-wrap td:first-child{color:var(--gold);font-weight:600;white-space:nowrap}
+.tbl-wrap tr:nth-child(even) td{background:rgba(125,211,252,.03)}
+/* —— 背诵模式 · 简略 / 详细 —— */
+body.recite-simple .bt .its,body.recite-simple .bt .tbl-wrap{filter:blur(8px);user-select:none;transition:filter .3s}
+body.recite-simple .bt:hover .its,body.recite-simple .bt:hover .tbl-wrap{filter:none}
+body.recite-simple .bt:hover h4{color:var(--gold)}
+/* 详细背诵：条目顶部显示线索短语，正文模糊；表格保留表头与首列作线索 */
+.bt .its p .clue{display:none}
+body.recite-detail .bt .its p{position:relative;padding-top:1.4em;margin-bottom:8px}
+body.recite-detail .bt .its p .clue{display:block;position:absolute;top:0;left:0;color:var(--gold);font-weight:700;z-index:2}
+body.recite-detail .bt .its p .hidden-part{filter:blur(6px);user-select:none;transition:filter .3s}
+body.recite-detail .bt:hover .its p .hidden-part{filter:none}
+body.recite-detail .bt.tbl .tbl-wrap td{filter:blur(6px);user-select:none;transition:filter .3s}
+body.recite-detail .bt.tbl:hover .tbl-wrap td{filter:none}
+body.recite-detail .bt.tbl .tbl-wrap td:first-child{filter:none !important;color:var(--gold)}
+body.recite-detail .bt.tbl .tbl-wrap thead th{filter:none !important}
+#searchPanel{display:none;position:fixed;inset:0;z-index:150;background:rgba(3,5,12,.7);backdrop-filter:blur(8px)}
+#searchPanel.active{display:flex;align-items:flex-start;justify-content:center;padding:12vh 16px 16px}
+#searchPanel .sbox{width:100%;max-width:520px}
+#searchPanel input{width:100%;border:1.5px solid var(--acc);border-radius:12px;padding:11px 15px;font-size:15px;background:var(--card);color:var(--ink);outline:none;font-family:inherit;backdrop-filter:blur(10px)}
+#searchPanel #sres{margin-top:8px;max-height:48vh;overflow-y:auto;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+#searchPanel #sres a{display:flex;justify-content:space-between;color:var(--ink);text-decoration:none;padding:8px 12px;font-size:13px;border-bottom:1px solid var(--line)}
+#searchPanel #sres a:last-child{border-bottom:none}
+#searchPanel #sres a:hover{background:rgba(125,211,252,.08)}
+#searchPanel #sres a .no{color:var(--acc2);font-weight:700;margin-right:8px}
+#searchPanel #sres a .sec{color:var(--muted);font-size:11px}
+#toast{position:fixed;left:50%;bottom:64px;transform:translateX(-50%) translateY(10px);background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:8px 18px;border-radius:999px;font-size:12.5px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:300;backdrop-filter:blur(10px)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:860px){
+  .wrap{flex-direction:column;padding:14px 12px 70px}
+  aside{position:static;width:100%;max-height:none;flex-direction:row}
+  aside .panel{flex:1}
+  #graphWrap{display:none}
+  header.hero h1{font-size:16px}
+  .hero-row{flex-direction:column;align-items:stretch}
+  .ctrls{justify-content:flex-start}
+  .card{padding:12px 12px}
+  .hd-t h3{font-size:14px}
+  .tbl-wrap table{min-width:280px;font-size:11px}
+}
+@media print{
+  header.hero,aside,#progBar,.stars,#searchPanel{display:none !important}
+  .wrap{display:block;padding:0}
+  .card{break-inside:avoid;page-break-inside:avoid;backdrop-filter:none;border:1px solid #bbb}
+  body{background:#fff;color:#000}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* AUTH_SAVE_V2 */
+(function(){document.documentElement.style.opacity='0';var cfg={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'},client=null,user=null,appId=decodeURIComponent(location.pathname.split('/').pop()||'card.html'),last='';function go(){location.replace('../search.html?login=1');}function keep(k){return k&&k!=='lb_uid'&&k!=='theme'&&k.indexOf('sb-')!==0&&k.indexOf('supabase')!==0;}function clear(){for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(keep(k))localStorage.removeItem(k);}}function state(){var o={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(keep(k))o[k]=localStorage.getItem(k);}return o;}function sig(o){try{return JSON.stringify(o);}catch(e){return '';}}async function sync(force){if(!client||!user)return;var st=state(),z=sig(st);if(!force&&z===last)return;last=z;var r=await client.from('user_saves').upsert({user_id:user.id,app_id:appId,schema_version:1,state:st,updated_at:new Date().toISOString()},{onConflict:'user_id,app_id'});if(r.error)console.warn(r.error.message);}async function boot(){try{client=window.supabase.createClient(cfg.url,cfg.key);var q=await client.auth.getSession();user=q.data&&q.data.session&&q.data.session.user;if(!user)return go();var p=await client.from('users').select('user_id').eq('user_id',user.id).maybeSingle();if(p.error||!p.data)return go();var r=await client.from('user_saves').select('state').eq('user_id',user.id).eq('app_id',appId).maybeSingle();if(r.error)throw r.error;clear();if(r.data&&r.data.state)Object.keys(r.data.state).forEach(function(k){if(keep(k))localStorage.setItem(k,r.data.state[k]);});last=sig(state());document.documentElement.style.opacity='';setInterval(function(){sync(false);},1200);addEventListener('pagehide',function(){sync(true);});client.auth.onAuthStateChange(function(e){if(e==='SIGNED_OUT')go();});}catch(e){console.warn(e);go();}}boot();})();
+</script>
+</head>
+<body>
+<div class="stars"></div>
+<div id="progBar"></div>
+<header class="hero">
+  <div class="hero-row">
+    <h1>🌌 生物必修一 <span class="sub">分子与细胞 · 知识图谱</span></h1>
+    <div class="ctrls">
+      <button class="btn" id="reciteSimpleBtn" onclick="toggleReciteMode('simple')">🎭 简略背诵</button>
+      <button class="btn" id="reciteDetailBtn" onclick="toggleReciteMode('detail')">🧩 详细背诵</button>
+      <button class="btn" onclick="openSearch()">🔍 搜索</button>
+      <button class="btn" onclick="print()">🖨️ 打印</button>
+      <button class="btn" id="themeBtn" onclick="toggleTheme()">☀️ 白昼</button>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <aside>
+    <div class="panel" id="graphWrap">
+      <div class="pt">🕸️ 知识图谱 <span style="color:var(--muted);font-weight:400">点击节点跳转</span></div>
+      <svg id="graph" viewBox="0 0 400 420"></svg>
+    </div>
+    <div class="panel">
+      <div class="pt">🏷️ 标签云 <span style="color:var(--muted);font-weight:400">点击筛选</span></div>
+      <div id="tagCloud"></div>
+    </div>
+  </aside>
+  <main id="main"><article class="card" id="card1" data-no="1"><div class="card-hd"><span class="node-dot">1</span><div class="hd-t"><h3>主题总览 · 三大模块架构</h3><div class="hd-meta"><span class="sec-chip">🗺️ 知识地图</span><span class="review-badge" data-no="1"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(1)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(1)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="总览" onclick="toggleTag('总览')">总览</button><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button></div><div class="blocks"><section class="bt b-core"><h4>📌 主线逻辑</h4><div class="its"><p>生物必修一《分子与细胞》以 <b class="hl">细胞是生命活动的基本单位</b> 为主线，按 <b class="hl">组成 → 结构 → 功能 → 能量 → 生命历程</b> 逻辑递进。</p><p><b class="g">四大观念贯穿全书</b>：结构与功能观（膜-器-核系统）、物质与能量观（ATP 为枢纽）、系统观（生物膜系统/细胞器协作）、进化观（原核→真核、半自主性细胞器）。</p></div></section><section class="bt tbl"><h4>📊 三大模块架构</h4><div class="tbl-wrap"><table><thead><tr><th>模块</th><th>子章节</th><th>核心内容</th></tr></thead><tbody><tr><td>模块一 细胞的结构基础</td><td>1.1 / 1.2 / 1.3</td><td>分子组成、膜系统、细胞器、细胞核、细胞学说与结构层次</td></tr><tr><td>模块二 细胞代谢</td><td>2.1 / 2.2 / 2.3 / 2.4 / 2.5</td><td>跨膜运输、酶与ATP、细胞呼吸、光合作用、光合呼吸综合分析</td></tr><tr><td>模块三 细胞的生命历程</td><td>3.1 / 3.2 / 3.3</td><td>细胞增殖、分化与全能性、衰老·死亡·癌变</td></tr></tbody></table></div></section></div></article><article class="card" id="card2" data-no="2"><div class="card-hd"><span class="node-dot">2</span><div class="hd-t"><h3>考点1.1 组成细胞的分子 · 拿分暗线</h3><div class="hd-meta"><span class="sec-chip">模块一 细胞的结构基础</span><span class="review-badge" data-no="2"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(2)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(2)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="计算" onclick="toggleTag('计算')">计算</button></div><div class="blocks"><section class="bt tbl"><h4>📊 六大类分子一览</h4><div class="tbl-wrap"><table><thead><tr><th>维度</th><th>核心拿分点</th><th>易错/高阶拓展</th></tr></thead><tbody><tr><td>元素</td><td>CHONPS 为主要元素；C 骨架、P 能量转移、S 蛋白结构</td><td>示踪用同位素（¹⁴C、³²P、³⁵S、¹⁵N）；实验设计逻辑</td></tr><tr><td>水</td><td>自由水（溶剂/运输/反应）vs 结合水（结构维持）</td><td>种子脱水耐受 vs 成熟细胞脱水死亡；渗透压 π=iCRT</td></tr><tr><td>无机盐</td><td>离子形式存在；维持渗透压、酸碱平衡、酶激活剂</td><td>Fe²⁺/Fe³⁺、Mg²⁺、Zn²⁺ 具体激活的酶对应表</td></tr><tr><td>糖类</td><td>单糖/双糖/多糖；还原性判断（游离半缩醛羟基）</td><td>糖原/淀粉/纤维素结构差异→功能分化；血糖稳态调节</td></tr><tr><td>脂质</td><td>脂肪（甘油+3脂肪酸）、磷脂（双亲性→膜骨架）、固醇</td><td>饱和/不饱和脂肪酸熔点差异→膜流动性；β-氧化产能</td></tr><tr><td>蛋白质</td><td><b class="hl">核心</b>：一级→空间结构决定功能；变性（破坏空间结构）</td><td>盐析可逆、变性多不可逆；n 个氨基酸→(n-1)肽键、脱(n-1)个 H₂O</td></tr><tr><td>核酸</td><td>DNA 双螺旋（A=T、G≡C）；RNA 单链（U 替代 T）</td><td>三大公式：①(A+G)/(T+C)=1 ②A=T,G=C ③(A+G)/(A+T+G+C)；碱基数换算</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 拿分要点</h4><div class="its"><p>蛋白质<b class="hl">变性 vs 盐析</b>：变性破坏空间结构多不可逆，盐析可逆，两者都不破坏肽键。</p><p>分子量计算：n 个氨基酸 → <b class="g">(n-1) 个肽键、脱去 (n-1) 个 H₂O</b>。</p><p>双链 DNA 中 <b class="g">A=T、G≡C、(A+G)/(T+C)=1</b>。</p></div></section><section class="bt b-trap"><h4>⚠️ 三个“最多”易混淆</h4><div class="its"><p><b class="hl">鲜重元素最 O、化合物最水、干重最蛋白质</b>。</p><p>无机盐以离子形式存在，不是化合物形式。</p></div></section></div></article><article class="card" id="card3" data-no="3"><div class="card-hd"><span class="node-dot">3</span><div class="hd-t"><h3>考点1.2 细胞的基本结构 · 膜系统与细胞器分工</h3><div class="hd-meta"><span class="sec-chip">模块一 细胞的结构基础</span><span class="review-badge" data-no="3"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(3)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(3)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="流程" onclick="toggleTag('流程')">流程</button></div><div class="blocks"><section class="bt tbl"><h4>📊 结构功能一览</h4><div class="tbl-wrap"><table><thead><tr><th>结构</th><th>核心拿分点</th><th>高频易混/高阶</th></tr></thead><tbody><tr><td>细胞膜</td><td>流动镶嵌模型：磷脂双层（骨架）+蛋白质（功能）；选择透过性</td><td>膜蛋白分类：受体（糖蛋白）、转运（通道/载体）、酶、识别</td></tr><tr><td>能量转化器</td><td>线粒体（有氧呼吸）、叶绿体（光合）— 半自主性（自有DNA/核糖体）</td><td>内共生说证据：双层膜、环状DNA、70S核糖体、分裂增殖</td></tr><tr><td>蛋白加工链</td><td>核糖体（合成）→ER（加工）→高尔基体（分选/分泌）→分泌泡</td><td>分选信号：信号肽（入ER）、甘露糖-6-磷酸（入溶酶体）、NLS（入核）</td></tr><tr><td>稳态类</td><td>溶酶体（降解）、液泡（贮存/渗透）、过氧化物酶体（过氧化氢酶）</td><td>差速离心顺序：核→线粒体/叶绿体→微粒体→核糖体</td></tr><tr><td>细胞核</td><td>核膜（双层+核孔）、染色质（DNA+蛋白）、核仁（rRNA合成）</td><td>核孔：小分子被动、大分子主动（NLS+受体+ATP）；成熟RBC无核</td></tr><tr><td>生物膜系统</td><td>核膜-ER-高尔基-溶酶体-质膜；结构相似/功能特异/相互转化</td><td>原核无生物膜系统；病毒无细胞结构</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 分泌蛋白合成运输全链路</h4><div class="its"><p>核（转录）→ 核糖体（翻译）→ 粗面内质网（加工/折叠）→ 囊泡 → 高尔基体（分类/包装）→ 囊泡 → 细胞膜（胞吐）→ 细胞外。</p><p><b class="hl">膜面积变化</b>：内质网 ↓、高尔基体 ≈、细胞膜 ↑。</p><p>放射性同位素标记氨基酸：核糖体→内质网→高尔基体→细胞膜。</p></div></section><section class="bt b-nan"><h4>🎯 难点突破</h4><div class="its"><p><b class="hl">半自主性细胞器</b>：线粒体/叶绿体含 DNA/RNA/核糖体，但绝大多数蛋白由核基因编码。</p><p>生物膜系统：结构相似、功能协同；原核细胞和病毒无此系统。</p></div></section></div></article><article class="card" id="card4" data-no="4"><div class="card-hd"><span class="node-dot">4</span><div class="hd-t"><h3>考点1.3 细胞学说与结构层次</h3><div class="hd-meta"><span class="sec-chip">模块一 细胞的结构基础</span><span class="review-badge" data-no="4"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(4)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(4)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button></div><div class="blocks"><section class="bt b-core"><h4>📌 核心知识</h4><div class="its"><p><b class="hl">学说建立过程</b>：Hooke 命名 → Schleiden/Schwann 建立 → Virchow“细胞源于细胞” → 归纳法总结。</p><p><b class="hl">生命系统层次</b>：细胞→组织→器官→系统→个体→种群→群落→生态系统→生物圈。</p><p><b class="g">病毒地位</b>：非细胞形态、寄生性、核酸+蛋白质、无代谢、只在活细胞内增殖。</p></div></section></div></article><article class="card" id="card5" data-no="5"><div class="card-hd"><span class="node-dot">5</span><div class="hd-t"><h3>考点2.1 物质跨膜运输 · 三要素判断</h3><div class="hd-meta"><span class="sec-chip">模块二 细胞代谢</span><span class="review-badge" data-no="5"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(5)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(5)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="曲线" onclick="toggleTag('曲线')">曲线</button></div><div class="blocks"><section class="bt tbl"><h4>📊 五种运输方式对比</h4><div class="tbl-wrap"><table><thead><tr><th>运输方式</th><th>能量</th><th>载体</th><th>方向</th><th>典型物质</th><th>易错点</th></tr></thead><tbody><tr><td>自由扩散</td><td>否</td><td>否</td><td>高→低</td><td>O₂/CO₂/N₂/甾体激素</td><td>不饱和 → 速率随浓度差线性增大</td></tr><tr><td>协助扩散</td><td>否</td><td>是（通道/载体）</td><td>高→低</td><td>葡萄糖/氨基酸/离子</td><td>饱和现象→Vmax；特异性/竞争抑制</td></tr><tr><td>主动运输</td><td>是（ATP）</td><td>是（载体）</td><td>低→高</td><td>Na⁺/K⁺泵、H⁺泵、肠上皮吸收</td><td>耗能可水解ATP/耦合梯度；载体磷酸化构象变化</td></tr><tr><td>胞吞/胞吐</td><td>是（ATP）</td><td>囊泡</td><td>大分子/颗粒</td><td>抗体分泌、胆固醇摄取、神经递质释放</td><td>需膜流动性；胞吞→食物泡→融合溶酶体</td></tr><tr><td>核孔运输</td><td>是（GTP/ATP）</td><td>核孔复合体</td><td>双向选择性</td><td>mRNA 出核、DNA 聚合酶入核</td><td>NLS 信号序列；Ran-GTP 梯度驱动</td></tr></tbody></table></div></section><section class="bt b-core"><h4>📌 渗透作用核心模型</h4><div class="its"><p>水势 Ψ = Ψs（溶质势）+ Ψp（压力势）；水由 <b class="hl">高水势 → 低水势</b>。</p><p>植物细胞：质壁分离（高渗失水/原生层离壁）vs 复原（低渗吸水）。</p><p>动物细胞：溶血（低渗吸水破裂）vs 皱缩（高渗失水）。</p><p><b class="g">装置液面分析</b>：U 型管/渗透仪 — 液面升降 ⇔ 水净流动方向 ⇔ 浓度变化。</p></div></section></div></article><article class="card" id="card6" data-no="6"><div class="card-hd"><span class="node-dot">6</span><div class="hd-t"><h3>考点2.2 酶与ATP · 代谢调控核心枢纽</h3><div class="hd-meta"><span class="sec-chip">模块二 细胞代谢</span><span class="review-badge" data-no="6"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(6)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(6)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="曲线" onclick="toggleTag('曲线')">曲线</button></div><div class="blocks"><section class="bt b-core"><h4>📌 核心知识 · 酶</h4><div class="its"><p><b class="hl">本质</b>：绝大多数蛋白质、少数 RNA（核酶）；降低活化能（ΔG≠不变）。</p><p><b class="hl">特性</b>：高效（10⁷~10¹³ 倍）、专一性（一酶一底物/一反应）、温和条件（37℃、pH7.4）。</p><p><b class="hl">影响因素曲线</b>：温度/pH 钟形（变性不可逆 vs 适宜可逆）；底物浓度双曲线→Vmax/Km；酶浓度直线过原点。</p><p><b class="hl">抑制/激活</b>：竞争性（结构类似/Km↑ Vmax不变）vs 非竞争性（变构位点/Km不变 Vmax↓）；别构调节/反馈抑制。</p></div></section><section class="bt b-core"><h4>📌 核心知识 · ATP</h4><div class="its"><p>结构：A（腺嘌呤）+R（核糖）+3P；高能磷酸键（~30.5 kJ/mol）。</p><p><b class="hl">循环</b>：ATP ⇌ ADP + Pi + 能量（偶联吸能/放能反应）；<b class="g">非能源/非催化/非遗传</b>。</p><p>合成途径：光合光反应（叶绿体）、细胞呼吸（线粒体/细胞质）、底物水平磷酸化。</p></div></section><section class="bt tbl"><h4>📊 辅酶体系</h4><div class="tbl-wrap"><table><thead><tr><th>辅酶</th><th>全称</th><th>传递</th><th>主要分布</th><th>关键作用</th></tr></thead><tbody><tr><td>NAD⁺/NADH</td><td>烟酰胺腺嘌呤二核苷酸</td><td>[H]（2e⁻+H⁺）</td><td>细胞质/线粒体</td><td>糖酵解/三羧酸/呼吸链传氢</td></tr><tr><td>NADP⁺/NADPH</td><td>磷酸化 NAD⁺</td><td>[H]</td><td>叶绿体/细胞质</td><td>光合暗反应/脂肪酸合成/解毒</td></tr><tr><td>FAD/FADH₂</td><td>黄素腺嘌呤二核苷酸</td><td>[2H]</td><td>线粒体</td><td>三羧酸/β-氧化/呼吸链复合体II</td></tr><tr><td>CoA</td><td>辅酶A</td><td>乙酰基（~S-CoA）</td><td>线粒体/细胞质</td><td>乙酰CoA枢纽/脂肪酸代谢</td></tr></tbody></table></div></section></div></article><article class="card" id="card7" data-no="7"><div class="card-hd"><span class="node-dot">7</span><div class="hd-t"><h3>考点2.3 细胞呼吸 · 物质能量精细账本</h3><div class="hd-meta"><span class="sec-chip">模块二 细胞代谢</span><span class="review-badge" data-no="7"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(7)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(7)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="计算" onclick="toggleTag('计算')">计算</button><button class="tag" data-tag="流程" onclick="toggleTag('流程')">流程</button></div><div class="blocks"><section class="bt tbl"><h4>📊 有氧呼吸四大阶段</h4><div class="tbl-wrap"><table><thead><tr><th>阶段</th><th>场所</th><th>物质变化</th><th>能量产出</th><th>关键拿分点</th></tr></thead><tbody><tr><td>糖酵解</td><td>细胞质基质</td><td>葡萄糖→2丙酮酸+4[H]+2ATP</td><td>净得2ATP、2NADH</td><td>不需O₂、共同途径、PFK限速</td></tr><tr><td>丙酮酸氧化脱羧</td><td>线粒体基质</td><td>2丙酮酸→2乙酰CoA+2CO₂+4[H]</td><td>2NADH</td><td>连接反应、产生CO₂</td></tr><tr><td>三羧酸循环</td><td>线粒体基质</td><td>2乙酰CoA→4CO₂+6NADH+2FADH₂+2ATP</td><td>6NADH、2FADH₂、2ATP</td><td>草酰乙酸再生、CO₂全部产生于此</td></tr><tr><td>电子传递/氧化磷酸化</td><td>线粒体内膜</td><td>10NADH+2FADH₂+6O₂→10H₂O+~28-30ATP</td><td>~28-30ATP</td><td>质子梯度驱动ATP合酶、化学渗透、抑制剂</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 无氧呼吸与呼吸商</h4><div class="its"><p><b class="hl">无氧呼吸（动物）</b>：丙酮酸→乳酸（还原 NADH→NAD⁺）；仅 2ATP、乳酸堆积→疲劳。</p><p><b class="hl">无氧呼吸（酵母/高等植物）</b>：丙酮酸→乙醛→乙醇+CO₂；仅 2ATP、工业发酵应用。</p><p><b class="g">呼吸商 RQ = CO₂产生量 / O₂消耗量</b>：糖类=1.0；脂肪≈0.7；蛋白质≈0.8-0.9。</p><p>总账：C₆H₁₂O₆+6H₂O→6CO₂+20[H]+4ATP（底物水平）+ 10O₂→10H₂O+~28-30ATP（氧化磷酸化）≈ 30-32 ATP/葡萄糖。</p></div></section><section class="bt b-trap"><h4>⚠️ 阶段易错陷阱</h4><div class="its"><p>有氧呼吸产生水在 <b class="hl">第三阶段</b>，不是第一阶段。</p><p>CO₂ 产生在 <b class="hl">第二阶段</b>，不是第三阶段。</p><p>线粒体不能直接利用葡萄糖 — 进入线粒体的是丙酮酸。</p><p>植物无氧呼吸不一定都产生酒精 — 玉米胚、马铃薯块茎产生乳酸。</p></div></section></div></article><article class="card" id="card8" data-no="8"><div class="card-hd"><span class="node-dot">8</span><div class="hd-t"><h3>考点2.4 光合作用 · 双相应答与碳同化</h3><div class="hd-meta"><span class="sec-chip">模块二 细胞代谢</span><span class="review-badge" data-no="8"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(8)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(8)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="流程" onclick="toggleTag('流程')">流程</button></div><div class="blocks"><section class="bt b-core"><h4>📌 光反应（类囊体膜）</h4><div class="its"><p><b class="hl">色素系统</b>：叶绿素a/b（蓝紫/红光）、类胡萝卜素（蓝紫/保护）；光系统II（P680）→光系统I（P700）。</p><p><b class="hl">电子传递链</b>：H₂O→PSII→PQ→Cyt b₆/f→PC→PSI→Fd→NADP⁺。</p><p><b class="g">产出</b>：O₂（水光解）、ATP（光合磷酸化）、NADPH。</p><p><b class="hl">循环/非循环光磷酸化</b>：仅PSI循环→仅ATP、不产O₂/NADPH；调节ATP/NADPH比例。</p></div></section><section class="bt b-core"><h4>📌 暗反应 / 卡尔文循环（叶绿体基质）</h4><div class="its"><p>3CO₂ + 9ATP + 6NADPH + 5H₂O → 3-PGA → G3P；<b class="hl">6轮合成 1 个葡萄糖（18ATP + 12NADPH）</b>。</p><p><b class="hl">关键酶</b>：RuBPCase（羧化/加氧竞争→光呼吸）、磷酸核糖激酶 PRK（限速）。</p><p><b class="g">C₄植物空间分离</b>：叶肉细胞（PEP羧化酶固定CO₂→C₄酸）→维管束鞘细胞（脱羧→卡尔文循环）— 高光/高温/干旱适应。</p><p><b class="g">CAM植物时间分离</b>：夜间开气孔固定CO₂→苹果酸贮存→白天关气孔脱羧。</p></div></section><section class="bt b-nan"><h4>🎯 光呼吸（C₂循环）</h4><div class="its"><p><b class="hl">条件</b>：高O₂/低CO₂/高光/高温；RuBPCase 加氧活性→乙醇酸→过氧化物酶体/线粒体/叶绿体循环。</p><p><b class="r">代价</b>：消耗O₂/释放CO₂/耗ATP/NADPH、<b class="hl">不产能量/不合成有机物</b>、降低光合效率 20-50%。</p><p><b class="g">工程改良</b>：引入甘油酸途径/乙醇酸脱氢酶→旁路光呼吸→增产。</p></div></section></div></article><article class="card" id="card9" data-no="9"><div class="card-hd"><span class="node-dot">9</span><div class="hd-t"><h3>考点2.5 光合呼吸综合分析 · 大题主战场</h3><div class="hd-meta"><span class="sec-chip">模块二 细胞代谢</span><span class="review-badge" data-no="9"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(9)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(9)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="计算" onclick="toggleTag('计算')">计算</button><button class="tag" data-tag="曲线" onclick="toggleTag('曲线')">曲线</button></div><div class="blocks"><section class="bt b-core"><h4>📌 速率关系铁律</h4><div class="its"><p><b class="hl">总光合 = 净光合 + 呼吸</b>；光合产O₂量 = O₂释放量 + 呼吸耗O₂量。</p><p>光合固CO₂量 = CO₂吸收量 + 呼吸产CO₂量；光合产有机物 = 积累量 + 呼吸消耗量。</p></div></section><section class="bt tbl"><h4>📊 光补偿点 / 饱和点曲线</h4><div class="tbl-wrap"><table><thead><tr><th>区段</th><th>光照</th><th>光合 vs 呼吸</th><th>气体交换</th><th>可测指标</th></tr></thead><tbody><tr><td>A点（补偿点）</td><td>低</td><td>光合=呼吸</td><td>不吸不放CO₂/O₂</td><td>净光合=0</td></tr><tr><td>A-B段</td><td>升</td><td>呼吸>光合</td><td>吸O₂、放CO₂</td><td>净光合<0</td></tr><tr><td>B-C段</td><td>升</td><td>光合>呼吸</td><td>放O₂、吸CO₂</td><td>净光合>0</td></tr><tr><td>C点（饱和点）</td><td>高</td><td>光合=最大</td><td>达峰</td><td>受CO₂/酶/温度限制</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 环境因子耦合与经典题型</h4><div class="its"><p><b class="hl">CO₂浓度↑</b>：提高饱和点、提高最大速率、补偿点不变/略降。</p><p><b class="hl">温度↑（适宜）</b>：酶活性↑→光合/呼吸均↑，呼吸增幅>光合→补偿点↑、饱和点↓。</p><p><b class="hl">水分胁迫</b>：气孔关闭→CO₂↓→光合↓、光呼吸↑。</p><p><b class="g">经典计算</b>：同位素示踪（¹⁴CO₂标记）、遮光/突变曲线（C₃/C₅变化推断）、气体交换积分面积、呼吸商/ATP/底物联立方程。</p></div></section><section class="bt tbl"><h4>📊 ATP / NADPH 跨膜转运规律（高频选择题）</h4><div class="tbl-wrap"><table><thead><tr><th>细胞器间</th><th>ATP转移</th><th>NAD(P)H转移</th></tr></thead><tbody><tr><td>叶绿体⇄细胞质</td><td>叶绿体产ATP基本不出 / 细胞质ATP可入</td><td>NADPH可出 / 细胞质NADPH可入</td></tr><tr><td>线粒体⇄细胞质</td><td>线粒体ATP可出 / 细胞质ATP不入</td><td>线粒体NADH可出（穿梭）/ 细胞质NADH可入（苹果酸-天冬氨酸穿梭）</td></tr></tbody></table></div></section></div></article><article class="card" id="card10" data-no="10"><div class="card-hd"><span class="node-dot">10</span><div class="hd-t"><h3>考点3.1 细胞增殖 · 分裂图像与数量动态</h3><div class="hd-meta"><span class="sec-chip">模块三 细胞的生命历程</span><span class="review-badge" data-no="10"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(10)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(10)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="计算" onclick="toggleTag('计算')">计算</button><button class="tag" data-tag="图像" onclick="toggleTag('图像')">图像</button></div><div class="blocks"><section class="bt b-core"><h4>📌 有丝分裂核心特征</h4><div class="its"><p><b class="hl">间期</b>：G₁（生长/合成RNA/蛋白）→ S（<b class="g">DNA复制/组蛋白/着丝粒复制</b>）→ G₂（制备纺锤体/微管蛋白）。</p><p><b class="hl">前期</b>：染色质凝缩→染色体（2姐妹染色单体/1着丝粒）、核膜核仁消失、纺锤体形成。</p><p><b class="hl">中期</b>：染色体排列赤道板、形态最典型/易计数、秋水仙素阻滞于此。</p><p><b class="hl">后期</b>：着丝粒分裂、姐妹染色单体分离→子染色体向两极（V字形）。</p><p><b class="hl">末期</b>：染色体解旋、核膜核仁重现；动物（分裂沟内陷）/植物（细胞板）。</p></div></section><section class="bt tbl"><h4>📊 减数分裂核心差异</h4><div class="tbl-wrap"><table><thead><tr><th>比较项</th><th>减数Ⅰ（核心：同源分离）</th><th>减数Ⅱ（类有丝：姐妹分离）</th></tr></thead><tbody><tr><td>前期</td><td>同源染色体联会→四分体、非姐妹染色单体交叉互换（重组）</td><td>无联会、无交叉、染色体散乱</td></tr><tr><td>中期</td><td>四分体排列赤道板两侧（自由组合）</td><td>染色体排列赤道板（单列）</td></tr><tr><td>后期</td><td>同源染色体分离（着丝粒不分裂）、染色体数减半</td><td>着丝粒分裂、姐妹染色单体分离</td></tr><tr><td>末期</td><td>形成 2 单倍体细胞（含染色单体）</td><td>形成 4 单倍体配子（不含染色单体）</td></tr><tr><td>DNA/染色体</td><td>2n/2c → n/2c（DNA不变、染色体减半）</td><td>n/2c → n/1c（DNA减半、染色体数不变）</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 图像判断万能模板 + 数量动态</h4><div class="its"><p><b class="hl">看同源/四分体</b>：区分有丝/减数Ⅰ/减数Ⅱ。</p><p><b class="hl">看染色体位置</b>：散乱=前期、单列赤道板=中期/减Ⅱ中期、双列=减Ⅰ中期。</p><p><b class="hl">看着丝粒分裂</b>：分裂=有丝后期/减Ⅱ后期；不分裂=减Ⅰ后期。</p><p><b class="hl">看核数/形状</b>：2核=有丝末期/减Ⅰ末期、4核=减Ⅱ末期；不均等分裂=卵母细胞。</p><p><b class="g">DNA</b>：S期翻倍（2C→4C）→有丝末期减半→减Ⅰ末期不变→减Ⅱ末期再减半。</p><p><b class="g">染色体</b>：以着丝粒计；S期不变→减Ⅰ后期减半（2n→n）→减Ⅱ不变。</p><p><b class="g">染色单体</b>：S期出现→有丝后期/减Ⅱ后期着丝粒分裂消失。</p></div></section></div></article><article class="card" id="card11" data-no="11"><div class="card-hd"><span class="node-dot">11</span><div class="hd-t"><h3>考点3.2 细胞分化与全能性</h3><div class="hd-meta"><span class="sec-chip">模块三 细胞的生命历程</span><span class="review-badge" data-no="11"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(11)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(11)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button></div><div class="blocks"><section class="bt tbl"><h4>📊 概念辨析</h4><div class="tbl-wrap"><table><thead><tr><th>概念</th><th>定义/本质</th><th>核心判断标准</th><th>高频易错点</th></tr></thead><tbody><tr><td>细胞分化</td><td>形态/结构/功能稳定性差异化过程</td><td>实质：基因选择性表达；遗传物质不变</td><td>管家基因所有细胞表达；特异基因特定表达</td></tr><tr><td>全能性</td><td>发育成完整个体/分化成多种细胞的潜能</td><td>判断标准：已发育成完整个体、或已分化出多种细胞类型</td><td>精子/卵/花粉=高分化高全能；种子萌发≠全能性表现</td></tr><tr><td>干细胞</td><td>保留分裂分化能力、自我更新</td><td>胚胎干细胞（ES）：全能/多能；成体干细胞：多能/单能；iPS：诱导去分化</td><td>精原干细胞→精子体现分化非全能；核移植体现核全能性</td></tr></tbody></table></div></section><section class="bt b-core"><h4>📌 分化-分裂-全能性三角关系</h4><div class="its"><p>受精卵（全能/分裂强/未分化）→ 干细胞（多能/分裂强/低分化）→ 体细胞（无全能/分裂弱/高分化）。</p><p><b class="hl">例外</b>：肝细胞/淋巴细胞/表皮基底层 — 高分化保留分裂；癌细胞 — 去分化/无限分裂。</p></div></section></div></article><article class="card" id="card12" data-no="12"><div class="card-hd"><span class="node-dot">12</span><div class="hd-t"><h3>考点3.3 衰老·死亡·癌变 · 稳态崩溃分子机制</h3><div class="hd-meta"><span class="sec-chip">模块三 细胞的生命历程</span><span class="review-badge" data-no="12"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(12)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(12)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="分子机制" onclick="toggleTag('分子机制')">分子机制</button></div><div class="blocks"><section class="bt tbl"><h4>📊 五大过程对比</h4><div class="tbl-wrap"><table><thead><tr><th>过程</th><th>核心特征</th><th>分子机制</th><th>生理意义/病理</th></tr></thead><tbody><tr><td>细胞衰老</td><td>体积↑/核大/酶活性↓/代谢↓/色素（脂褐质）堆积</td><td>端粒缩短→p53/p21/Rb通路；自由基氧化损伤</td><td>个体衰老≠所有细胞衰老；SASP促炎/致癌</td></tr><tr><td>细胞凋亡</td><td>程序性/基因依赖/有序；凋亡小体/无炎症</td><td>内源性（线粒体Cyt c→caspase-9→-3）、外源性（死亡受体→caspase-8）；Bcl-2家族</td><td>胚胎发育塑形、免疫耐受、肿瘤抑制</td></tr><tr><td>细胞坏死</td><td>非程序性/病理性/膜破裂/炎症反应</td><td>损伤/缺氧/毒素→ATP耗竭→离子泵失效→水肿溶解</td><td>炎症引发组织修复/纤维化</td></tr><tr><td>自噬</td><td>双层膜自噬体包裹受损结构→溶酶体降解循环</td><td>ATG基因调控；mTOR抑制诱导；选择性自噬</td><td>饥饿生存、清除病原体；过度自噬→II型死亡/凋亡</td></tr><tr><td>细胞癌变</td><td>原癌基因激活、抑癌基因失活、端粒酶重激活、转移</td><td>多基因累积突变；细胞周期失控（Rb/E2F、CyclinB/Cdk1）</td><td>接触抑制消失、免疫逃逸、Warburg效应</td></tr></tbody></table></div></section></div></article><article class="card" id="card13" data-no="13"><div class="card-hd"><span class="node-dot">13</span><div class="hd-t"><h3>难点1 光呼综合曲线“隐性条件”破解</h3><div class="hd-meta"><span class="sec-chip">🎯 难点专讲</span><span class="review-badge" data-no="13"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(13)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(13)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="曲线" onclick="toggleTag('曲线')">曲线</button><button class="tag" data-tag="计算" onclick="toggleTag('计算')">计算</button></div><div class="blocks"><section class="bt b-core"><h4>📌 破解模型</h4><div class="its"><p><b class="hl">识别坐标含义</b>：CO₂吸收速率=净光合；CO₂释放速率=呼吸-光合（负值）；O₂释放速率=净光合；干重增加速率=净产物积累。</p><p><b class="hl">补偿点/饱和点定位</b>：曲线穿零点=光补偿点；平台期=光饱和点。</p><p><b class="hl">面积积分法</b>：阴影面积=总量；早晚两个补偿点间面积=日净光合总量。</p><p><b class="hl">ATP产生场所判定</b>：仅线粒体（黑暗/非绿组织/补偿点下）；线粒体+叶绿体（光照绿组织）；+细胞质基质（有氧+光合同时）。</p><p><b class="g">限制因子判别</b>：平台前=光限制；平台后=CO₂/酶/温度限制；CO₂升高平台抬高→CO₂限制。</p></div></section></div></article><article class="card" id="card14" data-no="14"><div class="card-hd"><span class="node-dot">14</span><div class="hd-t"><h3>难点2 减数分裂图像/数量“陷阱条件”</h3><div class="hd-meta"><span class="sec-chip">🎯 难点专讲</span><span class="review-badge" data-no="14"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(14)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(14)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="图像" onclick="toggleTag('图像')">图像</button><button class="tag" data-tag="陷阱" onclick="toggleTag('陷阱')">陷阱</button></div><div class="blocks"><section class="bt tbl"><h4>📊 高频坑点清单</h4><div class="tbl-wrap"><table><thead><tr><th>陷阱类型</th><th>典型表述</th><th>正确解析</th></tr></thead><tbody><tr><td>同源vs姐妹</td><td>“后期染色单体分离”</td><td>减Ⅰ后期分离同源（着丝粒不分）；仅减Ⅱ/有丝后期分离姐妹</td></tr><tr><td>染色体计数</td><td>“S期染色体数加倍”</td><td>以着丝粒计，S期复制未分离→染色体不变（2n）、染色单体翻倍</td></tr><tr><td>四分体计数</td><td>“四分体数=染色体数/2”</td><td>仅减Ⅰ前/中期存在，数=单倍体数 n=同源对数</td></tr><tr><td>自由组合时机</td><td>“减Ⅱ发生自由组合”</td><td>自由组合仅减Ⅰ中期（同源排列随机）；减Ⅱ无同源</td></tr><tr><td>基因分离时机</td><td>“有丝分裂发生基因分离”</td><td>等位基因分离仅减Ⅰ后期（同源分离）</td></tr><tr><td>交叉互换频率</td><td>“交叉互换发生在减Ⅱ”</td><td>仅减Ⅰ前期联会复合体（Pachynema）非姐妹间</td></tr><tr><td>显微照片</td><td>“看形态判断有丝/减数”</td><td>无法区分同源/姐妹；必须结合来源（根尖/花药）、核数、均等/不均等</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 多倍体 / 异常分裂进阶</h4><div class="its"><p><b class="hl">三倍体（3n）</b>：同源无法完全配对→单价体/三价体→分离混乱→配子不育。</p><p><b class="hl">四倍体（4n）</b>：可形成二价体正常分离→育性恢复；但易多极纺锤体/滞后染色体。</p><p><b class="g">秋水仙素</b>：抑制微管聚合→阻滞中期→诱导多倍体/染色体标本制备。</p></div></section></div></article><article class="card" id="card15" data-no="15"><div class="card-hd"><span class="node-dot">15</span><div class="hd-t"><h3>难点3 载体构象变化与磷酸化开关</h3><div class="hd-meta"><span class="sec-chip">🎯 难点专讲</span><span class="review-badge" data-no="15"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(15)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(15)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="口诀" onclick="toggleTag('口诀')">口诀</button></div><div class="blocks"><section class="bt b-core"><h4>📌 核心机制统一认知</h4><div class="its"><p><b class="hl">载体/通道蛋白</b>：构象变化是跨膜运输/信号转导的统一物理基础。</p><p><b class="hl">磷酸化/去磷酸化</b>：蛋白质功能开关的通用分子机制（激酶/磷酸酶对抗）。</p><p><b class="g">ATP酶双重身份</b>：水解ATP供能 + 磷酸化自身驱动构象变化（P型ATP酶：Na⁺/K⁺、H⁺、Ca²⁺）。</p></div></section><section class="bt b-kao"><h4>🏆 实战判题口诀</h4><div class="its"><p>见“载体蛋白磷酸化/去磷酸化”→ 必涉及 <b class="hl">主动运输/泵蛋白/构象变化/ATP水解</b>。</p><p>见“通道蛋白门控/电压门控/配体门控”→ 必涉及 <b class="hl">被动运输/易化扩散/离子流/动作电位</b>。</p><p>见“G蛋白/第二信使/cAMP/Ca²⁺/蛋白激酶级联”→ 必涉及 <b class="hl">信号转导/放大效应/基因表达调控</b>。</p><p>见“核孔/NLS/Ran-GTP”→ 必涉及 <b class="hl">核质运输/主动/选择性/双向/需能</b>。</p></div></section></div></article><article class="card" id="card16" data-no="16"><div class="card-hd"><span class="node-dot">16</span><div class="hd-t"><h3>难点4 干细胞分类与全能性判定</h3><div class="hd-meta"><span class="sec-chip">🎯 难点专讲</span><span class="review-badge" data-no="16"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(16)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(16)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="概念" onclick="toggleTag('概念')">概念</button><button class="tag" data-tag="陷阱" onclick="toggleTag('陷阱')">陷阱</button></div><div class="blocks"><section class="bt tbl"><h4>📊 必考辨析表</h4><div class="tbl-wrap"><table><thead><tr><th>细胞类型</th><th>分化程度</th><th>分裂能力</th><th>全能性</th><th>典型陷阱</th></tr></thead><tbody><tr><td>受精卵/合子</td><td>0（未分化）</td><td>极强</td><td>全能</td><td>第一个全能细胞</td></tr><tr><td>早期胚胎（~8细胞期）</td><td>低</td><td>强</td><td>全能</td><td>单细胞可发育成完整个体</td></tr><tr><td>胚胎干细胞（ES）</td><td>低</td><td>强</td><td>多能</td><td>不能发育成完整个体（无滋养层）；可形成三胚层</td></tr><tr><td>成体干细胞</td><td>中/高</td><td>中</td><td>多能/单能</td><td>精原干细胞→精子体现分化非全能</td></tr><tr><td>诱导多能干细胞（iPS）</td><td>逆转至低</td><td>强</td><td>多能（类ES）</td><td>体细胞核全能性证明；自体移植低排斥</td></tr><tr><td>高分化体细胞</td><td>极高</td><td>弱/无</td><td>无/核全能</td><td>核移植体现核全能性</td></tr><tr><td>生殖细胞（精/卵/花粉）</td><td>极高</td><td>无/弱</td><td>高（受精后）</td><td>花粉培养获单倍体植株体现全能性</td></tr></tbody></table></div></section><section class="bt b-kao"><h4>🏆 判定金标准</h4><div class="its"><p><b class="hl">“发育成完整个体” 或 “分化成多种组织细胞类型”</b> — 仅满足其一即表现全能性。</p></div></section></div></article><article class="card" id="card17" data-no="17"><div class="card-hd"><span class="node-dot">17</span><div class="hd-t"><h3>跨文档关系合集 · 概念网络</h3><div class="hd-meta"><span class="sec-chip">📌 学习工具</span><span class="review-badge" data-no="17"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(17)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(17)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="总览" onclick="toggleTag('总览')">总览</button><button class="tag" data-tag="关系" onclick="toggleTag('关系')">关系</button></div><div class="blocks"><section class="bt b-core"><h4>📌 核心依赖链条</h4><div class="its"><p>元素/分子结构(1.1) → 蛋白质空间结构决定酶/载体/受体功能(2.2/2.1) → 磷脂双亲性决定膜结构/囊泡运输(1.2/2.1/3.1) → 核酸碱基配对决定复制/转录/翻译(3.1/3.2) → ATP高能键/辅酶传氢耦合能量转换(2.3/2.4)。</p></div></section><section class="bt b-core"><h4>📌 细胞器分工协作网络</h4><div class="its"><p>核糖体（合成）→ 内质网（加工折叠/信号肽识别）→ 高尔基体（修饰分选/标记）→ 分泌泡/胞吐（细胞外/膜更新）。</p><p>溶酶体/过氧化物酶体（降解/解毒）← 自噬体（受损细胞器/病原体）。</p><p>线粒体/叶绿体（能量转换/ATP/还原力供给全网络）。</p><p>细胞核（基因组/转录/核孔选择性运输）↔ 细胞质（翻译/代谢/信号）。</p></div></section><section class="bt b-core"><h4>📌 细胞周期与检查点逻辑</h4><div class="its"><p>G₁/S检查点（Rb/E2F/p53/p21）← 生长因子/营养/DNA损伤信号 → 通过 → S期（DNA复制）→ G₂/M检查点（CyclinB/Cdk1）→ 通过 → M期（有丝/减数）。</p><p>子细胞命运三选一：<b class="hl">继续分裂 / 分化（G₀） / 凋亡</b>。</p><p><b class="r">癌变 = 检查点失效 + 端粒酶激活 + 血管生成 + 转移</b>。</p></div></section><section class="bt b-core"><h4>📌 光合-呼吸-物质运输耦合回路</h4><div class="its"><p>光反应（类囊体膜）→ ATP/NADPH → 暗反应（基质）固定CO₂→糖 → 糖酵解（细胞质）→丙酮酸 → 线粒体（三羧酸/电传链）→ATP/NADH/FADH₂ → 细胞质/叶绿体/线粒体间穿梭 → 维持全细胞能量/还原力稳态。</p></div></section></div></article><article class="card" id="card18" data-no="18"><div class="card-hd"><span class="node-dot">18</span><div class="hd-t"><h3>缺口与待补充清单</h3><div class="hd-meta"><span class="sec-chip">📌 学习工具</span><span class="review-badge" data-no="18"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(18)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(18)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="总览" onclick="toggleTag('总览')">总览</button></div><div class="blocks"><section class="bt tbl"><h4>📊 知识缺口</h4><div class="tbl-wrap"><table><thead><tr><th>缺口模块</th><th>具体缺失</th><th>优先级</th><th>建议来源</th></tr></thead><tbody><tr><td>分子层面计算</td><td>核酸/蛋白质分子量精确计算、同位素示踪定量、Km/Vmax 定量</td><td>⭐⭐⭐</td><td>教材实验探究、高考计算题汇编</td></tr><tr><td>信号转导细节</td><td>GPCR/RTK 下游级联（cAMP/PKC/IP₃-DAG/MAPK）、表观遗传</td><td>⭐⭐⭐</td><td>选择性必修1/2、李林笔记专题</td></tr><tr><td>C₄/CAM/C₃ 比较表</td><td>解剖结构/酶学性质/光呼吸强度/产量效率量化对比</td><td>⭐⭐</td><td>教材P72-73、方法册专题</td></tr><tr><td>病毒/原核细胞</td><td>结构特征/复制方式/与真核差异/疫苗工程</td><td>⭐⭐</td><td>教材第1章、方法册专题</td></tr><tr><td>实验设计全流程</td><td>变量控制/对照/重复/数据处理/结论评价</td><td>⭐⭐⭐</td><td>教材“探究实践”、全国卷实验设计真题</td></tr></tbody></table></div></section></div></article><article class="card" id="card19" data-no="19"><div class="card-hd"><span class="node-dot">19</span><div class="hd-t"><h3>证据来源索引</h3><div class="hd-meta"><span class="sec-chip">📌 学习工具</span><span class="review-badge" data-no="19"></span></div></div><div class="card-tools"><button class="btn sm gost" onclick="copyCard(19)" title="复制为文本">📤</button><button class="btn sm gost" onclick="markReview(19)" title="标记已复习">🔁</button></div></div><div class="tagrow"><button class="tag" data-tag="总览" onclick="toggleTag('总览')">总览</button></div><div class="blocks"><section class="bt tbl"><h4>📊 资料来源</h4><div class="tbl-wrap"><table><thead><tr><th>文档ID</th><th>文档名称</th><th>覆盖模块</th><th>核心贡献</th></tr></thead><tbody><tr><td>b0595ed9-1</td><td>2名师大招册.pdf</td><td>1.1</td><td>分子结构-功能对应表、能源物质分类</td></tr><tr><td>b0595ed9-2</td><td>2026李林生物笔记第三版终稿.pdf</td><td>1.1-1.3, 2.1-2.5, 3.1-3.3</td><td>系统目录、知识框架、题型归纳专题</td></tr><tr><td>79eae3a7-2/-6</td><td>教师用书 第二单元第4课时</td><td>1.2</td><td>膜系统、细胞器分工</td></tr><tr><td>b0595ed9-6 / 79eae3a7-4/-5</td><td>李林笔记 / 教科书 / 53知识清单</td><td>2.2</td><td>酶与ATP、辅酶体系</td></tr><tr><td>b0595ed9-6 / 5dbfb202-1</td><td>李林笔记 / 教师用书第15课时</td><td>2.3 / 2.4 / 2.5</td><td>呼吸、光合、综合分析</td></tr><tr><td>514ef85c-1~-7</td><td>教师用书第16/18课时、李林笔记</td><td>3.1</td><td>有丝/减数分裂、数量动态</td></tr><tr><td>4d9c02ad-1~-7</td><td>教师用书第19课时、方法册、53清单</td><td>3.2 / 3.3</td><td>分化、全能性、衰老凋亡癌变</td></tr></tbody></table></div></section></div></article></main>
+</div>
+<div id="searchPanel" onclick="if(event.target===this)closeSearch()">
+  <div class="sbox">
+    <input id="sInp" placeholder="实时搜索：光合 / 减数分裂 / ATP / 全能性…" oninput="doSearch()" autocomplete="off">
+    <div id="sres"></div>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+const DATA = [{"no":1,"sec":"🗺️ 知识地图","t":"主题总览 · 三大模块架构","tags":["总览","概念"],"links":[2,6,10],"blocks":[{"ty":"core","title":"📌 主线逻辑","items":["生物必修一《分子与细胞》以 <b class=\"hl\">细胞是生命活动的基本单位</b> 为主线，按 <b class=\"hl\">组成 → 结构 → 功能 → 能量 → 生命历程</b> 逻辑递进。","<b class=\"g\">四大观念贯穿全书</b>：结构与功能观（膜-器-核系统）、物质与能量观（ATP 为枢纽）、系统观（生物膜系统/细胞器协作）、进化观（原核→真核、半自主性细胞器）。"]},{"ty":"table","title":"📊 三大模块架构","tbl":{"heads":["模块","子章节","核心内容"],"rows":[["模块一 细胞的结构基础","1.1 / 1.2 / 1.3","分子组成、膜系统、细胞器、细胞核、细胞学说与结构层次"],["模块二 细胞代谢","2.1 / 2.2 / 2.3 / 2.4 / 2.5","跨膜运输、酶与ATP、细胞呼吸、光合作用、光合呼吸综合分析"],["模块三 细胞的生命历程","3.1 / 3.2 / 3.3","细胞增殖、分化与全能性、衰老·死亡·癌变"]]}}]},{"no":2,"sec":"模块一 细胞的结构基础","t":"考点1.1 组成细胞的分子 · 拿分暗线","tags":["概念","计算"],"links":[3,7],"blocks":[{"ty":"table","title":"📊 六大类分子一览","tbl":{"heads":["维度","核心拿分点","易错/高阶拓展"],"rows":[["元素","CHONPS 为主要元素；C 骨架、P 能量转移、S 蛋白结构","示踪用同位素（¹⁴C、³²P、³⁵S、¹⁵N）；实验设计逻辑"],["水","自由水（溶剂/运输/反应）vs 结合水（结构维持）","种子脱水耐受 vs 成熟细胞脱水死亡；渗透压 π=iCRT"],["无机盐","离子形式存在；维持渗透压、酸碱平衡、酶激活剂","Fe²⁺/Fe³⁺、Mg²⁺、Zn²⁺ 具体激活的酶对应表"],["糖类","单糖/双糖/多糖；还原性判断（游离半缩醛羟基）","糖原/淀粉/纤维素结构差异→功能分化；血糖稳态调节"],["脂质","脂肪（甘油+3脂肪酸）、磷脂（双亲性→膜骨架）、固醇","饱和/不饱和脂肪酸熔点差异→膜流动性；β-氧化产能"],["蛋白质","<b class=\"hl\">核心</b>：一级→空间结构决定功能；变性（破坏空间结构）","盐析可逆、变性多不可逆；n 个氨基酸→(n-1)肽键、脱(n-1)个 H₂O"],["核酸","DNA 双螺旋（A=T、G≡C）；RNA 单链（U 替代 T）","三大公式：①(A+G)/(T+C)=1 ②A=T,G=C ③(A+G)/(A+T+G+C)；碱基数换算"]]}},{"ty":"kao","title":"🏆 拿分要点","items":["蛋白质<b class=\"hl\">变性 vs 盐析</b>：变性破坏空间结构多不可逆，盐析可逆，两者都不破坏肽键。","分子量计算：n 个氨基酸 → <b class=\"g\">(n-1) 个肽键、脱去 (n-1) 个 H₂O</b>。","双链 DNA 中 <b class=\"g\">A=T、G≡C、(A+G)/(T+C)=1</b>。"]},{"ty":"trap","title":"⚠️ 三个“最多”易混淆","items":["<b class=\"hl\">鲜重元素最 O、化合物最水、干重最蛋白质</b>。","无机盐以离子形式存在，不是化合物形式。"]}]},{"no":3,"sec":"模块一 细胞的结构基础","t":"考点1.2 细胞的基本结构 · 膜系统与细胞器分工","tags":["概念","流程"],"links":[2,7,9,14],"blocks":[{"ty":"table","title":"📊 结构功能一览","tbl":{"heads":["结构","核心拿分点","高频易混/高阶"],"rows":[["细胞膜","流动镶嵌模型：磷脂双层（骨架）+蛋白质（功能）；选择透过性","膜蛋白分类：受体（糖蛋白）、转运（通道/载体）、酶、识别"],["能量转化器","线粒体（有氧呼吸）、叶绿体（光合）— 半自主性（自有DNA/核糖体）","内共生说证据：双层膜、环状DNA、70S核糖体、分裂增殖"],["蛋白加工链","核糖体（合成）→ER（加工）→高尔基体（分选/分泌）→分泌泡","分选信号：信号肽（入ER）、甘露糖-6-磷酸（入溶酶体）、NLS（入核）"],["稳态类","溶酶体（降解）、液泡（贮存/渗透）、过氧化物酶体（过氧化氢酶）","差速离心顺序：核→线粒体/叶绿体→微粒体→核糖体"],["细胞核","核膜（双层+核孔）、染色质（DNA+蛋白）、核仁（rRNA合成）","核孔：小分子被动、大分子主动（NLS+受体+ATP）；成熟RBC无核"],["生物膜系统","核膜-ER-高尔基-溶酶体-质膜；结构相似/功能特异/相互转化","原核无生物膜系统；病毒无细胞结构"]]}},{"ty":"kao","title":"🏆 分泌蛋白合成运输全链路","items":["核（转录）→ 核糖体（翻译）→ 粗面内质网（加工/折叠）→ 囊泡 → 高尔基体（分类/包装）→ 囊泡 → 细胞膜（胞吐）→ 细胞外。","<b class=\"hl\">膜面积变化</b>：内质网 ↓、高尔基体 ≈、细胞膜 ↑。","放射性同位素标记氨基酸：核糖体→内质网→高尔基体→细胞膜。"]},{"ty":"nan","title":"🎯 难点突破","items":["<b class=\"hl\">半自主性细胞器</b>：线粒体/叶绿体含 DNA/RNA/核糖体，但绝大多数蛋白由核基因编码。","生物膜系统：结构相似、功能协同；原核细胞和病毒无此系统。"]}]},{"no":4,"sec":"模块一 细胞的结构基础","t":"考点1.3 细胞学说与结构层次","tags":["概念"],"links":[2,3],"blocks":[{"ty":"core","title":"📌 核心知识","items":["<b class=\"hl\">学说建立过程</b>：Hooke 命名 → Schleiden/Schwann 建立 → Virchow“细胞源于细胞” → 归纳法总结。","<b class=\"hl\">生命系统层次</b>：细胞→组织→器官→系统→个体→种群→群落→生态系统→生物圈。","<b class=\"g\">病毒地位</b>：非细胞形态、寄生性、核酸+蛋白质、无代谢、只在活细胞内增殖。"]}]},{"no":5,"sec":"模块二 细胞代谢","t":"考点2.1 物质跨膜运输 · 三要素判断","tags":["概念","曲线"],"links":[6,7,15],"blocks":[{"ty":"table","title":"📊 五种运输方式对比","tbl":{"heads":["运输方式","能量","载体","方向","典型物质","易错点"],"rows":[["自由扩散","否","否","高→低","O₂/CO₂/N₂/甾体激素","不饱和 → 速率随浓度差线性增大"],["协助扩散","否","是（通道/载体）","高→低","葡萄糖/氨基酸/离子","饱和现象→Vmax；特异性/竞争抑制"],["主动运输","是（ATP）","是（载体）","低→高","Na⁺/K⁺泵、H⁺泵、肠上皮吸收","耗能可水解ATP/耦合梯度；载体磷酸化构象变化"],["胞吞/胞吐","是（ATP）","囊泡","大分子/颗粒","抗体分泌、胆固醇摄取、神经递质释放","需膜流动性；胞吞→食物泡→融合溶酶体"],["核孔运输","是（GTP/ATP）","核孔复合体","双向选择性","mRNA 出核、DNA 聚合酶入核","NLS 信号序列；Ran-GTP 梯度驱动"]]}},{"ty":"core","title":"📌 渗透作用核心模型","items":["水势 Ψ = Ψs（溶质势）+ Ψp（压力势）；水由 <b class=\"hl\">高水势 → 低水势</b>。","植物细胞：质壁分离（高渗失水/原生层离壁）vs 复原（低渗吸水）。","动物细胞：溶血（低渗吸水破裂）vs 皱缩（高渗失水）。","<b class=\"g\">装置液面分析</b>：U 型管/渗透仪 — 液面升降 ⇔ 水净流动方向 ⇔ 浓度变化。"]}]},{"no":6,"sec":"模块二 细胞代谢","t":"考点2.2 酶与ATP · 代谢调控核心枢纽","tags":["概念","曲线"],"links":[5,7,9],"blocks":[{"ty":"core","title":"📌 核心知识 · 酶","items":["<b class=\"hl\">本质</b>：绝大多数蛋白质、少数 RNA（核酶）；降低活化能（ΔG≠不变）。","<b class=\"hl\">特性</b>：高效（10⁷~10¹³ 倍）、专一性（一酶一底物/一反应）、温和条件（37℃、pH7.4）。","<b class=\"hl\">影响因素曲线</b>：温度/pH 钟形（变性不可逆 vs 适宜可逆）；底物浓度双曲线→Vmax/Km；酶浓度直线过原点。","<b class=\"hl\">抑制/激活</b>：竞争性（结构类似/Km↑ Vmax不变）vs 非竞争性（变构位点/Km不变 Vmax↓）；别构调节/反馈抑制。"]},{"ty":"core","title":"📌 核心知识 · ATP","items":["结构：A（腺嘌呤）+R（核糖）+3P；高能磷酸键（~30.5 kJ/mol）。","<b class=\"hl\">循环</b>：ATP ⇌ ADP + Pi + 能量（偶联吸能/放能反应）；<b class=\"g\">非能源/非催化/非遗传</b>。","合成途径：光合光反应（叶绿体）、细胞呼吸（线粒体/细胞质）、底物水平磷酸化。"]},{"ty":"table","title":"📊 辅酶体系","tbl":{"heads":["辅酶","全称","传递","主要分布","关键作用"],"rows":[["NAD⁺/NADH","烟酰胺腺嘌呤二核苷酸","[H]（2e⁻+H⁺）","细胞质/线粒体","糖酵解/三羧酸/呼吸链传氢"],["NADP⁺/NADPH","磷酸化 NAD⁺","[H]","叶绿体/细胞质","光合暗反应/脂肪酸合成/解毒"],["FAD/FADH₂","黄素腺嘌呤二核苷酸","[2H]","线粒体","三羧酸/β-氧化/呼吸链复合体II"],["CoA","辅酶A","乙酰基（~S-CoA）","线粒体/细胞质","乙酰CoA枢纽/脂肪酸代谢"]]}}]},{"no":7,"sec":"模块二 细胞代谢","t":"考点2.3 细胞呼吸 · 物质能量精细账本","tags":["计算","流程"],"links":[2,3,6,9],"blocks":[{"ty":"table","title":"📊 有氧呼吸四大阶段","tbl":{"heads":["阶段","场所","物质变化","能量产出","关键拿分点"],"rows":[["糖酵解","细胞质基质","葡萄糖→2丙酮酸+4[H]+2ATP","净得2ATP、2NADH","不需O₂、共同途径、PFK限速"],["丙酮酸氧化脱羧","线粒体基质","2丙酮酸→2乙酰CoA+2CO₂+4[H]","2NADH","连接反应、产生CO₂"],["三羧酸循环","线粒体基质","2乙酰CoA→4CO₂+6NADH+2FADH₂+2ATP","6NADH、2FADH₂、2ATP","草酰乙酸再生、CO₂全部产生于此"],["电子传递/氧化磷酸化","线粒体内膜","10NADH+2FADH₂+6O₂→10H₂O+~28-30ATP","~28-30ATP","质子梯度驱动ATP合酶、化学渗透、抑制剂"]]}},{"ty":"kao","title":"🏆 无氧呼吸与呼吸商","items":["<b class=\"hl\">无氧呼吸（动物）</b>：丙酮酸→乳酸（还原 NADH→NAD⁺）；仅 2ATP、乳酸堆积→疲劳。","<b class=\"hl\">无氧呼吸（酵母/高等植物）</b>：丙酮酸→乙醛→乙醇+CO₂；仅 2ATP、工业发酵应用。","<b class=\"g\">呼吸商 RQ = CO₂产生量 / O₂消耗量</b>：糖类=1.0；脂肪≈0.7；蛋白质≈0.8-0.9。","总账：C₆H₁₂O₆+6H₂O→6CO₂+20[H]+4ATP（底物水平）+ 10O₂→10H₂O+~28-30ATP（氧化磷酸化）≈ 30-32 ATP/葡萄糖。"]},{"ty":"trap","title":"⚠️ 阶段易错陷阱","items":["有氧呼吸产生水在 <b class=\"hl\">第三阶段</b>，不是第一阶段。","CO₂ 产生在 <b class=\"hl\">第二阶段</b>，不是第三阶段。","线粒体不能直接利用葡萄糖 — 进入线粒体的是丙酮酸。","植物无氧呼吸不一定都产生酒精 — 玉米胚、马铃薯块茎产生乳酸。"]}]},{"no":8,"sec":"模块二 细胞代谢","t":"考点2.4 光合作用 · 双相应答与碳同化","tags":["概念","流程"],"links":[7,9],"blocks":[{"ty":"core","title":"📌 光反应（类囊体膜）","items":["<b class=\"hl\">色素系统</b>：叶绿素a/b（蓝紫/红光）、类胡萝卜素（蓝紫/保护）；光系统II（P680）→光系统I（P700）。","<b class=\"hl\">电子传递链</b>：H₂O→PSII→PQ→Cyt b₆/f→PC→PSI→Fd→NADP⁺。","<b class=\"g\">产出</b>：O₂（水光解）、ATP（光合磷酸化）、NADPH。","<b class=\"hl\">循环/非循环光磷酸化</b>：仅PSI循环→仅ATP、不产O₂/NADPH；调节ATP/NADPH比例。"]},{"ty":"core","title":"📌 暗反应 / 卡尔文循环（叶绿体基质）","items":["3CO₂ + 9ATP + 6NADPH + 5H₂O → 3-PGA → G3P；<b class=\"hl\">6轮合成 1 个葡萄糖（18ATP + 12NADPH）</b>。","<b class=\"hl\">关键酶</b>：RuBPCase（羧化/加氧竞争→光呼吸）、磷酸核糖激酶 PRK（限速）。","<b class=\"g\">C₄植物空间分离</b>：叶肉细胞（PEP羧化酶固定CO₂→C₄酸）→维管束鞘细胞（脱羧→卡尔文循环）— 高光/高温/干旱适应。","<b class=\"g\">CAM植物时间分离</b>：夜间开气孔固定CO₂→苹果酸贮存→白天关气孔脱羧。"]},{"ty":"nan","title":"🎯 光呼吸（C₂循环）","items":["<b class=\"hl\">条件</b>：高O₂/低CO₂/高光/高温；RuBPCase 加氧活性→乙醇酸→过氧化物酶体/线粒体/叶绿体循环。","<b class=\"r\">代价</b>：消耗O₂/释放CO₂/耗ATP/NADPH、<b class=\"hl\">不产能量/不合成有机物</b>、降低光合效率 20-50%。","<b class=\"g\">工程改良</b>：引入甘油酸途径/乙醇酸脱氢酶→旁路光呼吸→增产。"]}]},{"no":9,"sec":"模块二 细胞代谢","t":"考点2.5 光合呼吸综合分析 · 大题主战场","tags":["计算","曲线"],"links":[6,7,8,13],"blocks":[{"ty":"core","title":"📌 速率关系铁律","items":["<b class=\"hl\">总光合 = 净光合 + 呼吸</b>；光合产O₂量 = O₂释放量 + 呼吸耗O₂量。","光合固CO₂量 = CO₂吸收量 + 呼吸产CO₂量；光合产有机物 = 积累量 + 呼吸消耗量。"]},{"ty":"table","title":"📊 光补偿点 / 饱和点曲线","tbl":{"heads":["区段","光照","光合 vs 呼吸","气体交换","可测指标"],"rows":[["A点（补偿点）","低","光合=呼吸","不吸不放CO₂/O₂","净光合=0"],["A-B段","升","呼吸>光合","吸O₂、放CO₂","净光合<0"],["B-C段","升","光合>呼吸","放O₂、吸CO₂","净光合>0"],["C点（饱和点）","高","光合=最大","达峰","受CO₂/酶/温度限制"]]}},{"ty":"kao","title":"🏆 环境因子耦合与经典题型","items":["<b class=\"hl\">CO₂浓度↑</b>：提高饱和点、提高最大速率、补偿点不变/略降。","<b class=\"hl\">温度↑（适宜）</b>：酶活性↑→光合/呼吸均↑，呼吸增幅>光合→补偿点↑、饱和点↓。","<b class=\"hl\">水分胁迫</b>：气孔关闭→CO₂↓→光合↓、光呼吸↑。","<b class=\"g\">经典计算</b>：同位素示踪（¹⁴CO₂标记）、遮光/突变曲线（C₃/C₅变化推断）、气体交换积分面积、呼吸商/ATP/底物联立方程。"]},{"ty":"table","title":"📊 ATP / NADPH 跨膜转运规律（高频选择题）","tbl":{"heads":["细胞器间","ATP转移","NAD(P)H转移"],"rows":[["叶绿体⇄细胞质","叶绿体产ATP基本不出 / 细胞质ATP可入","NADPH可出 / 细胞质NADPH可入"],["线粒体⇄细胞质","线粒体ATP可出 / 细胞质ATP不入","线粒体NADH可出（穿梭）/ 细胞质NADH可入（苹果酸-天冬氨酸穿梭）"]]}}]},{"no":10,"sec":"模块三 细胞的生命历程","t":"考点3.1 细胞增殖 · 分裂图像与数量动态","tags":["计算","图像"],"links":[1,11,12,14],"blocks":[{"ty":"core","title":"📌 有丝分裂核心特征","items":["<b class=\"hl\">间期</b>：G₁（生长/合成RNA/蛋白）→ S（<b class=\"g\">DNA复制/组蛋白/着丝粒复制</b>）→ G₂（制备纺锤体/微管蛋白）。","<b class=\"hl\">前期</b>：染色质凝缩→染色体（2姐妹染色单体/1着丝粒）、核膜核仁消失、纺锤体形成。","<b class=\"hl\">中期</b>：染色体排列赤道板、形态最典型/易计数、秋水仙素阻滞于此。","<b class=\"hl\">后期</b>：着丝粒分裂、姐妹染色单体分离→子染色体向两极（V字形）。","<b class=\"hl\">末期</b>：染色体解旋、核膜核仁重现；动物（分裂沟内陷）/植物（细胞板）。"]},{"ty":"table","title":"📊 减数分裂核心差异","tbl":{"heads":["比较项","减数Ⅰ（核心：同源分离）","减数Ⅱ（类有丝：姐妹分离）"],"rows":[["前期","同源染色体联会→四分体、非姐妹染色单体交叉互换（重组）","无联会、无交叉、染色体散乱"],["中期","四分体排列赤道板两侧（自由组合）","染色体排列赤道板（单列）"],["后期","同源染色体分离（着丝粒不分裂）、染色体数减半","着丝粒分裂、姐妹染色单体分离"],["末期","形成 2 单倍体细胞（含染色单体）","形成 4 单倍体配子（不含染色单体）"],["DNA/染色体","2n/2c → n/2c（DNA不变、染色体减半）","n/2c → n/1c（DNA减半、染色体数不变）"]]}},{"ty":"kao","title":"🏆 图像判断万能模板 + 数量动态","items":["<b class=\"hl\">看同源/四分体</b>：区分有丝/减数Ⅰ/减数Ⅱ。","<b class=\"hl\">看染色体位置</b>：散乱=前期、单列赤道板=中期/减Ⅱ中期、双列=减Ⅰ中期。","<b class=\"hl\">看着丝粒分裂</b>：分裂=有丝后期/减Ⅱ后期；不分裂=减Ⅰ后期。","<b class=\"hl\">看核数/形状</b>：2核=有丝末期/减Ⅰ末期、4核=减Ⅱ末期；不均等分裂=卵母细胞。","<b class=\"g\">DNA</b>：S期翻倍（2C→4C）→有丝末期减半→减Ⅰ末期不变→减Ⅱ末期再减半。","<b class=\"g\">染色体</b>：以着丝粒计；S期不变→减Ⅰ后期减半（2n→n）→减Ⅱ不变。","<b class=\"g\">染色单体</b>：S期出现→有丝后期/减Ⅱ后期着丝粒分裂消失。"]}]},{"no":11,"sec":"模块三 细胞的生命历程","t":"考点3.2 细胞分化与全能性","tags":["概念"],"links":[10,12,16],"blocks":[{"ty":"table","title":"📊 概念辨析","tbl":{"heads":["概念","定义/本质","核心判断标准","高频易错点"],"rows":[["细胞分化","形态/结构/功能稳定性差异化过程","实质：基因选择性表达；遗传物质不变","管家基因所有细胞表达；特异基因特定表达"],["全能性","发育成完整个体/分化成多种细胞的潜能","判断标准：已发育成完整个体、或已分化出多种细胞类型","精子/卵/花粉=高分化高全能；种子萌发≠全能性表现"],["干细胞","保留分裂分化能力、自我更新","胚胎干细胞（ES）：全能/多能；成体干细胞：多能/单能；iPS：诱导去分化","精原干细胞→精子体现分化非全能；核移植体现核全能性"]]}},{"ty":"core","title":"📌 分化-分裂-全能性三角关系","items":["受精卵（全能/分裂强/未分化）→ 干细胞（多能/分裂强/低分化）→ 体细胞（无全能/分裂弱/高分化）。","<b class=\"hl\">例外</b>：肝细胞/淋巴细胞/表皮基底层 — 高分化保留分裂；癌细胞 — 去分化/无限分裂。"]}]},{"no":12,"sec":"模块三 细胞的生命历程","t":"考点3.3 衰老·死亡·癌变 · 稳态崩溃分子机制","tags":["概念","分子机制"],"links":[10,11],"blocks":[{"ty":"table","title":"📊 五大过程对比","tbl":{"heads":["过程","核心特征","分子机制","生理意义/病理"],"rows":[["细胞衰老","体积↑/核大/酶活性↓/代谢↓/色素（脂褐质）堆积","端粒缩短→p53/p21/Rb通路；自由基氧化损伤","个体衰老≠所有细胞衰老；SASP促炎/致癌"],["细胞凋亡","程序性/基因依赖/有序；凋亡小体/无炎症","内源性（线粒体Cyt c→caspase-9→-3）、外源性（死亡受体→caspase-8）；Bcl-2家族","胚胎发育塑形、免疫耐受、肿瘤抑制"],["细胞坏死","非程序性/病理性/膜破裂/炎症反应","损伤/缺氧/毒素→ATP耗竭→离子泵失效→水肿溶解","炎症引发组织修复/纤维化"],["自噬","双层膜自噬体包裹受损结构→溶酶体降解循环","ATG基因调控；mTOR抑制诱导；选择性自噬","饥饿生存、清除病原体；过度自噬→II型死亡/凋亡"],["细胞癌变","原癌基因激活、抑癌基因失活、端粒酶重激活、转移","多基因累积突变；细胞周期失控（Rb/E2F、CyclinB/Cdk1）","接触抑制消失、免疫逃逸、Warburg效应"]]}}]},{"no":13,"sec":"🎯 难点专讲","t":"难点1 光呼综合曲线“隐性条件”破解","tags":["曲线","计算"],"links":[9],"blocks":[{"ty":"core","title":"📌 破解模型","items":["<b class=\"hl\">识别坐标含义</b>：CO₂吸收速率=净光合；CO₂释放速率=呼吸-光合（负值）；O₂释放速率=净光合；干重增加速率=净产物积累。","<b class=\"hl\">补偿点/饱和点定位</b>：曲线穿零点=光补偿点；平台期=光饱和点。","<b class=\"hl\">面积积分法</b>：阴影面积=总量；早晚两个补偿点间面积=日净光合总量。","<b class=\"hl\">ATP产生场所判定</b>：仅线粒体（黑暗/非绿组织/补偿点下）；线粒体+叶绿体（光照绿组织）；+细胞质基质（有氧+光合同时）。","<b class=\"g\">限制因子判别</b>：平台前=光限制；平台后=CO₂/酶/温度限制；CO₂升高平台抬高→CO₂限制。"]}]},{"no":14,"sec":"🎯 难点专讲","t":"难点2 减数分裂图像/数量“陷阱条件”","tags":["图像","陷阱"],"links":[10,16],"blocks":[{"ty":"table","title":"📊 高频坑点清单","tbl":{"heads":["陷阱类型","典型表述","正确解析"],"rows":[["同源vs姐妹","“后期染色单体分离”","减Ⅰ后期分离同源（着丝粒不分）；仅减Ⅱ/有丝后期分离姐妹"],["染色体计数","“S期染色体数加倍”","以着丝粒计，S期复制未分离→染色体不变（2n）、染色单体翻倍"],["四分体计数","“四分体数=染色体数/2”","仅减Ⅰ前/中期存在，数=单倍体数 n=同源对数"],["自由组合时机","“减Ⅱ发生自由组合”","自由组合仅减Ⅰ中期（同源排列随机）；减Ⅱ无同源"],["基因分离时机","“有丝分裂发生基因分离”","等位基因分离仅减Ⅰ后期（同源分离）"],["交叉互换频率","“交叉互换发生在减Ⅱ”","仅减Ⅰ前期联会复合体（Pachynema）非姐妹间"],["显微照片","“看形态判断有丝/减数”","无法区分同源/姐妹；必须结合来源（根尖/花药）、核数、均等/不均等"]]}},{"ty":"kao","title":"🏆 多倍体 / 异常分裂进阶","items":["<b class=\"hl\">三倍体（3n）</b>：同源无法完全配对→单价体/三价体→分离混乱→配子不育。","<b class=\"hl\">四倍体（4n）</b>：可形成二价体正常分离→育性恢复；但易多极纺锤体/滞后染色体。","<b class=\"g\">秋水仙素</b>：抑制微管聚合→阻滞中期→诱导多倍体/染色体标本制备。"]}]},{"no":15,"sec":"🎯 难点专讲","t":"难点3 载体构象变化与磷酸化开关","tags":["概念","口诀"],"links":[5,6],"blocks":[{"ty":"core","title":"📌 核心机制统一认知","items":["<b class=\"hl\">载体/通道蛋白</b>：构象变化是跨膜运输/信号转导的统一物理基础。","<b class=\"hl\">磷酸化/去磷酸化</b>：蛋白质功能开关的通用分子机制（激酶/磷酸酶对抗）。","<b class=\"g\">ATP酶双重身份</b>：水解ATP供能 + 磷酸化自身驱动构象变化（P型ATP酶：Na⁺/K⁺、H⁺、Ca²⁺）。"]},{"ty":"kao","title":"🏆 实战判题口诀","items":["见“载体蛋白磷酸化/去磷酸化”→ 必涉及 <b class=\"hl\">主动运输/泵蛋白/构象变化/ATP水解</b>。","见“通道蛋白门控/电压门控/配体门控”→ 必涉及 <b class=\"hl\">被动运输/易化扩散/离子流/动作电位</b>。","见“G蛋白/第二信使/cAMP/Ca²⁺/蛋白激酶级联”→ 必涉及 <b class=\"hl\">信号转导/放大效应/基因表达调控</b>。","见“核孔/NLS/Ran-GTP”→ 必涉及 <b class=\"hl\">核质运输/主动/选择性/双向/需能</b>。"]}]},{"no":16,"sec":"🎯 难点专讲","t":"难点4 干细胞分类与全能性判定","tags":["概念","陷阱"],"links":[11,14],"blocks":[{"ty":"table","title":"📊 必考辨析表","tbl":{"heads":["细胞类型","分化程度","分裂能力","全能性","典型陷阱"],"rows":[["受精卵/合子","0（未分化）","极强","全能","第一个全能细胞"],["早期胚胎（~8细胞期）","低","强","全能","单细胞可发育成完整个体"],["胚胎干细胞（ES）","低","强","多能","不能发育成完整个体（无滋养层）；可形成三胚层"],["成体干细胞","中/高","中","多能/单能","精原干细胞→精子体现分化非全能"],["诱导多能干细胞（iPS）","逆转至低","强","多能（类ES）","体细胞核全能性证明；自体移植低排斥"],["高分化体细胞","极高","弱/无","无/核全能","核移植体现核全能性"],["生殖细胞（精/卵/花粉）","极高","无/弱","高（受精后）","花粉培养获单倍体植株体现全能性"]]}},{"ty":"kao","title":"🏆 判定金标准","items":["<b class=\"hl\">“发育成完整个体” 或 “分化成多种组织细胞类型”</b> — 仅满足其一即表现全能性。"]}]},{"no":17,"sec":"📌 学习工具","t":"跨文档关系合集 · 概念网络","tags":["总览","关系"],"links":[2,3,7,8,9,10],"blocks":[{"ty":"core","title":"📌 核心依赖链条","items":["元素/分子结构(1.1) → 蛋白质空间结构决定酶/载体/受体功能(2.2/2.1) → 磷脂双亲性决定膜结构/囊泡运输(1.2/2.1/3.1) → 核酸碱基配对决定复制/转录/翻译(3.1/3.2) → ATP高能键/辅酶传氢耦合能量转换(2.3/2.4)。"]},{"ty":"core","title":"📌 细胞器分工协作网络","items":["核糖体（合成）→ 内质网（加工折叠/信号肽识别）→ 高尔基体（修饰分选/标记）→ 分泌泡/胞吐（细胞外/膜更新）。","溶酶体/过氧化物酶体（降解/解毒）← 自噬体（受损细胞器/病原体）。","线粒体/叶绿体（能量转换/ATP/还原力供给全网络）。","细胞核（基因组/转录/核孔选择性运输）↔ 细胞质（翻译/代谢/信号）。"]},{"ty":"core","title":"📌 细胞周期与检查点逻辑","items":["G₁/S检查点（Rb/E2F/p53/p21）← 生长因子/营养/DNA损伤信号 → 通过 → S期（DNA复制）→ G₂/M检查点（CyclinB/Cdk1）→ 通过 → M期（有丝/减数）。","子细胞命运三选一：<b class=\"hl\">继续分裂 / 分化（G₀） / 凋亡</b>。","<b class=\"r\">癌变 = 检查点失效 + 端粒酶激活 + 血管生成 + 转移</b>。"]},{"ty":"core","title":"📌 光合-呼吸-物质运输耦合回路","items":["光反应（类囊体膜）→ ATP/NADPH → 暗反应（基质）固定CO₂→糖 → 糖酵解（细胞质）→丙酮酸 → 线粒体（三羧酸/电传链）→ATP/NADH/FADH₂ → 细胞质/叶绿体/线粒体间穿梭 → 维持全细胞能量/还原力稳态。"]}]},{"no":18,"sec":"📌 学习工具","t":"缺口与待补充清单","tags":["总览"],"links":[],"blocks":[{"ty":"table","title":"📊 知识缺口","tbl":{"heads":["缺口模块","具体缺失","优先级","建议来源"],"rows":[["分子层面计算","核酸/蛋白质分子量精确计算、同位素示踪定量、Km/Vmax 定量","⭐⭐⭐","教材实验探究、高考计算题汇编"],["信号转导细节","GPCR/RTK 下游级联（cAMP/PKC/IP₃-DAG/MAPK）、表观遗传","⭐⭐⭐","选择性必修1/2、李林笔记专题"],["C₄/CAM/C₃ 比较表","解剖结构/酶学性质/光呼吸强度/产量效率量化对比","⭐⭐","教材P72-73、方法册专题"],["病毒/原核细胞","结构特征/复制方式/与真核差异/疫苗工程","⭐⭐","教材第1章、方法册专题"],["实验设计全流程","变量控制/对照/重复/数据处理/结论评价","⭐⭐⭐","教材“探究实践”、全国卷实验设计真题"]]}}]},{"no":19,"sec":"📌 学习工具","t":"证据来源索引","tags":["总览"],"links":[],"blocks":[{"ty":"table","title":"📊 资料来源","tbl":{"heads":["文档ID","文档名称","覆盖模块","核心贡献"],"rows":[["b0595ed9-1","2名师大招册.pdf","1.1","分子结构-功能对应表、能源物质分类"],["b0595ed9-2","2026李林生物笔记第三版终稿.pdf","1.1-1.3, 2.1-2.5, 3.1-3.3","系统目录、知识框架、题型归纳专题"],["79eae3a7-2/-6","教师用书 第二单元第4课时","1.2","膜系统、细胞器分工"],["b0595ed9-6 / 79eae3a7-4/-5","李林笔记 / 教科书 / 53知识清单","2.2","酶与ATP、辅酶体系"],["b0595ed9-6 / 5dbfb202-1","李林笔记 / 教师用书第15课时","2.3 / 2.4 / 2.5","呼吸、光合、综合分析"],["514ef85c-1~-7","教师用书第16/18课时、李林笔记","3.1","有丝/减数分裂、数量动态"],["4d9c02ad-1~-7","教师用书第19课时、方法册、53清单","3.2 / 3.3","分化、全能性、衰老凋亡癌变"]]}}]}];
+const TAGCOUNTS = {"总览":4,"概念":11,"计算":5,"流程":3,"曲线":4,"图像":2,"分子机制":1,"陷阱":2,"口诀":1,"关系":1};
+const LS = {t:'gs_theme',rev:'gs_review',pos:'gs_scroll',tag:'gs_tags'};
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+const $=function(s){return document.querySelector(s);};
+const $$=function(s){return document.querySelectorAll(s);};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},1500);}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function daysSince(dateStr){var d1=new Date(dateStr), d2=new Date();return Math.floor((d2-d1)/86400000);}
+/* —— 主题 —— */
+function toggleTheme(){
+  var h=document.documentElement;
+  if(h.getAttribute('data-theme')==='light'){h.removeAttribute('data-theme');$('#themeBtn').textContent='☀️ 白昼';lsSet(LS.t,'dark');}
+  else{h.setAttribute('data-theme','light');$('#themeBtn').textContent='🌙 星夜';lsSet(LS.t,'light');}
+}
+/* —— 阅读进度 & 记住位置 —— */
+function onScroll(){
+  var st=document.documentElement.scrollTop||document.body.scrollTop;
+  var sh=document.documentElement.scrollHeight-window.innerHeight;
+  $('#progBar').style.width=(sh>0?(st/sh*100):0)+'%';
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+(function(){var p=lsGet(LS.pos,0);if(p>50)window.scrollTo(0,p);})();
+window.addEventListener('beforeunload',function(){lsSet(LS.pos,window.scrollY||document.documentElement.scrollTop);});
+/* —— 背诵模式：简略 / 详细 —— */
+function toggleReciteMode(mode){
+  var active = mode==='simple' ? document.body.classList.contains('recite-simple') : document.body.classList.contains('recite-detail');
+  setRecite(active ? '' : mode);
+}
+function setRecite(mode){
+  document.body.classList.remove('recite-simple','recite-detail');
+  $('#reciteSimpleBtn').classList.remove('on');
+  $('#reciteDetailBtn').classList.remove('on');
+  if(mode==='simple'){ document.body.classList.add('recite-simple'); $('#reciteSimpleBtn').classList.add('on'); toast('🎭 简略背诵：全部内容模糊，仅留板块标题，悬停/点击揭示'); }
+  else if(mode==='detail'){ setupDetailClues(); document.body.classList.add('recite-detail'); $('#reciteDetailBtn').classList.add('on'); toast('🧩 详细背诵：顶部显示线索短语，正文模糊，悬停/点击揭示'); }
+  else{ toast('已退出背诵模式'); }
+}
+function setupDetailClues(){
+  $$('#main .bt .its p').forEach(function(p){
+    if(p.getAttribute('data-clued')) return;
+    var full=p.innerHTML;
+    var txt=(p.textContent||'').trim();
+    var cut=Math.min(14, txt.length);
+    for(var i=14;i<Math.min(txt.length,24);i++){
+      var ch=txt.charAt(i);
+      if(ch===' '||ch==='：'||ch==='；'||ch==='，'||ch==='、'||ch==='.'){ cut=i+1; break; }
+    }
+    p.innerHTML='<span class="clue">'+esc(txt.substring(0,cut))+'</span><span class="hidden-part">'+full+'</span>';
+    p.setAttribute('data-clued','1');
+  });
+}
+/* —— 记忆曲线复习 —— */
+let reviews=lsGet(LS.rev,{});
+const INTERVALS=[1,3,7,15];
+function reviewStatus(no){
+  var r=reviews[no]; if(!r) return {due:true,stage:0,next:INTERVALS[0]};
+  var ds=daysSince(r.d); var stage=r.s||0;
+  var next=INTERVALS[Math.min(stage,INTERVALS.length-1)];
+  return {due:ds>=next,stage:stage,next:next};
+}
+function refreshReviews(){
+  $$('.review-badge').forEach(function(b){
+    var no=b.getAttribute('data-no'); var st=reviewStatus(no);
+    if(st.due){ b.textContent='🔁 待复习'; b.classList.add('due'); }
+    else{ b.textContent=''; b.classList.remove('due'); }
+  });
+}
+function markReview(no){
+  var st=reviewStatus(no);
+  reviews[no]={d:todayStr(),s:Math.min(st.stage+1,INTERVALS.length-1)};
+  lsSet(LS.rev,reviews); refreshReviews();
+  toast('🔁 已标记复习 · 下次间隔 '+INTERVALS[Math.min(st.stage+1,INTERVALS.length-1)]+' 天');
+}
+/* —— 复制卡片文本 —— */
+function cardText(no){
+  var c=DATA.find(function(x){return x.no===no;}); if(!c) return '';
+  var lines=['【'+c.no+'】'+c.t,'（'+c.sec+'）',''];
+  c.blocks.forEach(function(b){
+    lines.push('■ '+b.title);
+    if(b.items) b.items.forEach(function(it){ lines.push('  · '+it.replace(/<[^>]+>/g,'')); });
+    if(b.tbl){ lines.push('  '+b.tbl.heads.join(' | ')); b.tbl.rows.forEach(function(r){ lines.push('  '+r.join(' | ')); }); }
+  });
+  return lines.join('\n');
+}
+function copyCard(no){
+  var txt=cardText(no);
+  function done(){toast('📤 第'+no+'张卡片已复制到剪贴板');}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallback();});}
+  else fallback();
+  function fallback(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){toast('复制失败，请手动选择');}document.body.removeChild(ta);}
+}
+/* —— 搜索 —— */
+function openSearch(){$('#searchPanel').classList.add('active');setTimeout(function(){$('#sInp').focus();},50);doSearch();}
+function closeSearch(){$('#searchPanel').classList.remove('active');}
+function plainText(html){var d=document.createElement('div');d.innerHTML=html;return d.textContent||'';}
+function cardSearchText(c){
+  var t=c.t+' '+c.sec+' '+(c.tags?c.tags.join(' '):'');
+  c.blocks.forEach(function(b){t+=' '+(b.title||'');if(b.items)t+=b.items.join(' ');if(b.tbl)t+=b.tbl.heads.join(' ')+b.tbl.rows.map(function(r){return r.join(' ');}).join(' ');});
+  return plainText(t).toLowerCase();
+}
+function doSearch(){
+  var kw=$('#sInp').value.trim().toLowerCase();
+  var res=$('#sres'); if(!kw){res.innerHTML='';return;}
+  var hits=0,h='';
+  for(var i=0;i<DATA.length;i++){
+    if(cardSearchText(DATA[i]).indexOf(kw)>=0){
+      hits++;
+      h+='<a href="#card'+DATA[i].no+'" onclick="jump('+DATA[i].no+')"><span><span class="no">'+DATA[i].no+'</span>'+esc(DATA[i].t)+'</span><span class="sec">'+esc(DATA[i].sec)+'</span></a>';
+    }
+  }
+  res.innerHTML=hits?h:'<div style="padding:14px;color:var(--muted);font-size:13px">未找到「'+esc($('#sInp').value)+'」相关卡片</div>';
+}
+function jump(no){
+  closeSearch();
+  var el=document.getElementById('card'+no);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}
+}
+/* —— 标签云 —— */
+let activeTags=lsGet(LS.tag,[]);
+function buildTagCloud(){
+  var h=''; for(var t in TAGCOUNTS){
+    h+='<button class="tag'+(activeTags.indexOf(t)>=0?' on':'')+'" onclick="toggleTag(\''+t+'\')">'+t+' ('+TAGCOUNTS[t]+')</button>';
+  }
+  $('#tagCloud').innerHTML=h;
+}
+function toggleTag(t){
+  var i=activeTags.indexOf(t);
+  if(i>=0)activeTags.splice(i,1);else activeTags.push(t);
+  lsSet(LS.tag,activeTags); buildTagCloud(); applyFilter();
+}
+function applyFilter(){
+  $$('#main .card').forEach(function(el){
+    var c=DATA.find(function(x){return x.no===parseInt(el.getAttribute('data-no'));});
+    var show=true;
+    if(activeTags.length) show=c.tags.some(function(t){return activeTags.indexOf(t)>=0;});
+    el.classList.toggle('hidden-by-filter',!show);
+  });
+}
+/* —— 知识图谱 SVG —— */
+function buildGraph(){
+  var svg=$('#graph'); var W=400,H=420,cx=200,cy=200,R=155;
+  var ns={};
+  DATA.forEach(function(c){ ns[c.no]=c; });
+  var html='';
+  // edges
+  DATA.forEach(function(c){
+    (c.links||[]).forEach(function(t){
+      if(!ns[t])return;
+      var a1=(c.no-1)/DATA.length*2*Math.PI, a2=(t-1)/DATA.length*2*Math.PI;
+      var x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1),x2=cx+R*Math.cos(a2),y2=cy+R*Math.sin(a2);
+      html+='<line class="gedge" x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke-width="0.8"/>';
+    });
+  });
+  // nodes
+  DATA.forEach(function(c){
+    var a=(c.no-1)/DATA.length*2*Math.PI;
+    var x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+    var deg=(c.links||[]).length;
+    var r=7+deg*0.9;
+    html+='<g class="gnode" onclick="jump('+c.no+')"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="rgba(125,211,252,.18)" stroke="var(--acc)" stroke-width="1.2"/><text class="gtext" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'">'+c.no+'</text></g>';
+  });
+  // center title
+  html+='<text x="'+cx+'" y="38" text-anchor="middle" font-size="11" fill="var(--muted)" font-weight="700">知识节点 · 连线=关联</text>';
+  svg.innerHTML=html;
+}
+/* —— 快捷键 —— */
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT'){ if(e.key==='Escape')closeSearch(); return; }
+  if(e.key==='f'||e.key==='F'){openSearch();e.preventDefault();}
+  if(e.key==='r'||e.key==='R'){toggleReciteMode('simple');}
+  if(e.key==='d'||e.key==='D'){toggleReciteMode('detail');}
+  if(e.key==='Escape'){closeSearch();}
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key==='PageDown'){
+    e.preventDefault();
+    var vis=$$('#main .card'); var cur=-1;
+    for(var i=0;i<vis.length;i++){ if(vis[i].getBoundingClientRect().top>=74){cur=i;break;} }
+    var next=vis[cur<0?0:cur]; if(next){next.scrollIntoView({behavior:'smooth',block:'start'});}
+  }
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){
+    e.preventDefault();
+    var vis2=$$('#main .card'); var cur2=-1;
+    for(var i=0;i<vis2.length;i++){ if(vis2[i].getBoundingClientRect().top>=74){cur2=i;break;} }
+    var prev=vis2[cur2<=0?0:cur2-1]; if(prev){prev.scrollIntoView({behavior:'smooth',block:'start'});}
+  }
+});
+/* —— 初始化 —— */
+(function(){
+  var t=lsGet(LS.t,'dark');
+  if(t==='light'){document.documentElement.setAttribute('data-theme','light');$('#themeBtn').textContent='🌙 星夜';}
+  buildGraph(); buildTagCloud(); refreshReviews(); setupDetailClues();
+  window.addEventListener('resize',function(){buildGraph();});
+})();
+</script>
+</body>
+</html>
