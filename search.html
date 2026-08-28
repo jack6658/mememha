@@ -1,4 +1,4 @@
-﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -87,6 +87,10 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .ach-particle{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:999}
 .ach-confetti{position:fixed;width:12px;height:12px;pointer-events:none;z-index:997}
 .ach-flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:998}
+.av-tab{padding:4px 12px;border:1.5px solid #526487;border-radius:20px;background:rgba(255,255,255,.05);color:#aeb9d4;font-size:12px;cursor:pointer;transition:.2s}
+.av-tab.active{background:#d97706;border-color:#ffd76a;color:#fff}
+.av-color{width:26px;height:26px;border-radius:50%;cursor:pointer;transition:.2s;border:2px solid transparent;display:inline-block}
+.av-color.selected{border-color:#fff;transform:scale(1.15);box-shadow:0 0 8px rgba(255,255,255,.4)}
 </style>
 </head>
 <body>
@@ -251,7 +255,7 @@ function createConfetti(color){
   (function anim(){var el=Date.now()-start;if(el>=dur){c.remove();return;}c.style.top=(el/dur*120)+'vh';c.style.transform='rotate('+(el/dur*720)+'deg)';c.style.opacity=1-el/dur;requestAnimationFrame(anim);})();
 }
 var _lbSupabase=null,_lbUser=null,_lbUserData=null;
-var _lbConfig={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'};
+var _lbConfig={url:'',key:''};
 async function initLeaderboard(){
   if(!_lbConfig.url||!_lbConfig.key){
     document.getElementById('lbContent').innerHTML='<p style="color:#ffd76a;text-align:center;padding:30px">⚠️ 排行榜功能未配置<br><small>请在 search.html 中找到 <code style="background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px">_lbConfig</code> 并填入你的 Supabase URL 和 Key</small></p>';
@@ -311,9 +315,10 @@ function renderLeaderboard(list){
     var rc=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
     var isMe=item.user_id===_lbUser;
     var bgStyle=isMe?' style="border-color:#ffd76a;background:rgba(255,215,106,.1)"':'';
-    var avatar=item.avatar||'😀';
+    var avInfo=parseAvatar(item.avatar||'😀|#ffd76a');
+    var avHtml='<div class="lb-avatar" style="border-color:'+avInfo.color+';background:'+avInfo.color+'22">'+avInfo.icon+'</div>';
     var nameTag=(item.user_name||'匿名用户')+(isMe?' (你)':'');
-    html+='<div class="lb-item'+bgStyle+'"><div class="lb-avatar">'+avatar+'</div><div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
+    html+='<div class="lb-item'+bgStyle+'">'+avHtml+'<div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
   });
   el.innerHTML=html;
 }
@@ -338,18 +343,24 @@ function closeUserPanel(){document.getElementById('userWall').classList.remove('
 function registerUser(){
   var name=document.getElementById('regNameInput').value.trim();
   if(!name){alert('请输入昵称');return;}
+  if(!_lbConfig.url||!_lbConfig.key){alert('⚠️ 请先在 search.html 里填入 Supabase 配置(_lbConfig)，排行榜才能生效！');return;}
+  if(!_lbSupabase){
+    try{_lbSupabase=supabase.createClient(_lbConfig.url,_lbConfig.key);}catch(e){alert('连接失败: '+e.message);return;}
+  }
   var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
   localStorage.setItem('lb_uid',uid);
   _lbUser=uid;
-  _lbUserData={user_id:uid,user_name:name,avatar:'😀'};
-  if(_lbSupabase){
-    _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:'😀'},{onConflict:'user_id'})
-    .then(function(){alert('注册成功！');loadUserProfile();})
-    .catch(function(e){alert('注册失败: '+e.message);});
-  }else{
-    alert('注册成功！');
+  var av=_lbUserData&&_lbUserData.avatar?_lbUserData.avatar:'😀';
+  _lbUserData={user_id:uid,user_name:name,avatar:av};
+  _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:av},{onConflict:'user_id'})
+  .then(function(){
+    return syncCurrentUser(); // 注册成功立即同步到排行榜
+  })
+  .then(function(){
+    alert('注册成功！已同步到排行榜');
     loadUserProfile();
-  }
+  })
+  .catch(function(e){alert('注册失败: '+e.message);});
 }
 function loadUserProfile(){
   var el=document.getElementById('userInfo');
@@ -375,16 +386,72 @@ function loadUserProfile(){
 }
 function renderUserProfile(){
   var el=document.getElementById('userInfo');
-  var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
-  var avatars=['😀','😎','🤓','😺','🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐗','🐴','🦋','🐝','🌸','🌺','🍀','⭐','🔥','💎','🎮','🎯','🚀','🎸','🎨','📚'];
-  var avHtml='';
-  avatars.forEach(function(a){
-    var sel=(a===data.avatar?' selected':'');
-    avHtml+='<div class="avatar-item'+sel+'" data-av="'+a+'" onclick="pickAv(this)">'+a+'</div>';
+  var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀|#ffd76a'};
+  var av=parseAvatar(data.avatar);
+  var groups=[
+    {name:'表情',list:['😀','😎','🤓','🥳','😺','😸','🤠','🕶️','🧐','😤','🤩','🥰']},
+    {name:'动物',list:['🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐗','🐴','🦋','🐝']},
+    {name:'自然',list:['🌸','🌺','🍀','🌻','🌵','🍁','🌊','⛰️','🌙','☀️','🌈','🌟']},
+    {name:'爱好',list:['🎮','🎯','🚀','🎸','🎨','📚','⚽','🏀','🎤','💻','📷','🎲']},
+    {name:'物品',list:['💎','🔥','💡','🎁','👑','🏆','🪙','🔮','⚡','❄️','🍎','☕']}
+  ];
+  var colors=['#ffd76a','#f87171','#7dd3fc','#6ee7b7','#c084fc','#f59e0b','#34d399','#fb7185'];
+  var html='<div style="max-width:420px;margin:0 auto">';
+  // 头像预览
+  html+='<div style="text-align:center;margin-bottom:14px"><div id="avPrev" style="width:84px;height:84px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:44px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div><p style="color:#7a8ba8;font-size:11px;margin-top:6px">选择你的头像</p></div>';
+  // 分类标签
+  html+='<div style="display:flex;gap:6px;justify-content:center;margin-bottom:10px;flex-wrap:wrap" id="avTabs">';
+  for(var g=0;g<groups.length;g++){html+='<button class="av-tab'+(g===0?' active':'')+'" data-g="'+g+'" onclick="switchAvGroup(this)">'+groups[g].name+'</button>';}
+  html+='</div>';
+  // emoji 网格（所有分类，JS 切换显示）
+  html+='<div id="avGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px">';
+  for(var g=0;g<groups.length;g++){
+    for(var i=0;i<groups[g].list.length;i++){
+      var em=groups[g].list[i];
+      html+='<div class="avatar-item'+(em===av.icon?' selected':'')+'" data-av="'+em+'" data-g="'+g+'" onclick="pickAv(this)"'+(g>0?' style="display:none"':'')+'>'+em+'</div>';
+    }
+  }
+  html+='</div>';
+  // 背景色
+  html+='<div style="text-align:center;margin-bottom:14px"><p style="color:#7a8ba8;font-size:11px;margin-bottom:6px">背景颜色</p><div style="display:flex;gap:8px;justify-content:center" id="avColors">';
+  for(var c=0;c<colors.length;c++){html+='<div class="av-color'+(colors[c]===av.color?' selected':'')+'" data-c="'+colors[c]+'" style="background:'+colors[c]+'" onclick="pickColor(this)"></div>';}
+  html+='</div></div>';
+  // 用户名输入
+  html+='<label style="color:#aeb9d4;font-size:13px">用户名</label>';
+  html+='<input class="name-input" id="nameInput" value="'+(data.user_name||'')+'" placeholder="输入你的昵称" maxlength="20">';
+  html+='<button class="save-btn" onclick="saveProfile()">保存资料</button>';
+  html+='<button class="logout-btn" onclick="logoutUser()">切换账号</button>';
+  html+='</div>';
+  el.innerHTML=html;
+  _avColor=av.color;
+}
+var _avColor='#ffd76a';
+function parseAvatar(a){
+  if(a&&a.indexOf('|')>0){var p=a.split('|');return{icon:p[0],color:p[1]||'#ffd76a'};}
+  return{icon:a||'😀',color:'#ffd76a'};
+}
+function switchAvGroup(btn){
+  var g=parseInt(btn.getAttribute('data-g'));
+  document.querySelectorAll('#avTabs .av-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('#avGrid .avatar-item').forEach(function(el){
+    el.style.display=(parseInt(el.getAttribute('data-g'))===g)?'':'none';
   });
-  el.innerHTML='<div style="max-width:400px;margin:0 auto"><div style="text-align:center;margin-bottom:16px"><div style="font-size:60px;margin-bottom:8px">'+data.avatar+'</div><div class="avatar-grid">'+avHtml+'</div></div><label style="color:#aeb9d4;font-size:13px">用户名</label><input class="name-input" id="nameInput" value="'+(data.user_name||'')+'" placeholder="输入你的昵称" maxlength="20"><button class="save-btn" onclick="saveProfile()">保存资料</button><button class="logout-btn" onclick="logoutUser()">切换账号</button></div>';
 }
 function pickAv(el){
+  document.querySelectorAll('#avGrid .avatar-item').forEach(function(e){e.classList.remove('selected');});
+  el.classList.add('selected');
+  document.getElementById('avPrev').textContent=el.getAttribute('data-av');
+  _lbUserData.avatar=el.getAttribute('data-av')+'|'+_avColor;
+}
+function pickColor(el){
+  document.querySelectorAll('#avColors .av-color').forEach(function(e){e.classList.remove('selected');});
+  el.classList.add('selected');
+  _avColor=el.getAttribute('data-c');
+  var prev=document.getElementById('avPrev');
+  prev.style.borderColor=_avColor;prev.style.background=_avColor+'22';prev.style.boxShadow='0 0 20px '+_avColor+'44';
+  if(_lbUserData&&_lbUserData.avatar&&_lbUserData.avatar.indexOf('|')>0){_lbUserData.avatar=_lbUserData.avatar.split('|')[0]+'|'+_avColor;}
+}function pickAv(el){
   document.querySelectorAll('.avatar-item').forEach(function(e){e.classList.remove('selected');});
   el.classList.add('selected');
   document.querySelector('#userInfo div div').textContent=el.getAttribute('data-av');
