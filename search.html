@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -263,18 +263,17 @@ async function initLeaderboard(){
   }
   try{
     _lbSupabase=supabase.createClient(_lbConfig.url,_lbConfig.key);
-    var uid=localStorage.getItem('lb_uid');
-    if(!uid){uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);localStorage.setItem('lb_uid',uid);}
-    _lbUser=uid;
-    await syncCurrentUser();
-    await refreshLeaderboard();
+    // 只读取本地已注册的 uid（不自动生成匿名 uid）
+    _lbUser=localStorage.getItem('lb_uid')||null;
+    await refreshLeaderboard(); // 仅读取显示，未注册用户不写入
   }catch(e){
     document.getElementById('lbContent').innerHTML='<p style="color:#f87171;text-align:center">连接失败: '+e.message+'</p>';
   }
 }
 async function refreshLeaderboard(){
   if(!_lbSupabase)return;
-  await syncCurrentUser();
+  // 仅注册用户才同步写入；未注册只读
+  if(_lbUser&&_lbUserData){await syncCurrentUser();}
   var r=await _lbSupabase.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);
   renderLeaderboard(r.data||[]);
   document.getElementById('lbLastUpdate').textContent='更新: '+new Date().toLocaleTimeString('zh-CN');
@@ -331,8 +330,16 @@ function switchLbTab(type,btn){
 }
 function openLeaderboard(){
   document.getElementById('leaderboardWall').classList.add('show');
-  if(!_lbSupabase)initLeaderboard();
-  else refreshLeaderboard();
+  if(!_lbSupabase){
+    initLeaderboard();
+  }else{
+    // 若已注册但还没加载个人信息，先加载
+    if(_lbUser&&!_lbUserData){
+      loadUserProfileData().then(function(){refreshLeaderboard();});
+    }else{
+      refreshLeaderboard();
+    }
+  }
 }
 function closeLeaderboard(){document.getElementById('leaderboardWall').classList.remove('show');}
 function openUserPanel(){
@@ -347,19 +354,34 @@ function registerUser(){
   if(!_lbSupabase){
     try{_lbSupabase=supabase.createClient(_lbConfig.url,_lbConfig.key);}catch(e){alert('连接失败: '+e.message);return;}
   }
-  var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
-  localStorage.setItem('lb_uid',uid);
-  _lbUser=uid;
-  var avatar=_regAv+'|'+_regColor; // 注册表单里选的头像+颜色
-  _lbUserData={user_id:uid,user_name:name,avatar:avatar};
-  // 注册即生效：写 users + 同步 leaderboard
-  _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:avatar},{onConflict:'user_id'})
-  .then(function(){return syncCurrentUser();})
+  var el=document.getElementById('userInfo');
+  el.innerHTML='<p style="color:#aeb9d4;text-align:center">⏳ 注册中...</p>';
+  // 先查重：同名的已注册用户
+  _lbSupabase.from('users').select('user_id,user_name').eq('user_name',name)
+  .then(function(r){
+    if(r.data&&r.data.length>0){
+      el.innerHTML=renderRegForm();
+      alert('❌ 昵称「'+name+'」已被注册，请换一个！');
+      return;
+    }
+    // 无重名 → 注册
+    var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+    localStorage.setItem('lb_uid',uid);
+    _lbUser=uid;
+    var avatar=_regAv+'|'+_regColor;
+    _lbUserData={user_id:uid,user_name:name,avatar:avatar};
+    return _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:avatar},{onConflict:'user_id'});
+  })
   .then(function(){
+    if(!_lbUser)return; // 重名时已 return，没有 _lbUser
+    return syncCurrentUser(); // 注册即同步排行榜
+  })
+  .then(function(){
+    if(!_lbUser)return;
     alert('注册成功！用户名「'+name+'」已上排行榜');
     loadUserProfile();
   })
-  .catch(function(e){alert('注册失败: '+e.message);});
+  .catch(function(e){alert('注册失败: '+e.message);el.innerHTML=renderRegForm();});
 }
 
 var _regAv='😀',_regColor='#ffd76a';
@@ -424,6 +446,19 @@ function regPickColor(el){
   if(prev){prev.style.borderColor=_regColor;prev.style.background=_regColor+'22';}
 }
 
+
+function loadUserProfileData(){
+  return new Promise(function(resolve){
+    if(!_lbUser||!_lbSupabase){resolve();return;}
+    _lbSupabase.from('users').select('*').eq('user_id',_lbUser).single()
+    .then(function(r){
+      if(r.data){_lbUserData=r.data;}
+      resolve();
+    })
+    .catch(function(){resolve();});
+  });
+}
+
 function loadUserProfile(){
   var el=document.getElementById('userInfo');
   if(!_lbUser){
@@ -440,9 +475,10 @@ function loadUserProfile(){
       _lbUserData=r.data;
       renderUserProfile();
     }else{
-      _lbUserData={user_id:_lbUser,user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
-      _lbSupabase.from('users').insert(_lbUserData);
-      renderUserProfile();
+      // 数据库没有该用户记录 → 说明是残留的本地 uid，回到注册界面
+      localStorage.removeItem('lb_uid');
+      _lbUser=null;
+      el.innerHTML=renderRegForm();
     }
   })
   .catch(function(e){el.innerHTML='<p style="color:#f87171">加载失败: '+e.message+'</p>';});
