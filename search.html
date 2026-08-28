@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -14,17 +14,50 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .head .sub{font-size:13px;letter-spacing:6px;color:rgba(232,237,255,.5);margin-bottom:12px}
 .head h1{font-size:clamp(24px,4.6vw,38px);font-weight:900;letter-spacing:8px;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite}
 @keyframes grad{to{background-position:300% 0}}
-.box{max-width:620px;margin:22px auto 0;display:flex;gap:8px;padding:0 16px}
-.box input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:12px;padding:13px 16px;font-size:15px;color:#e8edff;outline:none;transition:.2s}
-.box input:focus{border-color:#7dd3fc;box-shadow:0 0 20px rgba(125,211,252,.35)}
-.box input::placeholder{color:rgba(232,237,255,.4)}
-.box button{background:linear-gradient(135deg,#7dd3fc,#4a9fd8);border:none;border-radius:12px;padding:0 22px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:.2s}
+.box{max-width:620px;margin:24px auto 0;display:flex;gap:6px;padding:6px;position:relative;background:linear-gradient(160deg,rgba(130,150,235,.2),rgba(210,130,255,.13) 55%,rgba(120,210,255,.16));border:1px solid rgba(255,255,255,.22);border-radius:22px;box-shadow:0 14px 44px rgba(40,50,140,.35),inset 0 1px 0 rgba(255,255,255,.25);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%)}
+.box input{flex:1;background:rgba(10,16,34,.25);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px 18px;font-size:15px;color:#f4f7ff;outline:none;transition:all .3s ease;box-shadow:inset 0 2px 10px rgba(0,0,0,.22),inset 0 -1px 0 rgba(255,255,255,.07);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+
+.box input::placeholder{color:rgba(232,237,255,.38);font-style:italic;letter-spacing:.5px}
+.box input:focus{border-color:rgba(170,200,255,.55);box-shadow:0 0 0 3px rgba(130,170,255,.22),0 0 24px rgba(140,170,255,.18),inset 0 2px 8px rgba(0,0,0,.16);background:rgba(16,26,50,.4)}
+.box button{background:linear-gradient(150deg,rgba(220,246,255,.34),rgba(120,205,255,.22) 50%,rgba(80,175,255,.28));border:1px solid rgba(255,255,255,.35);border-radius:16px;padding:0 24px;font-size:15px;font-weight:800;color:#e6f7ff;cursor:pointer;transition:all .28s ease;letter-spacing:1px;backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 22px rgba(100,190,255,.2);text-shadow:0 1px 2px rgba(0,20,50,.5)}
 .box button:hover{transform:scale(1.04);box-shadow:0 0 18px rgba(125,211,252,.5)}
 .back{display:inline-block;margin-top:18px;color:rgba(232,237,255,.6);text-decoration:none;font-size:13px;transition:.2s}
 .back:hover{color:#7dd3fc}
-.ach-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;margin:12px 6px 0;display:inline-block}
-.ach-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(245,158,11,.5)}
-.ach-btn.secondary{background:linear-gradient(135deg,#7dd3fc,#4a9fd8);color:#fff}
+.ach-btn{background:linear-gradient(150deg,rgba(255,244,222,.28),rgba(255,200,120,.16) 50%,rgba(255,170,60,.20));border:1px solid rgba(255,255,255,.32);border-radius:16px;padding:10px 18px;font-size:14px;font-weight:800;color:#ffe9c4;cursor:pointer;transition:all .3s ease;margin:12px 6px 0;display:inline-block;position:relative;letter-spacing:.5px;backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 22px rgba(255,180,90,.16);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.ach-btn:hover{transform:translateY(-2px);background:linear-gradient(150deg,rgba(255,246,228,.4),rgba(255,210,140,.24) 50%,rgba(255,185,90,.3));border-color:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 12px 32px rgba(255,190,100,.32)}
+.ach-btn:active{transform:translateY(0) scale(.98)}
+
+.top-actions{margin-top:14px}
+.main-btns{display:flex;justify-content:center;gap:12px;align-items:center}
+.main-btns .ach-btn{margin:0}
+.mine-btn{background:linear-gradient(150deg,rgba(224,247,255,.3),rgba(140,210,255,.18) 50%,rgba(90,180,255,.22));border:1px solid rgba(255,255,255,.34);color:#d8f2ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 22px rgba(90,190,255,.18);text-shadow:0 1px 2px rgba(0,10,30,.4)}
+.mini-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:430px;margin:14px auto 0}
+.mini-btns .checkin-btn,.mini-btns .draw-btn{margin:0;padding:9px 4px;font-size:13px;border-radius:10px;text-align:center}
+.green-btn{background:linear-gradient(135deg,#6ee7b7,#34d399);color:#0d1a2b}
+.purple-btn{background:linear-gradient(135deg,#f0abfc,#c084fc);color:#1a0b2e}
+.rank-row{text-align:center;margin:16px auto 4px}
+.rank-btn{margin:0;padding:10px 26px;background:linear-gradient(150deg,rgba(240,228,255,.32),rgba(180,140,255,.2) 50%,rgba(140,100,255,.24));border:1px solid rgba(255,255,255,.34);color:#e8dcff;letter-spacing:1px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 22px rgba(150,110,255,.2);text-shadow:0 1px 2px rgba(10,0,40,.45)}
+
+/* 📅 签到：晨光橘金 */
+.checkin-btn{background:linear-gradient(150deg,rgba(255,238,205,.3),rgba(255,190,110,.16) 50%,rgba(255,150,60,.22));color:#ffe8c8;border:1px solid rgba(255,255,255,.3);border-radius:13px;font-weight:800;backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 16px rgba(255,160,70,.14);transition:all .25s ease}
+.checkin-btn:hover{transform:translateY(-2px);background:linear-gradient(150deg,rgba(255,242,215,.42),rgba(255,200,125,.24) 50%,rgba(255,165,75,.3));border-color:rgba(255,255,255,.48);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 28px rgba(255,170,80,.3)}
+/* 🎴 抽卡：幻紫星空 */
+.draw-btn{background:linear-gradient(150deg,rgba(240,220,255,.32),rgba(190,130,255,.18) 50%,rgba(140,80,255,.24));color:#ecdfff;border:1px solid rgba(255,255,255,.32);border-radius:13px;font-weight:800;backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 16px rgba(160,90,255,.18);transition:all .25s ease}
+.draw-btn:hover{transform:translateY(-2px);background:linear-gradient(150deg,rgba(245,228,255,.44),rgba(200,145,255,.26) 50%,rgba(155,95,255,.32));border-color:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 28px rgba(170,100,255,.34)}
+/* 🎒 背包：森林翡翠 */
+.green-btn{background:linear-gradient(150deg,rgba(210,250,230,.3),rgba(110,220,170,.16) 50%,rgba(60,180,120,.22));color:#d9ffe9;border:1px solid rgba(255,255,255,.3);border-radius:13px;font-weight:800;backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 6px 16px rgba(70,200,140,.15);transition:all .25s ease}
+.green-btn:hover{transform:translateY(-2px);background:linear-gradient(150deg,rgba(220,252,238,.44),rgba(125,230,180,.24) 50%,rgba(75,195,135,.3));border-color:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 28px rgba(80,210,145,.32)}
+/* 🎟️ 兑换码：霓虹派对 */
+.purple-btn{background:linear-gradient(150deg,rgba(255,226,244,.32),rgba(255,150,205,.18) 50%,rgba(240,90,150,.24));color:#ffe0f0;border:1px solid rgba(255,255,255,.32);border-radius:13px;font-weight:800;backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 16px rgba(245,110,170,.16);transition:all .25s ease}
+.purple-btn:hover{transform:translateY(-2px);background:linear-gradient(150deg,rgba(255,236,250,.44),rgba(255,165,215,.26) 50%,rgba(245,105,160,.32));border-color:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 28px rgba(250,120,180,.34)}
+.mini-btns .checkin-btn,.mini-btns .draw-btn{font-size:13px;letter-spacing:.5px}
+
+@media(max-width:560px){
+  .mini-btns{grid-template-columns:repeat(4,1fr);gap:6px;max-width:94vw}
+  .mini-btns .checkin-btn,.mini-btns .draw-btn{font-size:12px;padding:8px 2px}
+  .rank-btn{width:min(330px,70vw);display:inline-block}
+}
+.ach-btn.secondary{background:linear-gradient(150deg,rgba(224,247,255,.3),rgba(140,210,255,.18) 50%,rgba(90,180,255,.22));border:1px solid rgba(255,255,255,.34);color:#d8f2ff}
 .wrap{position:relative;z-index:1;max-width:620px;margin:10px auto 40px;padding:0 16px}
 .hint{font-size:13px;color:rgba(232,237,255,.5);text-align:center;margin-bottom:10px;min-height:20px}
 .r{display:block;background:rgba(255,255,255,.06);border:1px solid rgba(125,211,252,.2);border-radius:14px;padding:16px 18px;margin-bottom:10px;text-decoration:none;color:inherit;transition:.2s}
@@ -104,9 +137,176 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 @keyframes magicPulse{to{transform:scale(1.25);opacity:.5}}
 
 @keyframes cardIn{to{transform:rotateY(0) scale(1)}}
-</style></style>
+
+
+/* ===== 国风水墨长卷 · 搜索页覆盖层 ===== */
+
+/* ===== 水墨按钮统一风格（覆盖所有主题） ===== */
+.ach-btn,.mine-btn,.rank-btn,.checkin-btn,.draw-btn,.green-btn,.purple-btn,.back,.lb-tab,.av-tab,.save-btn,.logout-btn,.draw-link,.box button {
+  font-family:"KaiTi","STKaiti","楷体","Microsoft YaHei",serif !important;
+  letter-spacing:2px !important;
+}
+/* 顶部主按钮 + 小按钮：统一宣纸墨条质感 */
+.ach-btn,.mine-btn,.rank-btn,.checkin-btn,.draw-btn,.green-btn,.purple-btn{
+  background:linear-gradient(170deg,rgba(255,252,242,.92),rgba(244,234,206,.88)) !important;
+  color:#3d3845 !important;
+  border:1.5px solid #8a8068 !important;
+  border-radius:14px !important;
+  text-shadow:0 1px 0 rgba(255,255,255,.6) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 5px 14px rgba(110,90,55,.12) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.ach-btn:hover,.mine-btn:hover,.rank-btn:hover,.checkin-btn:hover,.draw-btn:hover,.green-btn:hover,.purple-btn:hover{
+  background:#6f6752 !important;
+  color:#f4ecda !important;
+  border-color:#6f6752 !important;
+  text-shadow:none !important;
+  box-shadow:0 8px 20px rgba(80,65,45,.28) !important;
+}
+.ach-btn.secondary{background:linear-gradient(170deg,rgba(255,252,242,.92),rgba(244,234,206,.88)) !important;color:#3d3845 !important;border:1.5px solid #8a8068 !important}
+/* 返回链接 */
+.back{color:#6f6550 !important;text-decoration:none;border-bottom:1px solid #b7ab8c;padding-bottom:2px;transition:.2s}
+.back:hover{color:#3d3a35;border-color:#3d3a35}
+/* 排行榜 tab */
+.lb-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.lb-tab{background:rgba(255,250,238,.7) !important;border:1px solid #b3a685 !important;border-radius:999px !important;color:#5f5744 !important;padding:6px 16px !important;font-size:13px !important;cursor:pointer;transition:.2s}
+.lb-tab.active{background:#6f6752 !important;color:#f6eeda !important;border-color:#6f6752 !important}
+/* 头像分类 tab */
+.av-tab{background:rgba(255,250,238,.7) !important;border:1.5px solid #b3a685 !important;border-radius:999px !important;color:#5f5744 !important}
+.av-tab.active{background:#6f6752 !important;color:#f6eeda !important;border-color:#6f6752 !important}
+/* 保存/退出按钮 */
+.save-btn{background:#6f6752 !important;color:#f6eeda !important;border:1px solid #6f6752 !important;border-radius:12px !important;box-shadow:0 4px 12px rgba(80,65,45,.2) !important}
+.save-btn:hover{background:#5a5340 !important}
+.logout-btn{background:rgba(255,250,238,.7) !important;border:1.5px solid #8a8068 !important;border-radius:12px !important;color:#5f5744 !important}
+.logout-btn:hover{background:#6f6752 !important;color:#f6eeda !important}
+/* 抽卡卡片 */
+.draw-card{background:linear-gradient(165deg,#f2ead6,#e3d7b8) !important;border:2px solid #8a8068 !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 14px 34px rgba(90,75,50,.25) !important;color:#3d3845 !important}
+.draw-id{color:#9c4a3c !important}
+.draw-name{color:#3d3845 !important}
+.draw-sec{color:#8a5a2b !important;border-color:#b98a4e !important;background:rgba(180,130,60,.12) !important}
+.draw-tags{color:#6f6550 !important}
+.draw-link{color:#6f6752 !important;text-decoration:underline}
+.draw-x{color:#6f6550 !important}
+.draw-magic{background:radial-gradient(circle,rgba(160,120,60,.18),transparent 60%) !important}
+/* 头像选择格 */
+.avatar-item{background:rgba(255,250,238,.7) !important;border:2px solid #b3a685 !important}
+.avatar-item.selected{border-color:#9c4a3c !important;background:rgba(230,214,180,.7) !important;box-shadow:0 0 10px rgba(156,74,60,.35) !important}
+.av-color.selected{border-color:#6f6752 !important}
+/* 签到日历 */
+.cal .day{background:rgba(255,250,238,.65) !important;color:#6f6550 !important;border:1px solid rgba(179,166,133,.4)}
+.cal .signed{background:linear-gradient(160deg,#e8b54a,#c8802e) !important;color:#2c1d05 !important;border-color:#8a5a2b !important;box-shadow:0 0 10px rgba(200,120,40,.4) !important}
+.cal .today{outline:2px solid #9c4a3c !important}
+.cal .week{color:#8b7f66 !important}
+.check-box{background:linear-gradient(165deg,#f6efdc,#ece0c4) !important;border:1.5px solid #b3a685 !important;box-shadow:0 18px 50px rgba(80,65,45,.22) !important;color:#3d3845 !important}
+.check-head h2{color:#3d3845 !important}
+.points{color:#9c4a3c !important}
+/* 成就墙 / 排行榜 / 我的 面板 */
+#siteAchWall,#leaderboardWall,#userWall,#bagWall,#redeemWall,#checkinWall,#drawWall{background:rgba(60,52,40,.42) !important;backdrop-filter:blur(6px)}
+.ach-box{background:linear-gradient(165deg,#f6efdc,#ece0c4) !important;border:1.5px solid #b3a685 !important;box-shadow:0 18px 50px rgba(60,50,35,.3) !important;color:#3d3845 !important}
+.ach-head h2{color:#3d3845 !important}
+.ach-ttl{color:#6f6550 !important}
+.ag-i,.am-i{background:rgba(255,250,238,.7) !important;border:1.5px solid #b3a685 !important;color:#5f5744 !important}
+.ag-i.locked,.am-i.locked{color:#a69c85 !important;opacity:.65}
+.lb-item{background:rgba(255,250,238,.7) !important;border:1.5px solid #b3a685 !important;color:#3d3845 !important}
+.lb-name{color:#3d3845 !important}
+.lb-stats{color:#6f6550 !important}
+.lb-empty,.lb-note{color:#8b7f66 !important}
+.bag-item{background:rgba(255,250,238,.7) !important;border:1px solid #b3a685 !important}
+.bag-item .bid{color:#9c4a3c !important}
+.empty{color:#a69c85 !important}
+
+.box{max-width:620px;margin:24px auto 0;display:flex;gap:6px;padding:6px;position:relative;background:linear-gradient(160deg,rgba(255,250,238,.62),rgba(248,238,214,.42));border:1px solid rgba(160,140,100,.35);border-radius:22px;box-shadow:0 12px 34px rgba(110,90,55,.16),inset 0 1px 0 rgba(255,255,255,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.box input{flex:1;background:rgba(255,252,244,.6);border:1px solid rgba(170,150,110,.32);border-radius:16px;padding:12px 18px;font-size:15px;color:#3d3845;outline:none;transition:all .3s ease;box-shadow:inset 0 2px 8px rgba(90,75,50,.08);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.box input::placeholder{color:#afa387;font-style:italic;letter-spacing:.5px}
+.box input:focus{border-color:rgba(150,120,70,.6);box-shadow:0 0 0 3px rgba(160,130,80,.18),inset 0 2px 6px rgba(90,75,50,.06);background:rgba(255,252,244,.75)}
+.box button{background:rgba(244,236,210,.85);border:1.5px solid #77705c;border-radius:16px;padding:0 24px;font-size:15px;font-weight:700;color:#3d3845;cursor:pointer;transition:all .25s ease;letter-spacing:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 4px 12px rgba(110,90,55,.14)}
+.box button:hover{transform:translateY(-1px);background:#77705c;color:#f4ecda;box-shadow:0 8px 20px rgba(90,75,50,.3)}
+#inkLayer{position:fixed;inset:0;z-index:0;pointer-events:none}
+#inkLayer svg{position:absolute;left:0;top:0;width:100%;height:100%}
+.ink-vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(90% 70% at 50% 42%,transparent 55%,rgba(120,100,70,.14) 100%)}
+.ink-frm{position:fixed;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 60px rgba(120,100,70,.16)}
+.ink-nav{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:7;display:flex;flex-direction:column;align-items:center;gap:13px;pointer-events:none}
+.ink-nav .marker{width:30px;height:30px;border-radius:50%;border:2px solid #c0392b;color:#c0392b;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;background:rgba(255,250,238,.75);box-shadow:0 0 12px rgba(192,57,43,.4)}
+.ink-nav .dot{width:7px;height:7px;border-radius:50%;background:#c0392b;opacity:.55}
+.ink-seal{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c0392b;font-family:"KaiTi","STKaiti","楷体",serif;font-size:12px;border:2px solid rgba(192,57,43,.85);background:rgba(255,250,238,.62);box-shadow:0 0 12px rgba(192,57,43,.3);pointer-events:none}
+.ink-walker{position:fixed;z-index:5;pointer-events:none;font-size:16px;opacity:.75;animation:inkW 24s ease-in-out infinite alternate}
+.ink-walker.i1{left:-4%;bottom:11%}.ink-walker.i2{right:-4%;bottom:8%;animation-duration:20s;animation-direction:alternate-reverse}
+@keyframes inkW{from{transform:translateX(0)}to{transform:translateX(56px) translateY(-6px)}}
+</style>
 </head>
 <body>
+<div id="inkLayer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .83 0 0 0 .05 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f1e0"/><stop offset="1" stop-color="#efe6cf"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e2cb" stop-opacity=".9"/><stop offset="1" stop-color="#dcd3b8" stop-opacity=".95"/></linearGradient>
+    <linearGradient id="mtn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb7a8"/><stop offset="1" stop-color="#a8c4ae"/></linearGradient>
+    <linearGradient id="mtn2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ba396"/><stop offset="1" stop-color="#94b3a0"/></linearGradient>
+    <linearGradient id="mtn3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e7f74"/><stop offset="1" stop-color="#789a83"/></linearGradient>
+  </defs>
+  <!-- 天空 -->
+  <rect width="1440" height="900" fill="url(#sky)"/>
+  <!-- 远山层1（石青淡染） -->
+  <path d="M0,420 C140,340 260,375 400,330 C540,288 640,340 780,318 C930,296 1010,352 1160,322 C1280,300 1380,340 1440,318 L1440,900 L0,900 Z" fill="url(#mtn1)" opacity=".5"/>
+  <!-- 远山层2（石绿） -->
+  <path d="M-20,470 C120,400 260,430 420,392 C560,360 700,410 840,386 C980,362 1100,416 1240,392 C1330,376 1400,404 1440,392 L1440,900 L0,900 Z" fill="url(#mtn2)" opacity=".55"/>
+  <!-- 晨雾 横向长卷感 -->
+  <rect y="430" width="1440" height="60" fill="#f0e9d6" opacity=".35"/>
+  <!-- 孤峰群（皴法勾勒） -->
+  <g stroke="#42534d" stroke-width="2.4" fill="none" opacity=".8">
+    <path d="M150,470 L188,368 L214,470 Z" fill="url(#mtn3)"/>
+    <path d="M158,452 C162,430 174,396 180,384 M166,448 C172,420 180,404 184,392 M150,470 C158,444 166,420 172,400" opacity=".5"/>
+    <path d="M470,478 L512,356 L548,478 Z" fill="url(#mtn3)"/>
+    <path d="M480,454 C486,428 500,398 508,380 M492,452 C500,424 510,402 516,388 M470,478 C482,444 494,414 502,396" opacity=".5"/>
+    <path d="M940,470 L976,380 L1008,470 Z" fill="url(#mtn3)"/>
+    <path d="M950,452 C956,430 966,404 972,392 M958,450 C964,426 972,404 978,392" opacity=".5"/>
+    <path d="M1230,478 L1264,388 L1296,478 Z" fill="url(#mtn3)"/>
+    <path d="M1238,456 C1244,434 1252,414 1258,398 M1246,455 C1252,432 1260,410 1266,396" opacity=".5"/>
+  </g>
+  <!-- 水面平如镜（含倒影） -->
+  <rect y="486" width="1440" height="414" fill="url(#water)"/>
+  <g transform="translate(0,972) scale(1,-1)" opacity=".16">
+    <path d="M150,486 L188,368 L214,486 Z" fill="url(#mtn3)"/>
+    <path d="M470,486 L512,356 L548,486 Z" fill="url(#mtn3)"/>
+    <path d="M940,486 L976,380 L1008,486 Z" fill="url(#mtn3)"/>
+    <path d="M1230,486 L1264,388 L1296,486 Z" fill="url(#mtn3)"/>
+  </g>
+  <line x1="0" y1="486" x2="1440" y2="486" stroke="#c9bfa2" stroke-width="1.4" opacity=".8"/>
+  <!-- 岸边 -->
+  <path d="M0,540 C220,520 380,556 560,542 C760,528 980,566 1200,548 C1300,540 1390,556 1440,548 L1440,900 L0,900 Z" fill="#dcd2b6" opacity=".6"/>
+  <!-- 古松（右岸） -->
+  <g stroke="#3f4a44" stroke-width="3" fill="none" opacity=".85">
+    <path d="M1050,528 C1052,492 1046,458 1038,430"/>
+    <path d="M1038,472 C1016,462 1000,456 984,452 M1038,452 C1020,440 1006,434 992,430 M1036,486 C1060,478 1076,470 1092,462 M1036,464 C1060,452 1078,442 1096,430"/>
+    <circle cx="984" cy="450" r="2" fill="#3f4a44" opacity=".6"/><circle cx="992" cy="428" r="2" fill="#3f4a44" opacity=".6"/><circle cx="1096" cy="428" r="2" fill="#3f4a44" opacity=".6"/>
+  </g>
+  <g stroke="#3f4a44" stroke-width="2.6" fill="none" opacity=".7" transform="translate(0,26) scale(.8)">
+    <path d="M300,520 C302,492 298,466 292,444"/>
+    <path d="M292,478 C276,468 264,462 252,458 M292,460 C278,450 266,444 254,440"/>
+  </g>
+  <!-- 古风小木屋（远景） -->
+  <g stroke="#6b6252" stroke-width="1.6" fill="none" opacity=".7">
+    <path d="M700,524 L700,506 L724,506 L724,524 M686,524 L686,512 L700,512 L700,524 L724,524 L738,524"/>
+    <line x1="686" y1="512" x2="700" y2="506" stroke="#6b6252" stroke-width="1"/>
+  </g>
+  <!-- 水中舟影/草 -->
+  <g stroke="#8a9078" stroke-width="1.6" opacity=".6" fill="none">
+    <path d="M216,560 C220,548 228,540 238,534"/><path d="M236,562 C240,552 246,546 254,540"/>
+    <path d="M600,566 C604,556 610,548 618,542"/><path d="M620,568 C624,558 630,550 638,546"/>
+    <path d="M1180,562 C1184,552 1192,544 1200,538"/><path d="M1202,564 C1206,554 1212,548 1220,542"/>
+  </g>
+  <!-- 轻淡水纹 -->
+  <g stroke="#cfc6ab" stroke-width="1" opacity=".5" fill="none">
+    <path d="M180,640 Q300,636 420,640"/><path d="M660,700 Q820,696 980,700"/><path d="M320,780 Q500,776 680,780"/>
+  </g>
+</svg></div>
+<div class="ink-vig"></div>
+<div class="ink-frm"></div>
+<div class="ink-nav"><span class="marker">东</span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="ink-seal">知行</div>
+<div class="ink-walker i1">&#128677;</div>
+<div class="ink-walker i2">&#128677;</div>
 <canvas id="fx"></canvas>
 <div class="stars" id="stars"></div>
 <div class="head">
@@ -116,10 +316,20 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
     <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
     <button onclick="scheduleSearch()">搜索</button>
   </div>
-  <div>
-    <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button>
-    <button class="ach-btn secondary" onclick="openLeaderboard()">🏅 排行榜</button>
-    <button class="ach-btn" onclick="openUserPanel()" style="background:linear-gradient(135deg,#7dd3fc,#4a9fd8)">👤 我的</button><button class="checkin-btn" onclick="openCheckin()">📅 签到</button><button class="draw-btn" onclick="openDrawCard()">🎴 抽卡</button><button class="checkin-btn" style="background:linear-gradient(135deg,#6ee7b7,#34d399);color:#0d1a2b" onclick="openBag()">🎒 背包 <span id="bagCount">0</span></button><button class="checkin-btn" style="background:linear-gradient(135deg,#f0abfc,#c084fc);color:#1a0b2e" onclick="openRedeem()">🎟️ 兑换码</button>
+  <div class="top-actions">
+    <div class="main-btns">
+      <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button>
+      <button class="ach-btn mine-btn" onclick="openUserPanel()">👤 我的</button>
+    </div>
+    <div class="mini-btns">
+      <button class="checkin-btn" onclick="openCheckin()">📅 签到</button>
+      <button class="draw-btn" onclick="openDrawCard()">🎴 抽卡</button>
+      <button class="checkin-btn green-btn" onclick="openBag()">🎒 背包 <span id="bagCount">0</span></button>
+      <button class="checkin-btn purple-btn" onclick="openRedeem()">🎟️ 兑换码</button>
+    </div>
+    <div class="rank-row">
+      <button class="ach-btn secondary rank-btn" onclick="openLeaderboard()">🏅 排行榜</button>
+    </div>
   </div>
   <br><a class="back" href="index.html">← 返回欢迎入口</a>
 </div>

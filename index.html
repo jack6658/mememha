@@ -1,99 +1,128 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>欢迎学习 · 生物知识卡片</title>
+<title>欢迎学习 · 生物知识卡</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:radial-gradient(1200px 800px at 50% 28%,#232c52,#10162e 55%,#05070f);min-height:100dvh;overflow:hidden;color:#e8edff;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
-#fireworks{position:fixed;inset:0;z-index:0;pointer-events:none;display:block}
-.stage{position:relative;z-index:2;text-align:center;padding:24px;animation:fadeIn 1.4s ease both}
-@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.sub{font-size:clamp(13px,2.2vw,17px);letter-spacing:6px;color:rgba(232,237,255,.55);margin-bottom:14px;font-weight:500}
-h1{font-size:clamp(44px,9vw,92px);font-weight:900;letter-spacing:12px;line-height:1.15;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite,breathe 3.2s ease-in-out infinite}
-@keyframes grad{to{background-position:300% 0}}
-@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.enter-btn{margin-top:46px;font-size:clamp(17px,3vw,22px);font-weight:800;letter-spacing:8px;color:#0a0e1f;background:linear-gradient(135deg,#ffd76a,#ffb35c);border:none;border-radius:999px;padding:16px 52px 16px 60px;cursor:pointer;box-shadow:0 0 24px rgba(255,190,92,.55),0 8px 30px rgba(0,0,0,.45);transition:.25s;position:relative;overflow:hidden}
-.enter-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 42px rgba(255,200,110,.85),0 12px 36px rgba(0,0,0,.5)}
-.enter-btn:active{transform:scale(.97)}
-.enter-btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.75),transparent);animation:shine 2.6s ease-in-out infinite}
-@keyframes shine{0%,60%{left:-80%}100%{left:140%}}
-.hint{margin-top:22px;font-size:12.5px;color:rgba(232,237,255,.4);letter-spacing:3px}
-.corner{position:fixed;left:16px;bottom:12px;z-index:3;font-size:12px;color:rgba(232,237,255,.38);letter-spacing:1.5px;font-weight:500}
-#choose{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(6,9,20,.86);backdrop-filter:blur(10px)}
-#choose.show{display:flex;animation:fadeIn .5s ease both}
-.choose-head{font-size:clamp(20px,3.6vw,30px);font-weight:800;letter-spacing:5px;margin-bottom:14px;background:linear-gradient(90deg,#7dd3fc,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
-.choose-card{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;width:min(320px,82vw);padding:22px 18px;border-radius:18px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#e8edff;font-size:17px;font-weight:700;letter-spacing:2px;transition:.2s;text-align:center}
-.choose-card .big{font-size:34px}
-.choose-card .desc{font-size:12px;color:rgba(232,237,255,.55);font-weight:400;letter-spacing:1px;line-height:1.6}
-.choose-card:hover{border-color:#7dd3fc;box-shadow:0 0 26px rgba(125,211,252,.35);transform:translateY(-3px)}
-.back-btn{margin-top:10px;background:none;border:1px solid rgba(255,255,255,.25);color:rgba(232,237,255,.8);border-radius:999px;padding:9px 26px;font-size:13px;letter-spacing:3px;cursor:pointer;transition:.2s}
-.back-btn:hover{border-color:#ffd76a;color:#ffd76a}
-@media(max-width:560px){h1{letter-spacing:6px}.enter-btn{padding:14px 34px 14px 42px}}
+body{font-family:"KaiTi","STKaiti","楷体","Microsoft YaHei",serif;min-height:100dvh;overflow:hidden;color:#3d3845;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none;background:#f4ecda}
+/* ===== 国风水墨长卷 · 共享背景 ===== */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 18%, rgba(255,250,238,.98), rgba(244,236,214,.96) 46%, rgba(228,218,190,.94));
+  filter:url(#paper-noise);opacity:.97}
+.ink-scroll{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;overflow:hidden}
+.ink-scroll svg{position:absolute;left:0;top:0;width:100%;height:100%}
+.ink-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(90% 70% at 50% 42%, transparent 55%, rgba(120,100,70,.16) 100%)}
+.ink-frame{position:fixed;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 0 10px rgba(120,100,70,.06),inset 0 0 80px rgba(120,100,70,.14)}
+.ink-nav{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:none}
+.ink-nav .dot{width:7px;height:7px;border-radius:50%;background:#c0392b;opacity:.55;box-shadow:0 0 6px rgba(192,57,43,.5)}
+.ink-nav .marker{width:32px;height:32px;border-radius:50%;border:2px solid #c0392b;color:#c0392b;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;background:rgba(255,250,238,.7);box-shadow:0 0 14px rgba(192,57,43,.45)}
+.ink-seal{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:6;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#b8d4c4;font-family:"KaiTi","STKaiti","楷体",serif;font-size:13px;letter-spacing:1px;border:2px solid rgba(192,57,43,.85);color:#c0392b;background:rgba(255,250,238,.55);box-shadow:0 0 10px rgba(192,57,43,.3);pointer-events:none}
+.walker{position:fixed;z-index:5;pointer-events:none;font-family:"KaiTi","STKaiti","楷体",serif;font-size:15px;color:#3d4350;opacity:.85;
+  animation:ink-walk ease-in-out infinite alternate}
+.walker.w1{left:-4%;bottom:12%;animation-duration:26s}
+.walker.w2{right:-4%;bottom:10%;animation-duration:22s;animation-direction:alternate-reverse}
+@keyframes ink-walk{from{transform:translateX(0) translateY(0)}to{transform:translateX(60px) translateY(-7px)}}
+@media(max-width:560px){.ink-seal{width:46px;height:46px;font-size:11px}.ink-nav{gap:10px}}
+
+.stage{position:relative;z-index:4;text-align:center;padding:24px;animation:inkFade 2s ease both}
+@keyframes inkFade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sub{font-size:clamp(13px,2vw,17px);letter-spacing:10px;color:#8b7f66;margin-bottom:16px;font-weight:500}
+h1{font-size:clamp(46px,9vw,96px);font-weight:700;letter-spacing:18px;line-height:1.12;color:#3a3a35;text-shadow:0 2px 12px rgba(120,100,70,.18);margin-bottom:12px}
+h1 small{display:block;font-size:clamp(12px,1.8vw,15px);letter-spacing:14px;color:#9a8f78;font-weight:400;margin-top:12px}
+.ink-line{width:180px;height:2px;margin:22px auto;background:linear-gradient(90deg,transparent,#b0a489,transparent)}
+.enter-btn{margin-top:34px;font-family:inherit;font-size:clamp(17px,2.6vw,21px);font-weight:700;letter-spacing:10px;color:#3d3845;background:transparent;border:2px solid #3d3a35;border-radius:999px;padding:14px 46px 14px 56px;cursor:pointer;transition:.3s;position:relative}
+.enter-btn:hover{background:#3d3a35;color:#f4ecda;transform:translateY(-2px);box-shadow:0 8px 26px rgba(70,60,45,.25)}
+.enter-btn:active{transform:scale(.96)}
+.hint{margin-top:24px;font-size:12.5px;color:#a69c85;letter-spacing:4px}
+.corner{position:fixed;left:18px;bottom:14px;z-index:6;font-size:12px;color:#a69c85;letter-spacing:2px}
+.seal-mark{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:1px;color:#c0392b;border:2px solid rgba(192,57,43,.85);background:rgba(255,250,238,.6);box-shadow:0 0 12px rgba(192,57,43,.3);pointer-events:none}
+@media(max-width:560px){h1{letter-spacing:8px}.enter-btn{padding:12px 30px 12px 40px}}
 </style>
 </head>
 <body>
-<canvas id="fireworks"></canvas>
+<div class="ink-scroll"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="paper-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .83 0 0 0 .05 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f1e0"/><stop offset="1" stop-color="#efe6cf"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e2cb" stop-opacity=".9"/><stop offset="1" stop-color="#dcd3b8" stop-opacity=".95"/></linearGradient>
+    <linearGradient id="mtn1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb7a8"/><stop offset="1" stop-color="#a8c4ae"/></linearGradient>
+    <linearGradient id="mtn2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ba396"/><stop offset="1" stop-color="#94b3a0"/></linearGradient>
+    <linearGradient id="mtn3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e7f74"/><stop offset="1" stop-color="#789a83"/></linearGradient>
+  </defs>
+  <!-- 天空 -->
+  <rect width="1440" height="900" fill="url(#sky)"/>
+  <!-- 远山层1（石青淡染） -->
+  <path d="M0,420 C140,340 260,375 400,330 C540,288 640,340 780,318 C930,296 1010,352 1160,322 C1280,300 1380,340 1440,318 L1440,900 L0,900 Z" fill="url(#mtn1)" opacity=".5"/>
+  <!-- 远山层2（石绿） -->
+  <path d="M-20,470 C120,400 260,430 420,392 C560,360 700,410 840,386 C980,362 1100,416 1240,392 C1330,376 1400,404 1440,392 L1440,900 L0,900 Z" fill="url(#mtn2)" opacity=".55"/>
+  <!-- 晨雾 横向长卷感 -->
+  <rect y="430" width="1440" height="60" fill="#f0e9d6" opacity=".35"/>
+  <!-- 孤峰群（皴法勾勒） -->
+  <g stroke="#42534d" stroke-width="2.4" fill="none" opacity=".8">
+    <path d="M150,470 L188,368 L214,470 Z" fill="url(#mtn3)"/>
+    <path d="M158,452 C162,430 174,396 180,384 M166,448 C172,420 180,404 184,392 M150,470 C158,444 166,420 172,400" opacity=".5"/>
+    <path d="M470,478 L512,356 L548,478 Z" fill="url(#mtn3)"/>
+    <path d="M480,454 C486,428 500,398 508,380 M492,452 C500,424 510,402 516,388 M470,478 C482,444 494,414 502,396" opacity=".5"/>
+    <path d="M940,470 L976,380 L1008,470 Z" fill="url(#mtn3)"/>
+    <path d="M950,452 C956,430 966,404 972,392 M958,450 C964,426 972,404 978,392" opacity=".5"/>
+    <path d="M1230,478 L1264,388 L1296,478 Z" fill="url(#mtn3)"/>
+    <path d="M1238,456 C1244,434 1252,414 1258,398 M1246,455 C1252,432 1260,410 1266,396" opacity=".5"/>
+  </g>
+  <!-- 水面平如镜（含倒影） -->
+  <rect y="486" width="1440" height="414" fill="url(#water)"/>
+  <g transform="translate(0,972) scale(1,-1)" opacity=".16">
+    <path d="M150,486 L188,368 L214,486 Z" fill="url(#mtn3)"/>
+    <path d="M470,486 L512,356 L548,486 Z" fill="url(#mtn3)"/>
+    <path d="M940,486 L976,380 L1008,486 Z" fill="url(#mtn3)"/>
+    <path d="M1230,486 L1264,388 L1296,486 Z" fill="url(#mtn3)"/>
+  </g>
+  <line x1="0" y1="486" x2="1440" y2="486" stroke="#c9bfa2" stroke-width="1.4" opacity=".8"/>
+  <!-- 岸边 -->
+  <path d="M0,540 C220,520 380,556 560,542 C760,528 980,566 1200,548 C1300,540 1390,556 1440,548 L1440,900 L0,900 Z" fill="#dcd2b6" opacity=".6"/>
+  <!-- 古松（右岸） -->
+  <g stroke="#3f4a44" stroke-width="3" fill="none" opacity=".85">
+    <path d="M1050,528 C1052,492 1046,458 1038,430"/>
+    <path d="M1038,472 C1016,462 1000,456 984,452 M1038,452 C1020,440 1006,434 992,430 M1036,486 C1060,478 1076,470 1092,462 M1036,464 C1060,452 1078,442 1096,430"/>
+    <circle cx="984" cy="450" r="2" fill="#3f4a44" opacity=".6"/><circle cx="992" cy="428" r="2" fill="#3f4a44" opacity=".6"/><circle cx="1096" cy="428" r="2" fill="#3f4a44" opacity=".6"/>
+  </g>
+  <g stroke="#3f4a44" stroke-width="2.6" fill="none" opacity=".7" transform="translate(0,26) scale(.8)">
+    <path d="M300,520 C302,492 298,466 292,444"/>
+    <path d="M292,478 C276,468 264,462 252,458 M292,460 C278,450 266,444 254,440"/>
+  </g>
+  <!-- 古风小木屋（远景） -->
+  <g stroke="#6b6252" stroke-width="1.6" fill="none" opacity=".7">
+    <path d="M700,524 L700,506 L724,506 L724,524 M686,524 L686,512 L700,512 L700,524 L724,524 L738,524"/>
+    <line x1="686" y1="512" x2="700" y2="506" stroke="#6b6252" stroke-width="1"/>
+  </g>
+  <!-- 水中舟影/草 -->
+  <g stroke="#8a9078" stroke-width="1.6" opacity=".6" fill="none">
+    <path d="M216,560 C220,548 228,540 238,534"/><path d="M236,562 C240,552 246,546 254,540"/>
+    <path d="M600,566 C604,556 610,548 618,542"/><path d="M620,568 C624,558 630,550 638,546"/>
+    <path d="M1180,562 C1184,552 1192,544 1200,538"/><path d="M1202,564 C1206,554 1212,548 1220,542"/>
+  </g>
+  <!-- 轻淡水纹 -->
+  <g stroke="#cfc6ab" stroke-width="1" opacity=".5" fill="none">
+    <path d="M180,640 Q300,636 420,640"/><path d="M660,700 Q820,696 980,700"/><path d="M320,780 Q500,776 680,780"/>
+  </g>
+</svg></div>
+<div class="ink-vignette"></div>
+<div class="ink-frame"></div>
+<div class="ink-nav"><span class="marker">东</span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<div class="walker w1" style="left:-4%;bottom:12%">&#128677;</div>
+<div class="walker w2" style="right:-4%;bottom:9%">&#128677;</div>
 <div class="stage">
-  <h1>欢迎学习</h1>
-  <button class="enter-btn" onclick="location.href='list.html'">✦ 进入 ✦</button>
-  <div class="hint">点击进入，浏览全部知识卡片</div>
+  <div class="sub">— 山 水 之 间 · 学 海 泛 舟 —</div>
+  <h1>欢迎学习<small>生 物 知 识 卡 片</small></h1>
+  <div class="ink-line"></div>
+  <button class="enter-btn" onclick="location.href='list.html'">✦ 徐行入卷 ✦</button>
+  <div class="hint">点击进入 · 循江徐徐前行 · 尽览知识长卷</div>
 </div>
 <div class="corner">么么么哈tuer</div>
-<script>
-/* ===== 礼花炮（Canvas 烟花） ===== */
-var cv=document.getElementById('fireworks');
-var ctx=cv.getContext?cv.getContext('2d'):null;
-var W=0,H=0;
-function resize(){if(!cv)return;W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
-if(ctx){resize();window.addEventListener('resize',resize);}
-var rockets=[],parts=[];
-function hue(){return Math.floor(Math.random()*360);}
-function launch(){
-  if(!ctx)return;
-  rockets.push({x:W*(0.12+Math.random()*0.76),y:H+8,ty:H*(0.10+Math.random()*0.38),vx:(Math.random()-0.5)*2.4,vy:-(9.5+Math.random()*4),c:hue()});
-}
-function boom(x,y,c){
-  if(!ctx)return;
-  var n=70+Math.floor(Math.random()*50);
-  for(var i=0;i<n;i++){
-    var a=Math.random()*6.283,s=0.9+Math.random()*4.6;
-    parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,d:0.006+Math.random()*0.015,c:c,r:1.3+Math.random()*2});
-  }
-  parts.push({x:x,y:y,vx:0,vy:0,l:1,d:0.02,c:c,r:6}); /* 中心闪光 */
-}
-function tick(){
-  if(!ctx)return;
-  ctx.fillStyle='rgba(5,7,15,0.18)';ctx.fillRect(0,0,W,H);
-  var i,j;
-  for(i=rockets.length-1;i>=0;i--){
-    var r=rockets[i];r.x+=r.vx;r.y+=r.vy;r.vy+=0.07;
-    ctx.fillStyle='hsla('+r.c+',90%,72%,0.95)';
-    ctx.beginPath();ctx.arc(r.x,r.y,2.2,0,6.283);ctx.fill();
-    if(r.y<=r.ty||r.vy>=-0.4){boom(r.x,r.y,r.c);rockets.splice(i,1);}
-  }
-  for(j=parts.length-1;j>=0;j--){
-    var p=parts[j];p.x+=p.vx;p.y+=p.vy;p.vy+=0.028;p.vx*=0.984;p.vy*=0.984;p.l-=p.d;
-    if(p.l<=0){parts.splice(j,1);continue;}
-    ctx.globalAlpha=Math.max(0,p.l);
-    ctx.fillStyle='hsla('+p.c+',100%,'+(52+p.l*36)+'%,1)';
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l,0,6.283);ctx.fill();
-  }
-  ctx.globalAlpha=1;
-  requestAnimationFrame(tick);
-}
-/* 开场：立即密集礼花炮，持续约 5 秒 */
-var introCount=0;
-function intro(){
-  launch();
-  introCount++;
-  if(introCount<26){setTimeout(intro,150+Math.random()*220);}
-  else{setTimeout(function(){setInterval(function(){launch();},3200+Math.random()*2600);},4000);}
-}
-/* 点击"✦ 进入 ✦"直接跳转至卡片列表 */
-if(ctx){tick();setTimeout(intro,80);}else{setTimeout(function(){for(var k=0;k<6;k++)launch();},80);}
-</script>
+<div class="seal-mark">知行</div>
 </body>
 </html>
