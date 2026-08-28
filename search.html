@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -44,16 +44,26 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .ach-ttl{font-size:13px;margin:4px 0;color:rgba(232,237,255,.7)}
 .ach-ttl span{color:#ffd76a;font-weight:700}
 .ag{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
-.ag-i{flex:1 1 150px;padding:10px 12px;border:1.5px solid rgba(255,215,106,.35);border-radius:10px;background:rgba(255,255,255,.05);text-align:center}
-.ag-i.locked{opacity:.35;border-color:rgba(255,255,255,.12)}
+.ag-i{flex:1 1 150px;padding:10px 12px;border:1.5px solid;border-radius:10px;background:rgba(255,255,255,.05);text-align:center;transition:.2s}
 .ag-i strong{display:block;font-size:13px;margin-bottom:4px}
 .ag-i small{font-size:11px;color:rgba(232,237,255,.5)}
-.am{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:6px 0 14px}
-.am-i{text-align:center;padding:10px 6px;border:1.5px solid rgba(125,211,252,.3);border-radius:10px;background:rgba(255,255,255,.05)}
-.am-i.locked{opacity:.35;border-color:rgba(255,255,255,.1)}
+.ag-i em{display:inline-block;font-style:normal;font-size:10px;margin-top:4px;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.1)}
+.am{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 14px}
+.am-i{text-align:center;padding:10px 6px;border:1.5px solid;border-radius:10px;background:rgba(255,255,255,.05);transition:.2s}
 .am-i .mi{font-size:24px;display:block;margin-bottom:4px}
 .am-i b{display:block;font-size:12px;margin-bottom:2px}
 .am-i small{font-size:10px;color:rgba(232,237,255,.5)}
+.am-i em{display:inline-block;font-style:normal;font-size:9px;margin-top:3px;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.1)}
+/* 等级配色：1白 2蓝 3紫 4红 5彩 */
+.lv1{border-color:#e8edff}.lv1 strong{color:#e8edff}.lv1 em{color:#e8edff}
+.lv2{border-color:#7dd3fc}.lv2 strong{color:#7dd3fc}.lv2 em{color:#7dd3fc}
+.lv3{border-color:#c084fc}.lv3 strong{color:#c084fc}.lv3 em{color:#c084fc}
+.lv4{border-color:#f87171}.lv4 strong{color:#f87171}.lv4 em{color:#f87171}
+.lv5{border-color:#ffd76a;background:linear-gradient(145deg,rgba(255,215,106,.18),rgba(192,132,252,.15),rgba(125,211,252,.15))}
+.lv5 strong{background:linear-gradient(100deg,#ffd76a,#f59e0b,#c084fc,#7dd3fc,#6ee7b7);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* 未解锁遮罩（渐变模糊，遮住名称与条件） */
+.ag-i.locked,.am-i.locked{opacity:.6}
+.locked .mask{filter:blur(6px);opacity:.5;user-select:none;display:inline-block}
 </style>
 </head>
 <body>
@@ -108,59 +118,55 @@ doSearch();
 
 /* ===== 全站成就系统（读取卡片共享的 site_ach 数据） ===== */
 var stTitles=[],stMedals=[];
-var stTInfo=[['first','初入江湖','浏览第1张卡片'],['forty','渐入佳境','浏览40%卡片'],['seventyfive','炉火纯青','浏览75%卡片'],['all','登峰造极','浏览全部卡片']];
-var stMInfo=[['first_correct','🌱','感觉良好','全站累计答对1题'],['wrong_three','🧱','四处碰壁','任一卡连续答错3题'],['correct_five','⭐','渐有心得','全站答对5题'],['correct_ten','🔥','手感火热','全站答对10题'],['correct_thirty','💡','一通百通','全站答对30题'],['view_half','🗺️','博览群卡','浏览一半卡片'],['view_all','📚','学海无涯','浏览全部卡片'],['perfect_one','💎','满分起步','1张卡选择题全对'],['perfect_three','🏅','连战连捷','3张卡选择题全对'],['streak_five','⚡','连击大师','任一卡连续答对5题'],['perfect_all','👑','答题封神','全部卡片满分'],['master','🌌','知识星河','四项称号全部获得']];
+var stLevelLabel=['','★ 入门','★★ 进阶','★★★ 高深','★★★★ 稀有','★★★★★ 传说'];
+var stTInfo=[['t1','初入江湖','完成 1 张卡片的全部浏览',1],['t2','略有建树','完成 5 张卡片的全部浏览',2],['t3','炉火纯青','完成 15 张卡片的全部浏览',3],['t4','登峰造极','完成 30 张卡片的全部浏览',4]];
+var stMInfo=[['m1','🌱','感觉良好','任意知识卡连续答对 7 道题',2],['m2','🪙','终结币','任意知识卡连续答错 8 道题',2],['m3','⭐','渐有心得','全站累计答对 70 道题',2],['m4','🔥','手感火热','全站累计答对 100 道题',3],['m5','💡','一通百通','全站累计答对 150 道题',4],['m6','🗺️','博览群卡','浏览了 10 张卡片',2],['m7','📚','学海无涯','浏览了 30 张卡片',4],['m8','💎','满分起步','任意一张知识卡选择题全对',2],['m9','🏅','连战连捷','三套知识卡中的知识卡全部全对',3],['m10','⚡','连击大师','连续答对 20 道题',4],['m11','👑','答题封神','全站累计答对 70 道题',3],['m12','🌌','知识星河','完成 10 套知识卡套',5]];
 function getSiteAchData(){
-  try{
-    var raw=localStorage.getItem('site_ach');
-    if(!raw)return {};
-    return JSON.parse(raw);
-  }catch(e){return {};}
+  try{var raw=localStorage.getItem('site_ach');if(!raw)return {};return JSON.parse(raw);}catch(e){return {};}
 }
 function calcSiteAch(){
   var data=getSiteAchData();
-  var total=window.CARDS.length||1;
-  var viewed=0,correct=0,wrong=0;
-  var anyPerf=0,perfCount=0,anyStreak5=0,anyWrong3=0;
+  var completed=0,correct=0,perfectCount=0,anyPerfect=0,maxStreak=0,maxWrong=0;
   for(var k in data){
     var d=data[k];
-    if(d.viewed)viewed++;
-    correct+=d.correct||0;wrong+=d.wrong||0;
-    if(d.perfect){anyPerf=1;perfCount++;}
-    if((d.maxStreak||0)>=5)anyStreak5=1;
-    if((d.maxWrong||0)>=3)anyWrong3=1;
+    if(d.completed)completed++;
+    correct+=d.correct||0;
+    if(d.perfect){anyPerfect=1;perfectCount++;}
+    if((d.maxStreak||0)>maxStreak)maxStreak=d.maxStreak;
+    if((d.maxWrong||0)>maxWrong)maxWrong=d.maxWrong;
   }
   stTitles=[];
-  if(viewed>=1)stTitles.push('first');
-  if(viewed>=Math.ceil(total*0.4))stTitles.push('forty');
-  if(viewed>=Math.ceil(total*0.75))stTitles.push('seventyfive');
-  if(viewed>=total)stTitles.push('all');
+  if(completed>=1)stTitles.push('t1');
+  if(completed>=5)stTitles.push('t2');
+  if(completed>=15)stTitles.push('t3');
+  if(completed>=30)stTitles.push('t4');
   stMedals=[];
-  if(correct>=1)stMedals.push('first_correct');
-  if(anyWrong3)stMedals.push('wrong_three');
-  if(correct>=5)stMedals.push('correct_five');
-  if(correct>=10)stMedals.push('correct_ten');
-  if(correct>=30)stMedals.push('correct_thirty');
-  if(viewed>=Math.ceil(total/2))stMedals.push('view_half');
-  if(viewed>=total)stMedals.push('view_all');
-  if(anyPerf)stMedals.push('perfect_one');
-  if(perfCount>=3)stMedals.push('perfect_three');
-  if(anyStreak5)stMedals.push('streak_five');
-  if(perfCount>=total)stMedals.push('perfect_all');
-  if(stTitles.length>=4)stMedals.push('master');
+  if(maxStreak>=7)stMedals.push('m1');
+  if(maxWrong>=8)stMedals.push('m2');
+  if(correct>=70)stMedals.push('m3');
+  if(correct>=100)stMedals.push('m4');
+  if(correct>=150)stMedals.push('m5');
+  if(completed>=10)stMedals.push('m6');
+  if(completed>=30)stMedals.push('m7');
+  if(anyPerfect)stMedals.push('m8');
+  if(perfectCount>=3)stMedals.push('m9');
+  if(maxStreak>=20)stMedals.push('m10');
+  if(correct>=70)stMedals.push('m11');
+  if(completed>=10)stMedals.push('m12');
 }
 function openSiteAch(){
   calcSiteAch();
   var wall=document.getElementById('siteAchWall');
   if(!wall)return;
-  document.getElementById('stTitleList').innerHTML=stTInfo.map(function(x){return '<div class="ag-i '+(stTitles.indexOf(x[0])<0?'locked':'')+'"><strong>'+(stTitles.indexOf(x[0])>=0?'🏆 ':'🔒 ')+x[1]+'</strong><small>'+x[2]+'</small></div>';}).join('');
-  document.getElementById('stMedalGrid').innerHTML=stMInfo.map(function(m){var on=stMedals.indexOf(m[0])>=0;return '<div class="am-i '+(on?'':'locked')+'"><span class="mi">'+(on?m[1]:'⬛')+'</span><b>'+m[2]+'</b><small>'+m[3]+'</small></div>';}).join('');
+  var ti=stTInfo.map(function(x){var on=stTitles.indexOf(x[0])>=0;return '<div class="ag-i lv'+x[3]+' '+(on?'':'locked')+'"><strong>'+(on?'🏆 ':'🔒 ')+'<span class="'+(on?'':'mask')+'">'+x[1]+'</span></strong><small><span class="'+(on?'':'mask')+'">'+(on?x[2]:'解锁条件保密')+'</span></small><em>'+stLevelLabel[x[3]]+'</em></div>';}).join('');
+  var mi=stMInfo.map(function(m){var on=stMedals.indexOf(m[0])>=0;return '<div class="am-i lv'+m[4]+' '+(on?'':'locked')+'"><span class="mi">'+(on?m[1]:'🔒')+'</span><b><span class="'+(on?'':'mask')+'">'+m[2]+'</span></b><small><span class="'+(on?'':'mask')+'">'+(on?m[3]:'解锁条件保密')+'</span></small><em>'+stLevelLabel[m[4]]+'</em></div>';}).join('');
+  document.getElementById('stTitleList').innerHTML=ti;
+  document.getElementById('stMedalGrid').innerHTML=mi;
   document.getElementById('stTitleProg').textContent=stTitles.length+' / 4';
   document.getElementById('stMedalProg').textContent=stMedals.length+' / '+stMInfo.length;
   wall.classList.add('show');
 }
 function closeSiteAch(){var w=document.getElementById('siteAchWall');if(w)w.classList.remove('show');}
-
 </script>
 <script>
 /* ===== 背景星空 ===== */

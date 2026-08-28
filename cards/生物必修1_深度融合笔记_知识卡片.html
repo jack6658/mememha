@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -170,7 +170,7 @@ function cards(){return $$('#stage .card');}
 function cardList(){return cards();}
 function save(){lsSet(SAV.page,page);lsSet(SAV.lock,locked);lsSet(SAV.fav,favs);lsSet(SAV.view,views);lsSet(SAV.check,checkins);lsSet(SAV.min,minimalMode);lsSet('c1_correct',correctTotal);lsSet('c1_titles',titles);lsSet('c1_medals',medals);}
 function toast(msg,big){if(minimalMode)return;var t=$('#toast');t.innerHTML=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show');},big?2400:1500);}
-function go(n){if(locked&&Number(n)!==page)return;var cs=cards();if(!cs.length)return;page=Math.max(1,Math.min(cs.length,Number(n)||1));cs.forEach(function(c,i){c.classList.toggle('active',i===page-1);});var sl=$('#slider');if(sl)sl.value=page;var lb=$('#plabel');if(lb)lb.textContent='第 '+page+' / '+cs.length+' 页';views[String(page)]=1;save();siteAch({viewed:1});if(typeof themePageChange==='function')themePageChange(page);}
+function go(n){if(locked&&Number(n)!==page)return;var cs=cards();if(!cs.length)return;page=Math.max(1,Math.min(cs.length,Number(n)||1));cs.forEach(function(c,i){c.classList.toggle('active',i===page-1);});var sl=$('#slider');if(sl)sl.value=page;var lb=$('#plabel');if(lb)lb.textContent='第 '+page+' / '+cs.length+' 页';views[String(page)]=1;save();siteAch({viewed:1,page:page,total:cs.length});if(typeof themePageChange==='function')themePageChange(page);}
 function change(n){if(!locked)go(page+n);}
 function toggleArrows(){var r=$('#reader');if(!r)return;r.classList.toggle('no-arrows');var off=r.classList.contains('no-arrows');lsSet(SAV.arrow,off);var b=$('#arrowBtn');if(b)b.textContent=off?'↔️ 显示箭头':'↔️ 隐藏箭头';}
 function togglePageLock(){locked=!locked;lsSet(SAV.lock,locked);syncPageLock();toast(locked?'🔒 当前卡片已锁定':'🔓 已解除锁定');}
@@ -209,7 +209,7 @@ function renderTime(){var vc=document.getElementById('viewedCount');if(vc)vc.tex
 function closeModal(){var m=$('#modal');m.classList.remove('show');m.innerHTML='';if(timeTimer){clearInterval(timeTimer);timeTimer=null;}}
 function themePageChange(p){tickTime(lastPage);lastPage=p;}
 (function(){if(lsGet(SAV.min,false)){document.body.classList.add('minimal');var mb=$("#minBtn");if(mb)mb.textContent="🎭 恢复动画";}if(lsGet(SAV.theme,'light')==='dark'){document.body.classList.add('dark');var tb=$("#themeBtn");if(tb)tb.textContent="☀️ 日间";}var f=Number(lsGet(SAV.font,1)||1);document.body.classList.remove('fs','fsl');if(f===1)document.body.classList.add('fs');if(f===2)document.body.classList.add('fsl');if(lsGet(SAV.arrow,false)){var r=$("#reader");if(r){r.classList.add('no-arrows');var ab=$("#arrowBtn");if(ab)ab.textContent="↔️ 显示箭头";}}syncPageLock();go(page);})();
-function siteAch(upd){try{var key='site_ach';var all=lsGet(key,{});var name=document.title;var d=all[name]||{viewed:0,correct:0,wrong:0,maxStreak:0,streak:0,wrongStreak:0,maxWrong:0,checked:0,perfect:0};if(upd.viewed)d.viewed=1;if(upd.correct){d.correct+=upd.correct;d.streak=(d.streak||0)+1;if(d.streak>d.maxStreak)d.maxStreak=d.streak;d.wrongStreak=0;}if(upd.wrong){d.wrong+=upd.wrong;d.wrongStreak=(d.wrongStreak||0)+1;if(d.wrongStreak>d.maxWrong)d.maxWrong=d.wrongStreak;d.streak=0;}if(upd.checked)d.checked+=upd.checked;if(upd.perfect&&!d.perfect)d.perfect=1;all[name]=d;lsSet(key,all);}catch(e){}}
+function siteAch(upd){try{var key='site_ach';var all=lsGet(key,{});var name=document.title;var d=all[name]||{viewed:0,correct:0,wrong:0,maxStreak:0,streak:0,wrongStreak:0,maxWrong:0,checked:0,perfect:0,seen:[],total:0,completed:0};if(upd.viewed)d.viewed=1;if(upd.page!==undefined){if(d.seen.indexOf(upd.page)<0)d.seen.push(upd.page);}if(upd.total)d.total=upd.total;if(d.total&&d.seen.length>=d.total)d.completed=1;if(upd.correct){d.correct+=upd.correct;d.streak=(d.streak||0)+1;if(d.streak>d.maxStreak)d.maxStreak=d.streak;d.wrongStreak=0;}if(upd.wrong){d.wrong+=upd.wrong;d.wrongStreak=(d.wrongStreak||0)+1;if(d.wrongStreak>d.maxWrong)d.maxWrong=d.wrongStreak;d.streak=0;}if(upd.checked)d.checked+=upd.checked;if(upd.perfect&&!d.perfect)d.perfect=1;all[name]=d;lsSet(key,all);}catch(e){}}
 </script>
 
 </body>
