@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -32,6 +32,28 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .r .meta{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:5px}
 .r .meta span{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.3);color:#7dd3fc}
 .none{text-align:center;color:rgba(232,237,255,.5);padding:40px 0;font-size:14px}
+
+.ach-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;margin:12px auto 0;display:inline-block}
+.ach-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(245,158,11,.5)}
+#siteAchWall{display:none;position:fixed;inset:0;z-index:300;background:rgba(5,7,15,.94);align-items:center;justify-content:center;padding:18px}
+#siteAchWall.show{display:flex}
+.ach-box{width:min(860px,94vw);max-height:88vh;overflow:auto;background:linear-gradient(145deg,#1a1f3a,#131836);border:1.5px solid rgba(125,211,252,.25);border-radius:18px;padding:22px;color:#e8edff}
+.ach-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ach-head h2{font-size:20px;background:linear-gradient(100deg,#ffd76a,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ach-head button{background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:7px 14px;color:#e8edff;cursor:pointer;font-size:13px}
+.ach-ttl{font-size:13px;margin:4px 0;color:rgba(232,237,255,.7)}
+.ach-ttl span{color:#ffd76a;font-weight:700}
+.ag{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.ag-i{flex:1 1 150px;padding:10px 12px;border:1.5px solid rgba(255,215,106,.35);border-radius:10px;background:rgba(255,255,255,.05);text-align:center}
+.ag-i.locked{opacity:.35;border-color:rgba(255,255,255,.12)}
+.ag-i strong{display:block;font-size:13px;margin-bottom:4px}
+.ag-i small{font-size:11px;color:rgba(232,237,255,.5)}
+.am{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:6px 0 14px}
+.am-i{text-align:center;padding:10px 6px;border:1.5px solid rgba(125,211,252,.3);border-radius:10px;background:rgba(255,255,255,.05)}
+.am-i.locked{opacity:.35;border-color:rgba(255,255,255,.1)}
+.am-i .mi{font-size:24px;display:block;margin-bottom:4px}
+.am-i b{display:block;font-size:12px;margin-bottom:2px}
+.am-i small{font-size:10px;color:rgba(232,237,255,.5)}
 </style>
 </head>
 <body>
@@ -45,6 +67,7 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
     <button onclick="scheduleSearch()">搜索</button>
   </div>
   <a class="back" href="index.html">← 返回欢迎入口</a>
+  <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button>
 </div>
 <div class="wrap">
   <div class="hint" id="hint"></div>
@@ -52,7 +75,7 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
   <div class="none" id="none" style="display:none">没有找到匹配的卡片，换个词试试～</div>
 </div>
 <script>
-window.CARDS=[{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":63892,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":47330,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46600,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":111681,"id":691553},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49972,"id":545315}];
+window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":111684,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":63892,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":47330,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46600,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49972,"id":545315}];
 function doSearch(){
   var v=document.getElementById('q').value.trim();
   var cards=window.CARDS||[];
@@ -82,6 +105,62 @@ function scheduleSearch(){
 }
 document.getElementById('q').addEventListener('input',scheduleSearch);
 doSearch();
+
+/* ===== 全站成就系统（读取卡片共享的 site_ach 数据） ===== */
+var stTitles=[],stMedals=[];
+var stTInfo=[['first','初入江湖','浏览第1张卡片'],['forty','渐入佳境','浏览40%卡片'],['seventyfive','炉火纯青','浏览75%卡片'],['all','登峰造极','浏览全部卡片']];
+var stMInfo=[['first_correct','🌱','感觉良好','全站累计答对1题'],['wrong_three','🧱','四处碰壁','任一卡连续答错3题'],['correct_five','⭐','渐有心得','全站答对5题'],['correct_ten','🔥','手感火热','全站答对10题'],['correct_thirty','💡','一通百通','全站答对30题'],['view_half','🗺️','博览群卡','浏览一半卡片'],['view_all','📚','学海无涯','浏览全部卡片'],['perfect_one','💎','满分起步','1张卡选择题全对'],['perfect_three','🏅','连战连捷','3张卡选择题全对'],['streak_five','⚡','连击大师','任一卡连续答对5题'],['perfect_all','👑','答题封神','全部卡片满分'],['master','🌌','知识星河','四项称号全部获得']];
+function getSiteAchData(){
+  try{
+    var raw=localStorage.getItem('site_ach');
+    if(!raw)return {};
+    return JSON.parse(raw);
+  }catch(e){return {};}
+}
+function calcSiteAch(){
+  var data=getSiteAchData();
+  var total=window.CARDS.length||1;
+  var viewed=0,correct=0,wrong=0;
+  var anyPerf=0,perfCount=0,anyStreak5=0,anyWrong3=0;
+  for(var k in data){
+    var d=data[k];
+    if(d.viewed)viewed++;
+    correct+=d.correct||0;wrong+=d.wrong||0;
+    if(d.perfect){anyPerf=1;perfCount++;}
+    if((d.maxStreak||0)>=5)anyStreak5=1;
+    if((d.maxWrong||0)>=3)anyWrong3=1;
+  }
+  stTitles=[];
+  if(viewed>=1)stTitles.push('first');
+  if(viewed>=Math.ceil(total*0.4))stTitles.push('forty');
+  if(viewed>=Math.ceil(total*0.75))stTitles.push('seventyfive');
+  if(viewed>=total)stTitles.push('all');
+  stMedals=[];
+  if(correct>=1)stMedals.push('first_correct');
+  if(anyWrong3)stMedals.push('wrong_three');
+  if(correct>=5)stMedals.push('correct_five');
+  if(correct>=10)stMedals.push('correct_ten');
+  if(correct>=30)stMedals.push('correct_thirty');
+  if(viewed>=Math.ceil(total/2))stMedals.push('view_half');
+  if(viewed>=total)stMedals.push('view_all');
+  if(anyPerf)stMedals.push('perfect_one');
+  if(perfCount>=3)stMedals.push('perfect_three');
+  if(anyStreak5)stMedals.push('streak_five');
+  if(perfCount>=total)stMedals.push('perfect_all');
+  if(stTitles.length>=4)stMedals.push('master');
+}
+function openSiteAch(){
+  calcSiteAch();
+  var wall=document.getElementById('siteAchWall');
+  if(!wall)return;
+  document.getElementById('stTitleList').innerHTML=stTInfo.map(function(x){return '<div class="ag-i '+(stTitles.indexOf(x[0])<0?'locked':'')+'"><strong>'+(stTitles.indexOf(x[0])>=0?'🏆 ':'🔒 ')+x[1]+'</strong><small>'+x[2]+'</small></div>';}).join('');
+  document.getElementById('stMedalGrid').innerHTML=stMInfo.map(function(m){var on=stMedals.indexOf(m[0])>=0;return '<div class="am-i '+(on?'':'locked')+'"><span class="mi">'+(on?m[1]:'⬛')+'</span><b>'+m[2]+'</b><small>'+m[3]+'</small></div>';}).join('');
+  document.getElementById('stTitleProg').textContent=stTitles.length+' / 4';
+  document.getElementById('stMedalProg').textContent=stMedals.length+' / '+stMInfo.length;
+  wall.classList.add('show');
+}
+function closeSiteAch(){var w=document.getElementById('siteAchWall');if(w)w.classList.remove('show');}
+
 </script>
 <script>
 /* ===== 背景星空 ===== */
@@ -136,5 +215,6 @@ doSearch();
   tick();
 })();
 </script>
+<div id="siteAchWall" onclick="if(event.target===this)closeSiteAch()"><div class="ach-box"><div class="ach-head"><h2>🏆 全站成就系统</h2><button onclick="closeSiteAch()">✕</button></div><p class="ach-ttl">成就：<span id="stTitleProg">0 / 4</span></p><div class="ag" id="stTitleList"></div><p class="ach-ttl">勋章：<span id="stMedalProg">0 / 12</span></p><div class="am" id="stMedalGrid"></div></div></div>
 </body>
 </html>
