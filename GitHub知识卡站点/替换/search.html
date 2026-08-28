@@ -1,0 +1,422 @@
+﻿﻿﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>搜索 · 生物知识卡</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#05070f);min-height:100vh;color:#e8edff;font-family:"Segoe UI","Microsoft YaHei",sans-serif;overflow-x:hidden}
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.head{position:relative;z-index:1;text-align:center;padding:34px 20px 40px}
+.head .sub{font-size:13px;letter-spacing:6px;color:rgba(232,237,255,.5);margin-bottom:12px}
+.head h1{font-size:clamp(24px,4.6vw,38px);font-weight:900;letter-spacing:8px;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite}
+@keyframes grad{to{background-position:300% 0}}
+.box{max-width:620px;margin:22px auto 0;display:flex;gap:8px;padding:0 16px}
+.box input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:12px;padding:13px 16px;font-size:15px;color:#e8edff;outline:none;transition:.2s}
+.box input:focus{border-color:#7dd3fc;box-shadow:0 0 20px rgba(125,211,252,.35)}
+.box input::placeholder{color:rgba(232,237,255,.4)}
+.box button{background:linear-gradient(135deg,#7dd3fc,#4a9fd8);border:none;border-radius:12px;padding:0 22px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:.2s}
+.box button:hover{transform:scale(1.04);box-shadow:0 0 18px rgba(125,211,252,.5)}
+.back{display:inline-block;margin-top:18px;color:rgba(232,237,255,.6);text-decoration:none;font-size:13px;transition:.2s}
+.back:hover{color:#7dd3fc}
+.ach-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;margin:12px 6px 0;display:inline-block}
+.ach-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(245,158,11,.5)}
+.ach-btn.secondary{background:linear-gradient(135deg,#7dd3fc,#4a9fd8);color:#fff}
+.wrap{position:relative;z-index:1;max-width:620px;margin:10px auto 40px;padding:0 16px}
+.hint{font-size:13px;color:rgba(232,237,255,.5);text-align:center;margin-bottom:10px;min-height:20px}
+.r{display:block;background:rgba(255,255,255,.06);border:1px solid rgba(125,211,252,.2);border-radius:14px;padding:16px 18px;margin-bottom:10px;text-decoration:none;color:inherit;transition:.2s}
+.r:hover{background:rgba(125,211,252,.12);border-color:#7dd3fc;transform:translateY(-2px)}
+.r h3{font-size:16px;margin-bottom:4px;color:#ffd76a}
+.r .sub{font-size:12px;color:rgba(232,237,255,.6);margin-bottom:6px}
+.r .meta{display:flex;gap:6px;flex-wrap:wrap}
+.r .meta span{font-size:11px;background:rgba(125,211,252,.15);color:#7dd3fc;padding:2px 8px;border-radius:20px}
+.none{text-align:center;color:rgba(232,237,255,.4);padding:40px 0;font-size:14px}
+#siteAchWall,#leaderboardWall,#userWall{display:none;position:fixed;inset:0;z-index:300;background:rgba(5,7,15,.94);align-items:center;justify-content:center;padding:18px}
+#siteAchWall.show,#leaderboardWall.show,#userWall.show{display:flex}
+.ach-box{width:min(860px,94vw);max-height:88vh;overflow:auto;background:linear-gradient(145deg,#1a1f3a,#131836);border:1.5px solid rgba(125,211,252,.25);border-radius:18px;padding:22px;color:#e8edff}
+.ach-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ach-head h2{font-size:20px;background:linear-gradient(100deg,#ffd76a,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ach-head button{background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:7px 14px;color:#e8edff;cursor:pointer;font-size:13px}
+.ach-ttl{font-size:13px;margin:4px 0;color:rgba(232,237,255,.7)}
+.ach-ttl span{color:#ffd76a;font-weight:700}
+.ag{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.ag-i{flex:1 1 150px;padding:10px 12px;border:1.5px solid;border-radius:10px;background:rgba(255,255,255,.05);text-align:center}
+.ag-i strong{display:block;font-size:13px;margin-bottom:4px}
+.ag-i small{font-size:11px;color:rgba(232,237,255,.5)}
+.ag-i em{display:inline-block;font-style:normal;font-size:10px;margin-top:4px;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.1)}
+.am{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:6px 0 14px}
+.am-i{text-align:center;padding:10px 6px;border:1.5px solid;border-radius:10px;background:rgba(255,255,255,.05)}
+.am-i .mi{font-size:24px;display:block;margin-bottom:4px}
+.am-i b{display:block;font-size:12px;margin-bottom:2px}
+.am-i small{font-size:10px;color:rgba(232,237,255,.5)}
+.am-i em{display:inline-block;font-style:normal;font-size:9px;margin-top:3px;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.1)}
+.lv1{border-color:#e8edff}.lv1 strong,.lv1 b,.lv1 em{color:#e8edff}
+.lv2{border-color:#7dd3fc}.lv2 strong,.lv2 b,.lv2 em{color:#7dd3fc}
+.lv3{border-color:#c084fc}.lv3 strong,.lv3 b,.lv3 em{color:#c084fc}
+.lv4{border-color:#f87171}.lv4 strong,.lv4 b,.lv4 em{color:#f87171}
+.lv5{border-color:#ffd76a;background:linear-gradient(145deg,rgba(255,215,106,.15),rgba(192,132,252,.15),rgba(125,211,252,.15))}
+.lv5 strong,.lv5 b{background:linear-gradient(100deg,#ffd76a,#f59e0b,#c084fc,#7dd3fc,#6ee7b7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ag-i.locked,.am-i.locked{opacity:.55}
+.locked .mask{filter:blur(6px);opacity:.55;user-select:none}
+.lb-tabs{display:flex;gap:8px;margin-bottom:16px;justify-content:center;flex-wrap:wrap}
+.lb-tab{padding:6px 16px;border:1.5px solid #526487;border-radius:20px;background:rgba(255,255,255,.05);color:#e8edff;font-size:13px;cursor:pointer;transition:.2s}
+.lb-tab.active{background:#d97706;border-color:#ffd76a;color:#fff}
+.lb-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #354467;border-radius:10px;margin-bottom:6px;background:rgba(255,255,255,.04)}
+.lb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid #ffd76a;background:rgba(255,215,106,0.2)}
+.lb-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;flex-shrink:0}
+.lb-rank.gold{background:#ffd76a;color:#1a1a2e}.lb-rank.silver{background:#c0c0c0;color:#1a1a2e}.lb-rank.bronze{background:#cd7f32;color:#fff}
+.lb-name{flex:1;font-weight:bold;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-stats{font-size:12px;color:#aeb9d4;flex-shrink:0}
+.lb-stats span{color:#ffd76a;margin-left:4px}
+.lb-empty{text-align:center;color:#7a8ba8;padding:40px 0;font-size:14px}
+.lb-note{text-align:center;font-size:11px;color:#7a8ba8;margin-top:12px}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}
+.avatar-item{width:100%;aspect-ratio:1;border:2px solid #526487;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:.2s;background:rgba(255,255,255,.05)}
+.avatar-item:hover{border-color:#7dd3fc;background:rgba(125,211,252,.2)}
+.avatar-item.selected{border-color:#ffd76a;background:rgba(255,215,106,.2)}
+.name-input{width:100%;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:8px;padding:10px 14px;font-size:15px;color:#e8edff;outline:none;margin:8px 0}
+.name-input:focus{border-color:#7dd3fc}
+.save-btn{background:linear-gradient(135deg,#ffd76a,#f59e0b);border:none;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;width:100%;margin-top:8px}
+.save-btn:hover{transform:scale(1.02);box-shadow:0 0 15px rgba(255,215,106,.5)}
+.logout-btn{background:rgba(255,255,255,.1);border:1px solid #526487;border-radius:10px;padding:8px 24px;font-size:13px;color:#e8edff;cursor:pointer;transition:.2s;width:100%;margin-top:8px}
+.ach-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);padding:40px 60px;border-radius:20px;background:rgba(10,15,30,0.98);border:3px solid;z-index:1000;text-align:center;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);max-width:90vw}
+.ach-modal.show{transform:translate(-50%,-50%) scale(1)}
+.ach-particle{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:999}
+.ach-confetti{position:fixed;width:12px;height:12px;pointer-events:none;z-index:997}
+.ach-flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:998}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="stars" id="stars"></div>
+<div class="head">
+  <div class="sub">B I O · 搜 索</div>
+  <h1>🔍 搜索定制知识卡</h1>
+  <div class="box">
+    <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
+    <button onclick="scheduleSearch()">搜索</button>
+  </div>
+  <div>
+    <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button>
+    <button class="ach-btn secondary" onclick="openLeaderboard()">🏅 排行榜</button>
+    <button class="ach-btn" onclick="openUserPanel()" style="background:linear-gradient(135deg,#7dd3fc,#4a9fd8)">👤 我的</button>
+  </div>
+  <br><a class="back" href="index.html">← 返回欢迎入口</a>
+</div>
+<div class="wrap">
+  <div class="hint" id="hint"></div>
+  <div id="res"></div>
+  <div class="none" id="none" style="display:none">没有找到匹配的卡片，换个词试试～</div>
+</div>
+<div id="siteAchWall" onclick="if(event.target===this)closeSiteAch()">
+  <div class="ach-box">
+    <div class="ach-head"><h2>🏆 全站成就系统</h2><button onclick="closeSiteAch()">✕</button></div>
+    <p class="ach-ttl">称号：<span id="stTitleProg">0 / 4</span></p>
+    <div class="ag" id="stTitleList"></div>
+    <p class="ach-ttl">勋章：<span id="stMedalProg">0 / 12</span></p>
+    <div class="am" id="stMedalGrid"></div>
+  </div>
+</div>
+<div id="leaderboardWall" onclick="if(event.target===this)closeLeaderboard()">
+  <div class="ach-box">
+    <div class="ach-head"><h2>🏅 全站排行榜</h2><button onclick="closeLeaderboard()">✕</button></div>
+    <div id="lbContent"><p style="color:#aeb9d4;text-align:center">加载中...</p></div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="ach-btn secondary" onclick="refreshLeaderboard()" style="font-size:12px;padding:6px 14px">🔄 刷新</button>
+      <span id="lbLastUpdate" style="font-size:11px;color:#7a8ba8;margin-left:8px"></span>
+    </div>
+    <p class="lb-note">📌 每完成一张卡片或答题时自动同步，其他用户也能看到你的成绩</p>
+  </div>
+</div>
+<div id="userWall" onclick="if(event.target===this)closeUserPanel()">
+  <div class="ach-box">
+    <div class="ach-head"><h2>👤 个人信息</h2><button onclick="closeUserPanel()">✕</button></div>
+    <div id="userInfo" style="padding:16px 0"><p style="color:#aeb9d4;text-align:center">加载中...</p></div>
+  </div>
+</div>
+<script>
+window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":103043,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":58314,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46799,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46013,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49462,"id":545315}];
+function doSearch(){
+  var v=document.getElementById('q').value.trim();
+  var cards=window.CARDS||[];
+  var res=document.getElementById('res'),none=document.getElementById('none'),hint=document.getElementById('hint');
+  if(!v){res.innerHTML='';none.style.display='none';hint.textContent='请输入卡片 ID（纯数字）搜索';return;}
+  if(!/^\d+$/.test(v)){res.innerHTML='';none.style.display='block';none.textContent='请输入纯数字 ID（如 1、2、3…）';hint.textContent='无效输入：请只输入数字 ID';return;}
+  var id=parseInt(v,10);
+  var hits=cards.filter(function(x){return x.id===id;});
+  if(!hits.length){res.innerHTML='';none.style.display='block';none.textContent='没有找到 ID 为 '+id+' 的卡片，请确认 ID 是否正确（只输入完整 ID 才能搜到）';hint.textContent='没有 ID 为 '+id+' 的卡片';return;}
+  none.style.display='none';
+  hint.textContent='✅ 找到 1 张卡片（ID '+id+'）';
+  var html='';
+  hits.forEach(function(x){
+    var tags=(x.badges||[]).concat(x.tags||[]);
+    var tagHtml=tags.slice(0,5).map(function(t){return '<span>'+t+'</span>';}).join('');
+    html+='<a class="r" href="cards/'+encodeURIComponent(x.file)+'"><h3>'+(x.h1||x.title)+'</h3><div class="sub">'+x.title+'</div><div class="meta">'+tagHtml+'</div></a>';
+  });
+  res.innerHTML=html;
+}
+var pendingTimer=null;
+function scheduleSearch(){
+  if(pendingTimer)clearTimeout(pendingTimer);
+  var hint=document.getElementById('hint');
+  if(hint)hint.textContent='⏳ 正在扫描…';
+  pendingTimer=setTimeout(function(){pendingTimer=null;doSearch();},1500);
+}
+document.getElementById('q').addEventListener('input',scheduleSearch);
+var stTitles=[],stMedals=[],lastTitles=null,lastMedals=null;
+var stLevelLabel=['','★入门','★★进阶','★★★高深','★★★★稀有','★★★★★传说'];
+var stTInfo=[['t1','初入江湖','浏览 1 张知识点卡片',1],['t2','略有建树','浏览 20 张知识点卡片',2],['t3','炉火纯青','浏览 50 张知识点卡片',3],['t4','登峰造极','浏览 120 张知识点卡片',4]];
+var stMInfo=[['m1','🌱','感觉良好','任意知识卡连续答对 7 道题',2],['m2','🪙','终结币','任意知识卡连续答错 8 道题',2],['m3','⭐','渐有心得','全站累计答对 70 道题',2],['m4','🔥','手感火热','全站累计答对 100 道题',3],['m5','💡','一通百通','全站累计答对 150 道题',4],['m6','🗺️','博览群卡','浏览了 10 张卡片',2],['m7','📚','学海无涯','浏览了 30 张卡片',4],['m8','💎','满分起步','任意一张知识卡选择题全对',2],['m9','🏅','连战连捷','三套知识卡中的知识卡全部全对',3],['m10','⚡','连击大师','连续答对 20 道题',4],['m11','👑','答题封神','全站累计答对 200 道题',4],['m12','🌌','知识星河','完成 10 套知识卡套',5]];
+function getSiteAchData(){try{var r=localStorage.getItem('site_ach');return r?JSON.parse(r):{};}catch(e){return {};}}
+function calcSiteAch(){
+  var data=getSiteAchData();
+  var completed=0,totalPages=0,correct=0,perfectCount=0,anyPerfect=0,maxStreak=0,maxWrong=0;
+  for(var k in data){var d=data[k];if(d.completed)completed++;totalPages+=(d.pages||0);correct+=(d.correct||0);if(d.perfect){anyPerfect=1;perfectCount++;}if((d.maxStreak||0)>maxStreak)maxStreak=d.maxStreak;if((d.maxWrong||0)>maxWrong)maxWrong=d.maxWrong;}
+  stTitles=[];
+  if(totalPages>=1)stTitles.push('t1');
+  if(totalPages>=20)stTitles.push('t2');
+  if(totalPages>=50)stTitles.push('t3');
+  if(totalPages>=120)stTitles.push('t4');
+  stMedals=[];
+  if(maxStreak>=7)stMedals.push('m1');
+  if(maxWrong>=8)stMedals.push('m2');
+  if(correct>=70)stMedals.push('m3');
+  if(correct>=100)stMedals.push('m4');
+  if(correct>=150)stMedals.push('m5');
+  if(completed>=10)stMedals.push('m6');
+  if(completed>=30)stMedals.push('m7');
+  if(anyPerfect)stMedals.push('m8');
+  if(perfectCount>=3)stMedals.push('m9');
+  if(maxStreak>=20)stMedals.push('m10');
+  if(correct>=200)stMedals.push('m11');
+  if(completed>=10)stMedals.push('m12');
+}
+function openSiteAch(){
+  calcSiteAch();
+  var wall=document.getElementById('siteAchWall');
+  if(!wall)return;
+  var ti=stTInfo.map(function(x){var on=stTitles.indexOf(x[0])>=0;return '<div class="ag-i lv'+x[3]+' '+(on?'':'locked')+'"><strong>'+(on?'🏆 ':'🔒 ')+'<span class="'+(on?'':'mask')+'">'+x[1]+'</span></strong><small><span class="'+(on?'':'mask')+'">'+(on?x[2]:'解锁条件保密')+'</span></small><em>'+stLevelLabel[x[3]]+'</em></div>';}).join('');
+  var mi=stMInfo.map(function(m){var on=stMedals.indexOf(m[0])>=0;return '<div class="am-i lv'+m[4]+' '+(on?'':'locked')+'"><span class="mi">'+(on?m[1]:'🔒')+'</span><b><span class="'+(on?'':'mask')+'">'+m[2]+'</span></b><small><span class="'+(on?'':'mask')+'">'+(on?m[3]:'解锁条件保密')+'</span></small><em>'+stLevelLabel[m[4]]+'</em></div>';}).join('');
+  document.getElementById('stTitleList').innerHTML=ti;
+  document.getElementById('stMedalGrid').innerHTML=mi;
+  document.getElementById('stTitleProg').textContent=stTitles.length+' / 4';
+  document.getElementById('stMedalProg').textContent=stMedals.length+' / '+stMInfo.length;
+  var newT=stTitles.filter(function(t){return !lastTitles||lastTitles.indexOf(t)<0;});
+  var newM=stMedals.filter(function(m){return !lastMedals||lastMedals.indexOf(m)<0;});
+  if(lastTitles){for(var i=0;i<newT.length;i++){(function(idx){var info=stTInfo.find(function(x){return x[0]===newT[idx];});if(info)setTimeout(function(){showAchievementEffect(info[3],info[1],'🏆');},idx*400);})(i);}}
+  if(lastMedals){for(var j=0;j<newM.length;j++){(function(idx){var info=stMInfo.find(function(x){return x[0]===newM[idx];});if(info)setTimeout(function(){showAchievementEffect(info[4],info[2],info[1]);},idx*250);})(j);}}
+  lastTitles=stTitles.slice();
+  lastMedals=stMedals.slice();
+  wall.classList.add('show');
+}
+function closeSiteAch(){var w=document.getElementById('siteAchWall');if(w)w.classList.remove('show');}
+function checkAndTriggerAchievement(){
+  calcSiteAch();
+  var newT=stTitles.filter(function(t){return !lastTitles||lastTitles.indexOf(t)<0;});
+  var newM=stMedals.filter(function(m){return !lastMedals||lastMedals.indexOf(m)<0;});
+  if(newT.length>0||newM.length>0){
+    for(var i=0;i<newT.length;i++){(function(idx){var info=stTInfo.find(function(x){return x[0]===newT[idx];});if(info)setTimeout(function(){showAchievementEffect(info[3],info[1],'🏆');},idx*400);})(i);}
+    for(var j=0;j<newM.length;j++){(function(idx){var info=stMInfo.find(function(x){return x[0]===newM[idx];});if(info)setTimeout(function(){showAchievementEffect(info[4],info[2],info[1]);},idx*250);})(j);}
+  }
+  lastTitles=stTitles.slice();
+  lastMedals=stMedals.slice();
+}
+function showAchievementEffect(lvl,name,icon){
+  var color=['','#e8edff','#7dd3fc','#c084fc','#f87171','#ffd76a'][lvl]||'#fff';
+  var flash=document.createElement('div');flash.className='ach-flash';document.body.appendChild(flash);
+  requestAnimationFrame(function(){flash.style.opacity=lvl>=4?'0.5':'0.3';setTimeout(function(){flash.style.opacity='0';setTimeout(function(){flash.remove();},300);},200);});
+  var modal=document.createElement('div');modal.className='ach-modal';modal.style.border='3px solid '+color;modal.style.boxShadow='0 0 '+(lvl>=4?80:40)+'px '+color+'88';
+  if(lvl===5)modal.style.background='linear-gradient(135deg,rgba(255,215,106,0.2),rgba(192,132,252,0.2),rgba(125,211,252,0.2))';
+  modal.innerHTML='<div style="font-size:'+(lvl>=4?'100px':'70px')+';margin-bottom:15px">'+icon+'</div><h2 style="color:'+color+';font-size:'+(lvl>=4?'36px':'28px')+';margin-bottom:8px">'+name+'</h2><p>'+(lvl>=4?'🏆 称号已解锁！':'🎖️ 勋章已解锁！')+'</p>';
+  document.body.appendChild(modal);
+  requestAnimationFrame(function(){modal.classList.add('show');});
+  for(var i=0;i<lvl*25;i++){setTimeout(function(){createParticle(color,lvl);},i*25);}
+  if(lvl>=4)for(var j=0;j<50;j++){setTimeout(function(){createConfetti(color);},j*40);}
+  setTimeout(function(){modal.classList.remove('show');setTimeout(function(){modal.remove();},500);},lvl>=4?4000:3000);
+}
+function createParticle(color,lvl){
+  var p=document.createElement('div');p.className='ach-particle';p.style.background=color;p.style.width=p.style.height=(lvl>=4?'14':'10')+'px';
+  p.style.left='50%';p.style.top='50%';document.body.appendChild(p);
+  var ang=Math.random()*Math.PI*2;var vel=(80+Math.random()*120)*(lvl>=4?1.5:1);
+  var vx=Math.cos(ang)*vel;var vy=Math.sin(ang)*vel;var x=0,y=0,op=1;
+  (function anim(){x+=vx*0.02;y+=vy*0.02+2;op-=0.015;p.style.transform='translate('+x+'px,'+y+'px)';p.style.opacity=op;if(op>0)requestAnimationFrame(anim);else p.remove();})();
+}
+function createConfetti(color){
+  var c=document.createElement('div');c.className='ach-confetti';c.style.background=color;c.style.left=Math.random()*100+'vw';c.style.top='-20px';
+  document.body.appendChild(c);
+  var dur=3000+Math.random()*1000;var start=Date.now();
+  (function anim(){var el=Date.now()-start;if(el>=dur){c.remove();return;}c.style.top=(el/dur*120)+'vh';c.style.transform='rotate('+(el/dur*720)+'deg)';c.style.opacity=1-el/dur;requestAnimationFrame(anim);})();
+}
+var _lbSupabase=null,_lbUser=null,_lbUserData=null;
+var _lbConfig={url:'',key:''};
+async function initLeaderboard(){
+  if(!_lbConfig.url||!_lbConfig.key){
+    document.getElementById('lbContent').innerHTML='<p style="color:#ffd76a;text-align:center;padding:30px">⚠️ 排行榜功能未配置<br><small>请在 search.html 中找到 <code style="background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px">_lbConfig</code> 并填入你的 Supabase URL 和 Key</small></p>';
+    return;
+  }
+  try{
+    _lbSupabase=supabase.createClient(_lbConfig.url,_lbConfig.key);
+    var uid=localStorage.getItem('lb_uid');
+    if(!uid){uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);localStorage.setItem('lb_uid',uid);}
+    _lbUser=uid;
+    await syncCurrentUser();
+    await refreshLeaderboard();
+  }catch(e){
+    document.getElementById('lbContent').innerHTML='<p style="color:#f87171;text-align:center">连接失败: '+e.message+'</p>';
+  }
+}
+async function refreshLeaderboard(){
+  if(!_lbSupabase)return;
+  await syncCurrentUser();
+  var r=await _lbSupabase.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);
+  renderLeaderboard(r.data||[]);
+  document.getElementById('lbLastUpdate').textContent='更新: '+new Date().toLocaleTimeString('zh-CN');
+}
+async function syncCurrentUser(){
+  if(!_lbSupabase)return;
+  var d=getCurrentData();
+  try{
+    await _lbSupabase.from('leaderboard').upsert({
+      user_id:_lbUser,
+      user_name:(_lbUserData&&_lbUserData.user_name)?_lbUserData.user_name:'用户_'+_lbUser.slice(-4),
+      avatar:(_lbUserData&&_lbUserData.avatar)?_lbUserData.avatar:'😀',
+      total_pages:d.totalPages,total_correct:d.correct,
+      completed_sets:d.completed,max_streak:d.maxStreak,
+      total_score:calcScore(d),last_seen:new Date().toISOString()
+    },{onConflict:'user_id'});
+  }catch(e){console.log('同步失败:',e.message);}
+}
+function getCurrentData(){
+  try{
+    var data=JSON.parse(localStorage.getItem('site_ach')||'{}');
+    var c=0,tp=0,cr=0,ms=0;
+    for(var k in data){var v=data[k];if(v.completed)c++;tp+=(v.pages||0);cr+=(v.correct||0);if((v.maxStreak||0)>ms)ms=v.maxStreak;}
+    return{totalPages:tp,correct:cr,completed:c,maxStreak:ms};
+  }catch(e){return{totalPages:0,correct:0,completed:0,maxStreak:0};}
+}
+function calcScore(d){return d.totalPages*2+d.correct*1+d.completed*10+d.maxStreak*5;}
+function renderLeaderboard(list){
+  var el=document.getElementById('lbContent');
+  if(!list.length){el.innerHTML='<div class="lb-empty">暂无记录，快来刷分吧！</div>';return;}
+  var html='<div class="lb-tabs">';
+  html+='<button class="lb-tab active" onclick="switchLbTab(\"score\",this)">🏆 总分</button>';
+  html+='<button class="lb-tab" onclick="switchLbTab(\"pages\",this)">📖 浏览</button>';
+  html+='<button class="lb-tab" onclick="switchLbTab(\"correct\",this)">✅ 答题</button>';
+  html+='</div>';
+  list.forEach(function(item,i){
+    var rank=i+1;
+    var rc=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
+    var isMe=item.user_id===_lbUser;
+    var bgStyle=isMe?' style="border-color:#ffd76a;background:rgba(255,215,106,.1)"':'';
+    var avatar=item.avatar||'😀';
+    var nameTag=(item.user_name||'匿名用户')+(isMe?' (你)':'');
+    html+='<div class="lb-item'+bgStyle+'"><div class="lb-avatar">'+avatar+'</div><div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
+  });
+  el.innerHTML=html;
+}
+function switchLbTab(type,btn){
+  document.querySelectorAll('.lb-tab').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  if(!_lbSupabase)return;
+  var col=type==='score'?'total_score':type==='pages'?'total_pages':'total_correct';
+  _lbSupabase.from('leaderboard').select('*').order(col,{ascending:false}).limit(50).then(function(r){renderLeaderboard(r.data||[]);});
+}
+function openLeaderboard(){
+  document.getElementById('leaderboardWall').classList.add('show');
+  if(!_lbSupabase)initLeaderboard();
+  else refreshLeaderboard();
+}
+function closeLeaderboard(){document.getElementById('leaderboardWall').classList.remove('show');}
+function openUserPanel(){
+  document.getElementById('userWall').classList.add('show');
+  loadUserProfile();
+}
+function closeUserPanel(){document.getElementById('userWall').classList.remove('show');}
+function registerUser(){
+  var name=document.getElementById('regNameInput').value.trim();
+  if(!name){alert('请输入昵称');return;}
+  var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+  localStorage.setItem('lb_uid',uid);
+  _lbUser=uid;
+  _lbUserData={user_id:uid,user_name:name,avatar:'😀'};
+  if(_lbSupabase){
+    _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:'😀'},{onConflict:'user_id'})
+    .then(function(){alert('注册成功！');loadUserProfile();})
+    .catch(function(e){alert('注册失败: '+e.message);});
+  }else{
+    alert('注册成功！');
+    loadUserProfile();
+  }
+}
+function loadUserProfile(){
+  var el=document.getElementById('userInfo');
+  if(!_lbUser){
+    el.innerHTML='<div style="text-align:center;padding:20px 0"><p style="color:#ffd76a;font-size:16px;margin-bottom:16px">👋 欢迎来到知识卡！</p><p style="color:#aeb9d4;font-size:13px;margin-bottom:20px">请先注册你的账号</p><input class="name-input" id="regNameInput" placeholder="输入你的昵称..." maxlength="20"><button class="save-btn" id="regBtn" onclick="registerUser()">立即注册</button></div>';
+    setTimeout(function(){var inp=document.getElementById('regNameInput');if(inp)inp.focus();},100);
+    return;
+  }
+  el.innerHTML='<p style="color:#aeb9d4;text-align:center">加载中...</p>';
+  if(!_lbSupabase){el.innerHTML='<p style="color:#f87171;text-align:center">未连接数据库</p>';return;}
+  _lbSupabase.from('users').select('*').eq('user_id',_lbUser).single()
+  .then(function(r){
+    if(r.data){
+      _lbUserData=r.data;
+      renderUserProfile();
+    }else{
+      _lbUserData={user_id:_lbUser,user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
+      _lbSupabase.from('users').insert(_lbUserData);
+      renderUserProfile();
+    }
+  })
+  .catch(function(e){el.innerHTML='<p style="color:#f87171">加载失败: '+e.message+'</p>';});
+}
+function renderUserProfile(){
+  var el=document.getElementById('userInfo');
+  var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
+  var avatars=['😀','😎','🤓','😺','🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐗','🐴','🦋','🐝','🌸','🌺','🍀','⭐','🔥','💎','🎮','🎯','🚀','🎸','🎨','📚'];
+  var avHtml='';
+  avatars.forEach(function(a){
+    var sel=(a===data.avatar?' selected':'');
+    avHtml+='<div class="avatar-item'+sel+'" data-av="'+a+'" onclick="pickAv(this)">'+a+'</div>';
+  });
+  el.innerHTML='<div style="max-width:400px;margin:0 auto"><div style="text-align:center;margin-bottom:16px"><div style="font-size:60px;margin-bottom:8px">'+data.avatar+'</div><div class="avatar-grid">'+avHtml+'</div></div><label style="color:#aeb9d4;font-size:13px">用户名</label><input class="name-input" id="nameInput" value="'+(data.user_name||'')+'" placeholder="输入你的昵称" maxlength="20"><button class="save-btn" onclick="saveProfile()">保存资料</button><button class="logout-btn" onclick="logoutUser()">切换账号</button></div>';
+}
+function pickAv(el){
+  document.querySelectorAll('.avatar-item').forEach(function(e){e.classList.remove('selected');});
+  el.classList.add('selected');
+  document.querySelector('#userInfo div div').textContent=el.getAttribute('data-av');
+  _lbUserData.avatar=el.getAttribute('data-av');
+}
+async function saveProfile(){
+  var name=document.getElementById('nameInput').value.trim();
+  if(!name){alert('请输入用户名');return;}
+  try{
+    await _lbSupabase.from('users').upsert({user_id:_lbUser,user_name:name,avatar:_lbUserData.avatar},{onConflict:'user_id'});
+    await _lbSupabase.from('leaderboard').upsert({user_id:_lbUser,user_name:name,avatar:_lbUserData.avatar,total_pages:getCurrentData().totalPages,total_correct:getCurrentData().correct,completed_sets:getCurrentData().completed,max_streak:getCurrentData().maxStreak,total_score:calcScore(getCurrentData()),last_seen:new Date().toISOString()},{onConflict:'user_id'});
+    alert('保存成功！');
+    closeUserPanel();
+    refreshLeaderboard();
+  }catch(e){alert('保存失败: '+e.message);}
+}
+function logoutUser(){
+  if(confirm('确定要切换账号吗？')){
+    localStorage.removeItem('lb_uid');
+    _lbUser=null;
+    _lbSupabase=null;
+    closeUserPanel();
+    location.reload();
+  }
+}
+(function(){var box=document.getElementById('stars');if(!box)return;var n=('ontouchstart' in window)||innerWidth<768?45:70,html='';for(var i=0;i<n;i++){var s=Math.random()*2+1;html+='<div style="position:absolute;width:'+s+'px;height:'+s+'px;background:white;border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;opacity:'+(Math.random()*0.5+0.2)+';animation:twinkle '+(2+Math.random()*3)+'s ease-in-out infinite alternate"></div>';}box.innerHTML=html;})();
+</script>
+<script>
+var canvas=document.getElementById('fx');if(!canvas)return;var ctx=canvas.getContext('2d');var W=canvas.width=innerWidth;var H=canvas.height=innerHeight;var pts=[];for(var i=0;i<60;i++){pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*1.5+0.5});}
+function tick(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(125,211,252,0.4)';ctx.fill();});requestAnimationFrame(tick);}
+tick();
+window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
+</script>
+</body>
+</html>

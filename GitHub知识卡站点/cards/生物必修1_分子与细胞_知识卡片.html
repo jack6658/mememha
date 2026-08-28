@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>生物必修1 · 分子与细胞 · 知识卡片</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;line-height:1.7;font-size:15px;min-height:100dvh;overflow-x:hidden}
+:root{--bg:#0a0e1a;--panel:#121828;--panel2:#1a2338;--card:#0f1625;--ink:#e2eaf5;--muted:#7388aa;--line:#23304a;--accent:#38bdf8;--accent2:#818cf8;--gold:#fbbf24;--green:#2dd4a7;--red:#f87171;--pink:#f472b6;--orange:#fb923c;--btn-hover:#253250;--scrollbar:#2c3850;--card-text:#dfe8f5;--zebra:rgba(255,255,255,.02);--hero-grad:linear-gradient(135deg,#0a0e1a 0%,#152342 60%,#0d2a33 100%);--fill-text:#0b0f1a}
+[data-theme="light"]{--bg:#ffffff;--panel:#f7f9fc;--panel2:#eef2f7;--card:#ffffff;--ink:#1f2937;--muted:#5b6b82;--line:#e2e8f0;--accent:#0ea5e9;--accent2:#6366f1;--gold:#d97706;--green:#0d9488;--red:#dc2626;--pink:#db2777;--orange:#ea580c;--btn-hover:#e2e8f0;--scrollbar:#cbd5e1;--card-text:#334155;--zebra:rgba(0,0,0,.02);--hero-grad:linear-gradient(135deg,#ffffff 0%,#eef3fb 55%,#e5f4f7 100%);--fill-text:#ffffff}--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(56,189,248,.3);color:#fff}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+header.hero{position:sticky;top:0;z-index:50;background:var(--hero-grad);border-bottom:1px solid var(--line);padding:14px 20px;padding-top:calc(14px + var(--safe-t))}
+.hero-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+header.hero h1{font-size:18px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:6px}
+header.hero h1 .sub{font-size:12px;color:var(--muted);font-weight:500}
+header.hero p.meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.ctrls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;transition:.15s;font-family:inherit;white-space:nowrap;user-select:none}
+.btn:hover{border-color:var(--accent);background:var(--btn-hover)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:var(--fill-text);box-shadow:0 4px 14px rgba(56,189,248,.25)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.gost{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn.gost:hover{background:rgba(56,189,248,.1)}
+.btn.sm{font-size:12px;padding:5px 10px;border-radius:8px}
+.wrap{display:flex;gap:22px;max-width:1200px;margin:0 auto;padding:20px 22px 80px;padding-bottom:calc(80px + var(--safe-b))}
+nav.toc{width:260px;flex-shrink:0;position:sticky;top:74px;align-self:flex-start;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px;max-height:calc(100dvh - 90px);overflow-y:auto}
+nav.toc .tt{font-size:10.5px;color:var(--muted);letter-spacing:.4px;margin:10px 4px 5px;text-transform:uppercase;font-weight:700}
+nav.toc a{display:block;color:var(--muted);text-decoration:none;font-size:12.5px;padding:6px 8px;border-radius:7px;transition:.15s;line-height:1.4}
+nav.toc a:hover{color:var(--accent);background:rgba(56,189,248,.08)}
+nav.toc a .no{display:inline-block;width:22px;color:var(--accent2);font-weight:700;font-size:10.5px;flex-shrink:0}
+nav.toc a.sec{font-weight:700;color:var(--ink);font-size:13px;padding:8px 8px 4px;pointer-events:none}
+nav.toc a.sec .no{display:none}
+main{flex:1;min-width:0}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.card > summary{display:flex;align-items:center;gap:10px;padding:14px 16px;list-style:none;font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;transition:background .2s;-webkit-tap-highlight-color:transparent}
+.card > summary::-webkit-details-marker{display:none}
+.card > summary:hover{background:var(--panel2)}
+.card > summary .cn{flex-shrink:0;font-size:10.5px;font-weight:700;color:#0b0f1a;background:var(--gold);border-radius:999px;padding:2px 8px;min-width:24px;text-align:center}
+.card > summary::after{content:"\25BE";margin-left:auto;color:var(--muted);transition:transform .2s;font-size:13px;flex-shrink:0}
+.card.open > summary::after,.card[open] > summary::after{transform:rotate(180deg)}
+.card > summary .cg{font-size:11px;font-weight:500;color:var(--accent2);background:rgba(129,140,248,.12);padding:2px 8px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;flex-shrink:0}
+.card .b{width:auto;padding:14px 18px;border-top:1px solid var(--line);background:var(--panel);font-size:13.5px;color:var(--card-text)}
+.card .b:first-child{border-top:none}
+.card .b h4{font-size:12.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:5px;letter-spacing:.2px}
+.card .b p{margin:0 0 6px 0;line-height:1.75}
+.card .b p:last-child{margin-bottom:0}
+.card .b ul{margin:0;padding:0;list-style:none}
+.card .b li{position:relative;padding-left:16px;margin-bottom:4px;line-height:1.7}
+.card .b li::before{content:"";position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:2px;background:var(--muted)}
+.card .b.core{background:var(--panel)}
+.card .b.core h4{color:var(--accent)}
+.card .b.core li::before{background:var(--accent)}
+.card .b.kao{background:rgba(251,191,36,.05)}
+.card .b.kao h4{color:var(--gold)}
+.card .b.kao li::before{background:var(--gold)}
+.card .b.nan{background:rgba(244,114,182,.05)}
+.card .b.nan h4{color:var(--pink)}
+.card .b.nan li::before{background:var(--pink)}
+.card .b.trap{background:rgba(248,113,113,.05)}
+.card .b.trap h4{color:var(--red)}
+.card .b.trap li::before{background:var(--red)}
+.card .b.exam{background:rgba(129,140,248,.05)}
+.card .b.exam h4{color:var(--accent2)}
+.card .b.exam li::before{background:var(--accent2)}
+.card .b.table{background:var(--panel)}
+.card .b.table h4{color:var(--green)}
+.card .b .hl{color:var(--gold);font-weight:700}
+.card .b .g{color:var(--green);font-weight:700}
+.card .b .r{color:var(--red);font-weight:700}
+.card .b .p{color:var(--pink);font-weight:700}
+.card .b .o{color:var(--orange);font-weight:700}
+.card .b code{background:var(--panel2);padding:1px 6px;border-radius:4px;font-size:12.5px;color:var(--accent);font-family:"JetBrains Mono","Consolas",monospace}
+.card .b strong{color:var(--ink)}
+.card .b em{color:var(--accent2);font-style:normal}
+.tbl-wrap{overflow-x:auto;margin:8px 0 4px;border-radius:10px;border:1px solid var(--line);background:var(--panel2)}
+.tbl-wrap table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:420px}
+.tbl-wrap th,.tbl-wrap td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl-wrap th{background:var(--panel2);color:var(--accent);font-weight:700;font-size:11.5px;white-space:nowrap;position:sticky;top:0}
+.tbl-wrap tr:last-child td{border-bottom:none}
+.tbl-wrap td:first-child{color:var(--gold);font-weight:600;white-space:nowrap}
+.tbl-wrap tr:nth-child(even) td{background:var(--zebra)}
+.tbl-wrap .hl{color:var(--gold);font-weight:700}
+.tbl-wrap .g{color:var(--green);font-weight:700}
+.tbl-wrap .r{color:var(--red);font-weight:700}
+.card .b .note{margin:6px 0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(56,189,248,.06);border-radius:0 8px 8px 0;font-size:13px;color:var(--muted)}
+.tag-contain{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.tag{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(129,140,248,.12);color:var(--accent2);white-space:nowrap}
+.tag.gold{background:rgba(251,191,36,.12);color:var(--gold)}
+.tag.green{background:rgba(45,212,167,.12);color:var(--green)}
+.tag.red{background:rgba(248,113,113,.12);color:var(--red)}
+.tag.pink{background:rgba(244,114,182,.12);color:var(--pink)}
+.tag.acc{background:rgba(56,189,248,.12);color:var(--accent)}
+#study-overlay{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column}
+#study-overlay.active{display:flex}
+#study-head{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 16px;padding-top:calc(10px + var(--safe-t));border-bottom:1px solid var(--line);background:var(--panel);min-height:48px}
+#study-head .pr{flex:1;height:7px;background:var(--line);border-radius:99px;overflow:hidden;min-width:40px}
+#study-head .pr .fl{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .4s ease}
+#study-head .cnt{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+#study-head .h-title{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;color:var(--ink)}
+#study-stage{flex:1;min-height:0;overflow-y:auto;padding:20px 16px 16px;overscroll-behavior:contain}
+#study-stage .card{width:100%;max-width:820px;margin:0 auto;animation:fadeIn .35s ease-out}
+#study-stage .card > summary{cursor:default;background:var(--panel2);pointer-events:none}
+#study-stage .card .b{display:block}
+#study-foot{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;padding-bottom:calc(10px + var(--safe-b));border-top:1px solid var(--line);background:var(--panel)}
+#study-foot .btn{min-width:90px;justify-content:center;font-size:13px;padding:10px 16px}
+#study-foot .btn:disabled{opacity:.3;cursor:not-allowed}
+#study-foot .btn.done{background:var(--green);border-color:var(--green);color:var(--fill-text)}
+#study-foot .btn.done:hover{filter:brightness(1.1)}
+#study-foot .sp{font-size:12px;color:var(--muted);min-width:60px;text-align:center}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+#study-empty{text-align:center;padding:50px 20px;color:var(--muted);max-width:480px;margin:auto}
+#study-empty .big{font-size:64px;line-height:1;margin-bottom:12px}
+#study-empty h2{font-size:20px;margin-bottom:5px;color:var(--ink)}
+#study-empty p{font-size:14px;margin:5px auto}
+#study-empty .btn{margin-top:14px}
+#mob-toc-btn{display:none;position:fixed;bottom:12px;right:12px;bottom:calc(12px + var(--safe-b));z-index:100;background:var(--accent);color:var(--fill-text);border:none;border-radius:60px;padding:12px 18px;font-size:13px;font-weight:800;box-shadow:0 4px 20px rgba(56,189,248,.35);cursor:pointer;transition:.2s;font-family:inherit;line-height:1}
+#mob-toc-btn:hover{transform:scale(1.05)}
+#mob-toc{display:none;position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--panel);border-top:1px solid var(--line);border-radius:16px 16px 0 0;padding:14px 16px 16px;padding-bottom:calc(16px + var(--safe-b));max-height:60dvh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,.5);animation:slideUp .25s ease-out}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#mob-toc.active{display:block}
+#mob-toc .tt{font-size:10.5px;color:var(--muted);margin:8px 4px 4px;text-transform:uppercase;font-weight:700;letter-spacing:.4px}
+#mob-toc a{display:block;color:var(--muted);text-decoration:none;font-size:13px;padding:7px 10px;border-radius:8px;transition:.15s}
+#mob-toc a:hover{color:var(--accent);background:rgba(56,189,248,.08)}
+#mob-toc a .no{display:inline-block;width:24px;color:var(--accent2);font-weight:700;font-size:11px}
+#mob-toc .close{display:flex;justify-content:flex-end;margin-bottom:4px}
+#mob-toc .close .btn{font-size:12px;padding:6px 12px;background:transparent;border-color:var(--muted);color:var(--muted)}
+#mob-overlay{display:none;position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.5);backdrop-filter:blur(2px)}
+#mob-overlay.active{display:block}
+@media(max-width:820px){
+  .wrap{flex-direction:column;padding:14px 14px 70px;padding-bottom:calc(70px + var(--safe-b))}
+  nav.toc{display:none}
+  #mob-toc-btn{display:flex}
+  header.hero h1{font-size:16px}
+  header.hero h1 .sub{font-size:11px}
+  .hero-row{flex-direction:column;align-items:stretch}
+  .ctrls{justify-content:flex-start}
+  .card > summary .cg{max-width:100px;font-size:10px}
+  .card .b{font-size:13px;padding:12px 14px}
+  .tbl-wrap table{font-size:11.5px;min-width:300px}
+  .tbl-wrap th,.tbl-wrap td{padding:6px 8px}
+  #study-foot .btn{min-width:70px;font-size:12px;padding:8px 12px}
+  #study-head{padding:8px 12px;padding-top:calc(8px + var(--safe-t));gap:6px}
+  #study-head .h-title{font-size:11px}
+  #study-stage{padding:14px 10px 10px}
+}
+@media(max-width:420px){
+  .card .b{font-size:12px;padding:10px 12px}
+  .card > summary{font-size:14px;padding:12px 14px}
+  .tbl-wrap table{font-size:11px;min-width:260px}
+  .tbl-wrap th,.tbl-wrap td{padding:5px 6px}
+  #study-head .h-title{font-size:10.5px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-row">
+    <h1>🧬 生物必修1 <span class="sub">· 知识卡片</span></h1>
+    <div class="ctrls">
+      <button class="btn" id="modeToggle" onclick="toggleStudy()">📖 学习模式</button>
+      <button class="btn sm gost" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ 顶部</button>
+      <button class="btn sm gost" id="themeToggle" onclick="toggleTheme()">🌙 深色</button>
+    </div>
+  </div>
+  <p class="meta">📚 分子与细胞 · 6 专题 · 25 知识卡片 · 考点/难点/易错/真题全覆盖</p>
+</header>
+<div class="wrap" id="refWrap">
+  <nav class="toc" id="toc"></nav>
+  <main id="mainContent"></main>
+</div>
+<div id="mob-overlay" onclick="closeMobToc()"></div>
+<button id="mob-toc-btn" onclick="toggleMobToc()">📑 目录</button>
+<div id="mob-toc">
+  <div class="close"><button class="btn" onclick="closeMobToc()">✕ 关闭</button></div>
+  <div id="mobTocContent"></div>
+</div>
+<div id="study-overlay">
+  <div id="study-head">
+    <button class="btn sm" onclick="toggleStudy()">← 查阅</button>
+    <span class="h-title" id="studyTitle">第 1 张</span>
+    <div class="pr"><div class="fl" id="progFill"></div></div>
+    <span class="cnt" id="progCnt">0 / 0</span>
+  </div>
+  <div id="study-stage"></div>
+  <div id="study-foot">
+    <button class="btn" id="prevBtn" onclick="navStudy(-1)">← 上一张</button>
+    <span class="sp" id="studyPos"></span>
+    <button class="btn" id="nextBtn" onclick="navStudy(1)">下一张 →</button>
+  </div>
+</div>
+<script>
+const CARDS = [{
+  no:1,sec:"🗺️ 知识地图",t:"主题总览 · 知识目录",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    "生物必修1《分子与细胞》以 细胞是生命活动的基本单位 为主线，按 组成→结构→功能→能量→生命历程 逻辑递进。",
+    '<b class="hl">跨章核心线索</b>：结构与功能观（膜-器-核系统）、物质与能量观（ATP为枢纽）、系统观（生物膜系统/细胞器协作）、进化观（原核→真核、半自主性细胞器）。'
+  ]},{ty:"table",title:"📊 章节目录 · 高频考点密度",tbl:{
+    heads:["章/专题","核心模块","考试密度"],
+    rows:[
+      ["第1-2章","细胞的分子组成","⭐ 5/5 — 元素/化合物鉴别、蛋白质/核酸"],
+      ["第3章","细胞的基本结构","⭐ 5/5 — 膜模型、细胞器分工、分泌蛋白"],
+      ["第4章","物质输入和输出","⭐ 4/5 — 渗透、运输方式比较、曲线"],
+      ["第5章","能量供应和利用","⭐ 5/5 — 酶/ATP、呼吸/光合过程、限制因素"],
+      ["第6章","细胞的生命历程","⭐ 4/5 — 有丝分裂、分化/衰老/凋亡/癌变"]
+    ]
+  }}]
+},{
+  no:2,sec:"专题一 细胞的分子组成",t:"元素与化合物鉴别",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '主要元素：<b class="hl">C、H、O、N、P、S</b>（CHONPS）；微量元素：Fe、Zn、Cu、Mn、B、Mo。',
+    '<b class="hl">鲜重最多的元素是O</b>，干重最多的是C；鲜重最多的化合物是水，干重最多的是蛋白质。',
+    '无机盐以<b class="g">离子形式</b>存在（K⁺、Mg²⁺、Ca²⁺、Fe²⁺/³⁺、Cl⁻、PO₄³⁻等）。'
+  ]},{ty:"table",title:"📊 鉴别反应一览",tbl:{
+    heads:["物质","试剂","现象"],
+    rows:[["蛋白质","双缩脲试剂","紫"],["淀粉","碘液","蓝"],["还原糖","斐林试剂","砖红沉淀（需水浴）"],["脂肪","苏丹III/IV","橙黄/红"],["DNA","二苯胺 / 甲基绿","蓝 / 绿"],["RNA","吡罗红","红"]]
+  }},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    '三个"最多"易混淆：<b class="hl">鲜重元素最O、化合物最水、干重最蛋白质</b>。',
+    "无机盐以离子形式存在，不是化合物形式。"
+  ]}]
+},{
+  no:3,sec:"专题一 细胞的分子组成",t:"蛋白质结构与功能",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '基本单位：<b class="hl">氨基酸</b>（通式：R-CH(NH₂)-COOH），20种常见，肽键(-CO-NH-)连接。',
+    "结构层次：一级（序列）→ 二级（α螺旋/β折叠）→ 三级（空间折叠）→ 四级（亚基组装）。",
+    '<b class="g">多样性根本原因</b>：氨基酸种类、数量、排列顺序、空间结构不同。',
+    "功能分类：催化（酶）、运输（血红蛋白）、免疫（抗体）、调节（胰岛素）、结构（胶原蛋白）。"
+  ]},{ty:"kao",title:"🏆 高频变式 · 计算",items:[
+    '<b class="hl">脱水缩合计算</b>：n个氨基酸 → (n-1)个肽键、(n-1)个水、游离氨基/羧基各至少1个',
+    "环形肽：肽键数 = 氨基酸数。",
+    "相对分子质量 = Σ氨基酸质量 - 18×肽键数"
+  ]},{ty:"nan",title:"🎯 难点突破",items:[
+    '<b class="hl">变性与变性复性</b>：高温/强酸碱/重金属/有机溶剂破坏氢键等非共价键 → 空间结构破坏 → 功能丧失。',
+    "条件适宜可复性（核酸变性不可逆对比）。",
+    "变性不破坏肽键，双缩脲反应仍阳性。"
+  ]}]
+},{
+  no:4,sec:"专题一 细胞的分子组成",t:"核酸结构与功能",
+  blocks:[{ty:"table",title:"📊 DNA vs RNA 对比",tbl:{
+    heads:["项目","DNA","RNA"],
+    rows:[
+      ["基本单位","脱氧核糖核苷酸","核糖核苷酸"],
+      ["五碳糖","脱氧核糖","核糖"],
+      ["碱基","A、G、C、T","A、G、C、U"],
+      ["链数","双链（反向平行）","单链（可折叠）"],
+      ["结构特征","双螺旋、碱基互补配对(A=T, C≡G)","发夹结构"],
+      ["分布","核/线粒体/叶绿体","核/细胞质/线粒体/叶绿体"],
+      ["功能","遗传物质（主要）","部分病毒遗传物质、模板/催化/运输/核糖体组分"]
+    ]
+  }},{ty:"nan",title:"🎯 难点突破",items:[
+    'DNA复制<b class="hl">半保留机制</b>：子代DNA分子各保留一条母链，新链按碱基配对原则合成。',
+    "Meselson-Stahl实验：同位素标记法（¹⁵N/¹⁴N）为核心证据。",
+    '<b class="p">不同生物的遗传物质</b>：细胞生物 → DNA；HIV/SARS等病毒 → RNA'
+  ]}]
+},{
+  no:5,sec:"专题一 细胞的分子组成",t:"糖类与脂质",
+  blocks:[{ty:"core",title:"📚 核心知识 · 糖类",items:[
+    '元素组成：<b class="hl">C、H、O</b>。单糖 → 二糖 → 多糖。',
+    '<b class="g">葡萄糖是细胞生命活动的重要能源物质</b>，核糖/脱氧核糖是核酸组成成分。',
+    '淀粉（植物储能）、糖原（动物储能）、纤维素（植物细胞壁 — <b class="hl">不提供能量</b>）。'
+  ]},{ty:"core",title:"📚 核心知识 · 脂质",items:[
+    "元素：主要由C、H、O，有的含N、P。",
+    '<b class="hl">脂肪</b>：储能、保温、缓冲；<b class="hl">磷脂</b>：细胞膜成分；<b class="hl">固醇</b>：胆固醇、性激素、维生素D。',
+    "脂肪单位质量储能最多，氧化耗O₂多、产H₂O多、产能量多。"
+  ]},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    '<b class="hl">糖类不一定都是能源物质</b>（纤维素、核糖、脱氧核糖是结构成分）。',
+    "二糖水解产物：蔗糖→葡+果；麦芽糖→2葡；乳糖→葡+半乳。",
+    '斐林试剂检测还原糖需<b class="r">水浴加热</b>。',
+    "胆固醇是细胞膜重要成分，但过多引发心血管疾病。"
+  ]}]
+},{
+  no:6,sec:"专题二 细胞的基本结构",t:"细胞膜 · 流动镶嵌模型",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    "化学组成：脂质~50%（磷脂为骨架）、蛋白质~40%（转运/受体/酶/识别）、糖类2%~10%（糖被）。",
+    '结构模型：<b class="hl">磷脂双分子层</b>（基本支架，疏水内部）+ 镶嵌蛋白质 + 糖被（外表面）。',
+    "流动性：磷脂分子侧向移动、蛋白质大多能运动。",
+    '功能：分隔（边界）、控制物质进出（<b class="g">选择透过性</b>）、信息交流（受体/糖被）。'
+  ]},{ty:"trap",title:"⚠️ 高频陷阱",items:[
+    '"细胞膜只有磷脂和蛋白质" ✗ — 忽略糖类、胆固醇。',
+    '"只有细胞膜具有选择透过性" ✗ — <b class="r">所有生物膜均有</b>。',
+    '"胆固醇只存在于动物细胞膜" ✓ — 植物细胞膜无胆固醇。',
+    "细胞融合实验（小鼠-人细胞，荧光标记）证明流动性。"
+  ]}]
+},{
+  no:7,sec:"专题二 细胞的基本结构",t:"细胞器分工与生物膜系统",
+  blocks:[{ty:"table",title:"📊 细胞器结构与功能",tbl:{
+    heads:["细胞器","膜层数","核心功能","含DNA/RNA","分布"],
+    rows:[
+      ["线粒体","双层","有氧呼吸主场（动力车间）","有","真核细胞"],
+      ["叶绿体","双层","光合作用（养料制造/能量转换）","有","绿色植物细胞"],
+      ["内质网","单层","粗面—蛋白加工；光面—脂质合成","无","真核细胞"],
+      ["高尔基体","单层","动物—蛋白加工/分类/包装；植物—细胞壁","无","真核细胞"],
+      ["溶酶体","单层","含水解酶，降解衰老细胞器/病原体","无","主要动物细胞"],
+      ["液泡","单层","调节渗透压、储存色素/废物","无","植物细胞"],
+      ["核糖体","无膜","蛋白质合成场所","有RNA","所有细胞"],
+      ["中心体","无膜","形成纺锤体（动物/低等植物）","无","动物/低等植物"]
+    ]
+  }},{ty:"kao",title:"🏆 分泌蛋白合成运输全链路",items:[
+    "核（转录）→ 核糖体（翻译）→ 粗面内质网（加工/折叠）→ 囊泡 → 高尔基体（分类/包装）→ 囊泡 → 细胞膜（胞吐）→ 细胞外。",
+    '<b class="hl">膜面积变化</b>：内质网↓ 高尔基体≈ 细胞膜↑。',
+    "放射性同位素标记氨基酸：核糖体→内质网→高尔基体→细胞膜。"
+  ]},{ty:"nan",title:"🎯 难点突破",items:[
+    '<b class="hl">半自主性细胞器</b>：线粒体/叶绿体含DNA/RNA/核糖体，但绝大多数蛋白由核基因编码。',
+    "生物膜系统：结构相似、功能协同，原核/病毒无此系统。"
+  ]}]
+},{
+  no:8,sec:"专题二 细胞的基本结构",t:"细胞核结构与功能",
+  blocks:[{ty:"table",title:"📊 细胞核结构",tbl:{
+    heads:["结构","组成/特征","功能"],
+    rows:[
+      ["核膜","双层膜、核孔（选择透过、消耗能量）","分隔核质、控制物质进出"],
+      ["染色质/染色体","DNA+蛋白，同一物质两形态","遗传物质载体"],
+      ["核仁","RNA+蛋白，无膜","rRNA合成、核糖体组装"],
+      ["核质","蛋白质/酶/核酸等","代谢场所"]
+    ]
+  }},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    "细胞质RNA大部分在核内转录，但线粒体/叶绿体DNA也能转录。",
+    "蛋白质在细胞质核糖体合成，调控基因表达的蛋白经核孔进入核。",
+    '<b class="hl">核孔不是自由进出</b> — mRNA可出核，DNA不能出核。'
+  ]}]
+},{
+  no:9,sec:"专题三 物质输入和输出",t:"四种跨膜运输方式比较",
+  blocks:[{ty:"table",title:"📊 核心对比",tbl:{
+    heads:["特征","自由扩散","协助扩散","主动运输","胞吞/胞吐"],
+    rows:[
+      ["需载体","不需要","需要（通道/载体）","需要（载体）","不需要载体蛋白"],
+      ["需能量","不需要","不需要","需要（ATP）","需要（ATP）"],
+      ["方向","顺浓度梯度","顺浓度梯度","逆浓度梯度","大分子/颗粒进出"],
+      ["特异性","无","高","高","受体识别"],
+      ["饱和现象","无","有","有","—"],
+      ["典型物质","O₂/CO₂/水/脂溶性小分子","葡萄糖/氨基酸（顺梯度）","Na⁺/K⁺/葡萄糖（逆梯度）","蛋白质/多糖/病菌"],
+      ["代表实例","气体交换","红细胞吸收葡萄糖","Na⁺-K⁺泵/肠上皮吸收","白细胞吞噬/激素分泌"]
+    ]
+  }},{ty:"nan",title:"🎯 难点突破",items:[
+    '<b class="hl">协同转运/次级主动运输</b>：不直接消耗ATP，利用电化学势能（如Na⁺梯度驱动葡萄糖同向转运）。',
+    '<b class="g">通道蛋白 vs 载体蛋白</b>：通道蛋白不与被运输物质结合，运输速率快。'
+  ]}]
+},{
+  no:10,sec:"专题三 物质输入和输出",t:"影响因素曲线与渗透作用",
+  blocks:[{ty:"table",title:"📊 因素分析",tbl:{
+    heads:["因素","自由扩散","协助扩散","主动运输","判读口诀"],
+    rows:[
+      ["浓度差↑","速率↑（线性）","速率↑后饱和","速率↑后饱和","扩散看斜率，载体看平台"],
+      ["转运蛋白数↑","无影响","速率↑","速率↑","蛋白数限制载体类"],
+      ["氧气/呼吸抑制","无影响","无影响","速率↓至0","主动运输靠呼吸"],
+      ["温度↑","速率↑","速率↑","速率↑↑","主动运输最敏感"]
+    ]
+  }},{ty:"kao",title:"🏆 渗透作用与质壁分离",items:[
+    "渗透条件：半透膜 + 膜两侧浓度差。水分子从高水势向低水势扩散。",
+    '<b class="hl">质壁分离</b>：植物细胞置于高渗溶液 → 失水 → 原生层脱离细胞壁。',
+    "应用：食品腌制（高渗脱水）、医用生理盐水（0.9% NaCl等渗）。",
+    '<b class="r">动物细胞</b>（无细胞壁）高渗皱缩、低渗溶血。'
+  ]}]
+},{
+  no:11,sec:"专题四 能量供应和利用",t:"酶的作用与特性",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '本质：<b class="hl">绝大多数为蛋白质，少数RNA（核酶）</b>。',
+    "原理：降低活化能（不改变ΔG/平衡点），加速反应达平衡。",
+    "特性：高效性（比无机催化剂高10⁷~10¹³倍）、专一性、温和条件。",
+    "影响因素：温度、pH、底物浓度、酶浓度、抑制剂。"
+  ]},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    '<b class="hl">低温不使酶变性</b>（仅活性↓），高温/强酸碱/重金属才变性。',
+    "酶不改变化学平衡常数K，只缩短达平衡时间。",
+    "双缩脲试剂只能鉴定蛋白质类酶。"
+  ]}]
+},{
+  no:12,sec:"专题四 能量供应和利用",t:"ATP · 直接能源物质",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '结构简式：<b class="hl">A-P~P~P</b>（A=腺苷=腺嘌呤+核糖，~=高能磷酸键）。',
+    "元素组成：C、H、O、N、P。",
+    "水解：ATP → ADP + Pi + 能量。",
+    "合成：ADP + Pi + 能量 → ATP（光合光反应/细胞呼吸）。",
+    'ATP含量少但周转快，充当能量"货币"。'
+  ]},{ty:"kao",title:"🏆 考点 · ATP水解驱动主动运输",items:[
+    "Ca²⁺结合载体蛋白激活ATP酶活性 → ATP水解 → 磷酸基转移给载体 → 构象变化 → 释放Ca²⁺。",
+    "ATP合成场所：细胞质基质、线粒体、叶绿体类囊体薄膜。",
+    'ATP→ADP的转化<b class="r">不是可逆反应</b>（条件、酶、场所不同）。'
+  ]}]
+},{
+  no:13,sec:"专题四 能量供应和利用",t:"细胞呼吸全过程",
+  blocks:[{ty:"table",title:"📊 有氧呼吸四大阶段",tbl:{
+    heads:["阶段","场所","核心反应","ATP产出"],
+    rows:[
+      ["糖酵解","细胞质基质","葡萄糖→2丙酮酸+2[H]","2ATP（净得）"],
+      ["连接反应","线粒体基质","丙酮酸→乙酰辅酶A+CO₂+[H]","—"],
+      ["三羧酸循环","线粒体基质","乙酰辅酶A→2CO₂+[H]","~12ATP/乙酰辅酶A"],
+      ["电子传递","线粒体内膜","[H]+½O₂→H₂O","~30~32ATP/葡萄糖"]
+    ]
+  }},{ty:"kao",title:"🏆 物质量比例（必背）",items:[
+    '<b class="hl">有氧呼吸</b>：C₆H₁₂O₆ : O₂ : CO₂ : H₂O = 1 : 6 : 6 : 6',
+    '<b class="hl">酒精发酵</b>：C₆H₁₂O₆ : CO₂ : 酒精 = 1 : 2 : 2',
+    '<b class="hl">乳酸发酵</b>：C₆H₁₂O₆ : 乳酸 = 1 : 2',
+    '<b class="g">无氧呼吸第二阶段不产生ATP</b>。'
+  ]},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    '有氧呼吸产生水在<b class="hl">第三阶段</b>，不是第一阶段。',
+    'CO₂产生在<b class="hl">第二阶段</b>，不是第三阶段。',
+    "线粒体不能直接利用葡萄糖 — 丙酮酸才能进入线粒体。",
+    "植物无氧呼吸不一定都产生酒精 — 玉米胚、马铃薯块茎产生乳酸。"
+  ]}]
+},{
+  no:14,sec:"专题四 能量供应和利用",t:"光合作用 · 光反应与暗反应",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '<b class="hl">光反应</b>（类囊体膜）：2H₂O → 4H⁺ + 4e⁻ + O₂↑；NADP⁺→NADPH；ADP→ATP。',
+    '<b class="hl">暗反应</b>（叶绿体基质）：CO₂ + C₅ → 2C₃ → C₆(糖) + C₅再生。',
+    "总反应：6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O。"
+  ]},{ty:"nan",title:"🎯 难点 · C₃/C₅/NADPH/ATP变化曲线",items:[
+    '环境骤变题型核心逻辑：<b class="hl">限制因素突变 → 受限阶段受阻 → 底物堆积/产物减少 → 传导</b>。',
+    '<b class="g">断光</b>：C₃↑ C₅↑ NADPH↑ ATP↑',
+    '<b class="g">停CO₂</b>：C₃↓ C₅↑ NADPH↑ ATP↑',
+    '光合作用产生的O₂来自<b class="hl">水的光解</b>，不是来自CO₂。'
+  ]},{ty:"kao",title:"🏆 光合速率与呼吸速率关系",items:[
+    '<b class="hl">真光合</b> = 净光合 + 呼吸速率',
+    "光合产O₂量 = 释放O₂量 + 呼吸耗O₂量",
+    "光合固定CO₂量 = 吸收CO₂量 + 呼吸产CO₂量",
+    '"O₂释放量"是净光合，"O₂产生量"是总光合 — 注意区分！'
+  ]}]
+},{
+  no:15,sec:"专题四 能量供应和利用",t:"呼吸/光合影响因素与限制规律",
+  blocks:[{ty:"table",title:"📊 影响因素对比",tbl:{
+    heads:["因素","细胞呼吸","光合作用"],
+    rows:[
+      ["温度","适宜↑+酶活性↑；过高变性↓","适宜↑；过高变性↓·暗反应更敏感"],
+      ["O₂/CO₂","O₂↑促有氧/抑无氧；CO₂↑抑制","CO₂↑促进（至饱和）"],
+      ["光照","无直接影响","光强↑→速率↑至饱和"],
+      ["水分","含水量↑→呼吸↑","缺水→气孔关闭→CO₂↓→光合↓↓"]
+    ]
+  }},{ty:"nan",title:"🎯 难点突破",items:[
+    '<b class="hl">限制因素叠加/补偿效应</b>：单因子限制时调节该因子最有效；多因子共同限制时需综合调控。',
+    "大棚蔬菜：光/温/CO₂/水/肥协调。",
+    '<b class="p">光补偿点</b>：光合速率=呼吸速率，净光合=0。',
+    '<b class="p">光饱和点</b>：光合速率达到最大时的光照强度。'
+  ]}]
+},{
+  no:16,sec:"专题五 细胞的生命历程",t:"细胞周期与有丝分裂",
+  blocks:[{ty:"table",title:"📊 有丝分裂各期",tbl:{
+    heads:["时期","核心事件","DNA/染色体/染色单体"],
+    rows:[
+      ["间期","G₁:RNA/蛋白；S:DNA复制；G₂:准备","DNA:2C→4C；染色体:2n(2单体)；单体:0→4n"],
+      ["前期","染色质螺旋化、核膜消失、纺锤体形成","DNA:4C；染色体:2n(2单体)；单体:4n"],
+      ["中期","着丝粒排列赤道板","同前期"],
+      ["后期","着丝粒分裂，姐妹染色单体分离","DNA:4C→2C+2C；染色体:2n→4n；单体:4n→0"],
+      ["末期","染色体去螺旋、核膜重现、细胞质分裂","DNA:2C/核；染色体:2n/核；单体:0"]
+    ]
+  }},{ty:"kao",title:"🏆 动植物有丝分裂差异",items:[
+    '<b class="hl">纺锤体形成</b>：动物有中心体星射线，高等植物无中心体（两极宽阔）。',
+    '<b class="hl">细胞质分裂</b>：动物向心收缩，植物向外制造细胞板（高尔基体囊泡融合）。'
+  ]},{ty:"nan",title:"🎯 难点 · 染色体/DNA/染色单体计数",items:[
+    '<b class="hl">DNA数</b>：S期复制加倍（2C→4C），后期分离减半（4C→2C/核）。',
+    '<b class="hl">染色体数</b>：以着丝粒数为准；后期着丝粒分裂加倍（2n→4n）。',
+    '<b class="hl">染色单体数</b>：S期出现（4n），后期着丝粒分裂消失（→0）。'
+  ]}]
+},{
+  no:17,sec:"专题五 细胞的生命历程",t:"减数分裂与受精作用",
+  blocks:[{ty:"table",title:"📊 减数分裂 vs 有丝分裂",tbl:{
+    heads:["特征","减数分裂I","减数分裂II","有丝分裂"],
+    rows:[
+      ["前期","联会→四分体→非姐妹互换","无联会/互换","无联会/互换"],
+      ["中期","同源染色体在赤道板两侧","着丝粒在赤道板中央","着丝粒在赤道板中央"],
+      ["后期","同源染色体分离","着丝粒分裂，姐妹单体分离","着丝粒分裂，姐妹单体分离"],
+      ["结果","2个次级母细胞，2n→n","4个配子，n→n","2个体细胞，2n→2n"]
+    ]
+  }},{ty:"kao",title:"🏆 配子种类计算",items:[
+    "1个精原细胞（n对同源染色体）→ 可能2ⁿ种精子，实际2种（两两相同/互补）。",
+    "1个卵原细胞 → 可能2ⁿ种，实际1种。",
+    "考虑互换：配子种类 > 2ⁿ。"
+  ]},{ty:"nan",title:"🎯 难点 · 分裂异常判断",items:[
+    '<b class="hl">"相同减I，不同减II"</b>：同源不分离（减I异常）→ 子细胞组成相同；姐妹单体不分离（减II异常）→ 子细胞组成不同（一多一少）。'
+  ]}]
+},{
+  no:18,sec:"专题五 细胞的生命历程",t:"细胞分化、衰老、凋亡、癌变",
+  blocks:[{ty:"table",title:"📊 四大生命历程",tbl:{
+    heads:["过程","核心机制","意义"],
+    rows:[
+      ["分化","基因选择性表达，遗传物质不变","形态/结构/功能专门化"],
+      ["全能性","已分化细胞仍具发育潜能","组培育种、核移植"],
+      ["衰老","端粒缩短、自由基攻击、酶活性↓","个体衰老=细胞普遍衰老"],
+      ["凋亡","基因决定、程序性、Caspase级联","胚胎发育塑形、稳态维持"],
+      ["坏死","外界剧烈因素、非程序性、引发炎症","病理损伤"],
+      ["癌变","原癌基因激活+抑癌基因失活","无限增殖、易转移"]
+    ]
+  }},{ty:"trap",title:"⚠️ 易错陷阱",items:[
+    '<b class="hl">凋亡 vs 坏死</b>：凋亡是基因控制的主动过程，对机体有利；坏死是外界因素导致的被动过程。',
+    "衰老的细胞不一定凋亡。",
+    "癌变细胞无限增殖，不衰老。",
+    "细胞凋亡是正常的生理过程，不是病理性死亡。"
+  ]}]
+},{
+  no:19,sec:"🎯 难点专讲",t:"生物膜系统的动态流动与膜成分流向",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '<b class="hl">流向铁律</b>：内质网（合成）→ 囊泡 → 高尔基体（修饰）→ 囊泡 → 细胞膜/溶酶体/液泡/分泌出细胞。',
+    "核膜双层：外层膜与粗面内质网相连，核孔复合体通透性大于细胞膜。",
+    "膜融合不改变膜的两面性（胞质面始终朝外）。"
+  ]}]
+},{
+  no:20,sec:"🎯 难点专讲",t:"呼吸/光合电子传递链与化学渗透",
+  blocks:[{ty:"table",title:"📊 线粒体 vs 叶绿体",tbl:{
+    heads:["维度","线粒体内膜（呼吸）","叶绿体类囊体膜（光合）"],
+    rows:[
+      ["电子供体","NADH/FADH₂([H])","H₂O（光解）"],
+      ["最终受体","O₂ → H₂O","NADP⁺ → NADPH"],
+      ["质子泵向","基质→膜间隙","基质→类囊体腔"],
+      ["ATP合酶朝向","膜间隙→基质","类囊体腔→基质"],
+      ["能量来源","有机物氧化分解","光能激发电子"]
+    ]
+  }},{ty:"kao",title:"🏆 高阶考法",items:[
+    "解偶联剂（DNP）破坏H⁺梯度 → ATP合成停止，能量以热散发。",
+    "寡霉素抑制ATP合酶 → H⁺梯度过高反馈抑制电子传递。",
+    "高考新题常考电子传递链抑制剂作用位点。"
+  ]}]
+},{
+  no:21,sec:"🎯 难点专讲",t:"减数分裂染色体行为 · 图像判读法",
+  blocks:[{ty:"core",title:"📚 核心方法",items:[
+    '<b class="hl">折线图"画线法"</b>：',
+    "• 斜线2N→4N = DNA复制（S期）",
+    "• 斜线4N→2N = 同源染色体分离（减I后期）",
+    "• 斜线2N→N = 姐妹染色单体分离（减II后期/有丝后期）",
+    '• "有时有有时无"折线 = 染色单体',
+    '<b class="hl">柱状图"两定法"</b>：定物质（有单体=分裂前/无单体=分裂后）、定时期（单体多=减I前/少=减II前）。'
+  ]}]
+},{
+  no:22,sec:"🎯 难点专讲",t:"细胞癌变分子机制与p53通路",
+  blocks:[{ty:"core",title:"📚 核心知识",items:[
+    '<b class="hl">双轨失控</b>：原癌基因（油门卡死）+ 抑癌基因（刹车失灵）。',
+    '<b class="g">p53守护者</b>：DNA损伤→p53活化→p21表达→CDK抑制→G₁/S阻滞→修复或凋亡。',
+    "p53突变→基因组不稳定→癌变加速。"
+  ]}]
+},{
+  no:23,sec:"📌 学习工具",t:"跨文档概念关系网",
+  blocks:[{ty:"table",title:"📊 核心概念关联",tbl:{
+    heads:["核心概念","关联概念","依赖关系"],
+    rows:[
+      ["磷脂双分子层","细胞膜/细胞器膜/核膜/囊泡膜","统一结构基础→生物膜系统"],
+      ["蛋白质多样性","酶/转运蛋白/受体/抗体/激素","一级结构决定空间结构决定功能"],
+      ["ATP","光合光反应/呼吸/主动运输","能量货币枢纽，连接物质与能量"],
+      ["核糖体","核仁/粗面内质网/线粒体叶绿体","蛋白合成统一场所"],
+      ["DNA复制半保留","有丝分裂S期/减数分裂前间期","遗传物质稳定传递的分子基础"],
+      ["选择透过性","载体蛋白/通道蛋白/膜流动性/ATP","跨膜运输四方式的统一结构基础"],
+      ["减数分裂重组","联会/互换/自由组合/受精","遗传变异根本来源"]
+    ]
+  }}]
+},{
+  no:24,sec:"📌 学习工具",t:"缺口与待补充清单",
+  blocks:[{ty:"table",title:"📊 知识缺口",tbl:{
+    heads:["知识点","缺口描述","建议方向"],
+    rows:[
+      ["糖类/脂质结构细节","缺乏糖苷键/酯键结构式、磷脂两亲性自组装机制","教科书P20-25"],
+      ["酶催化机理微观动画","缺乏活化能能垒图、诱导契合模型示意","教科书P44-45"],
+      ["电子传递复合体","缺乏复合体I-IV、Q循环、ATP合酶F₀F₁细节","选择性必修/竞赛教材"],
+      ["C₄/CAM途径","无解剖学/时间学分离机制、PEP羧化酶","选择性必修/拓展阅读"],
+      ["细胞周期检查点","缺G₂/M检查点、纺锤体检查点分子机制","分子生物学教材/综述"],
+      ["信号转导经典通路","缺GPCR-cAMP-PKA、RTK-Ras-MAPK","选择性必修1"],
+      ["最新高考真题","缺系统按年份/省份分类的真题库","教育部考试中心真题卷"]
+    ]
+  }}]
+},{
+  no:25,sec:"📌 学习工具",t:"证据来源索引",
+  blocks:[{ty:"table",title:"📊 资料来源",tbl:{
+    heads:["文档类型","覆盖章节","核心作用"],
+    rows:[
+      ["教科书·必修1（PDF）","全书","所有概念定义、实验设计、图示一级来源"],
+      ["教科书·必修1（分片段）","第1-6章核心段落","膜探索史、细胞器结构功能、分泌蛋白、生物膜系统"],
+      ["学霸笔记·通关练","第3-6章","细胞器分类对比表、典型选择题解析"],
+      ["学霸笔记+解题觉醒","第4-5章","四种运输方式对比、曲线分析、渗透/呼吸/光合核心参数"],
+      ["学霸笔记+解题觉醒","第5-6章","呼吸光合阶段场所产物表、比例、曲线分析"],
+      ["学霸笔记+解题觉醒+必修2","减数分裂/癌变/分子机制","有丝分裂减数分裂对比、配子种类、新题型"],
+      ["学霸笔记+解题觉醒","第6章","衰老凋亡特征、p53通路、细胞周期曲线"]
+    ]
+  }}]
+}];
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const SECS=[{k:"core",icon:"📚",label:"核心知识",cls:"core"},{k:"kao",icon:"🏆",label:"考法考点",cls:"kao"},{k:"nan",icon:"🎯",label:"难点突破",cls:"nan"},{k:"trap",icon:"⚠️",label:"易错陷阱",cls:"trap"},{k:"table",icon:"📊",label:"对比表",cls:"table"}];
+function renderTable(tbl){if(!tbl||!tbl.heads||!tbl.rows||!tbl.rows.length)return"";let h="<div class=\"tbl-wrap\"><table><thead><tr>";tbl.heads.forEach(hd=>{h+="<th>"+hd+"</th>"});h+="</tr></thead><tbody>";tbl.rows.forEach(r=>{h+="<tr>";r.forEach(c=>{h+="<td>"+c+"</td>"});h+="</tr>"});h+="</tbody></table></div>";return h;}
+function renderCard(c){let h="<details class=\"card\" id=\"card"+c.no+"\" data-no=\""+c.no+"\"><summary><span class=\"cn\">"+c.no+"</span><span>"+c.t+"</span><span class=\"cg\">"+c.sec+"</span></summary>";c.blocks.forEach(b=>{const cls=b.ty==="table"?"table":b.ty;h+="<div class=\"b "+cls+"\">";h+="<h4>"+b.title+"</h4>";if(b.ty==="table"&&b.tbl)h+=renderTable(b.tbl);if(b.items&&b.items.length)h+="<p>"+b.items.join("</p><p>")+"</p>";h+="</div>"});h+="</details>";return h;}
+function buildTOC(){const t=$("#toc");let cg="";let h="<div class=\"tt\">📑 章节导航</div>";CARDS.forEach((c,i)=>{if(c.sec!==cg){cg=c.sec;h+="<a class=\"sec\">"+c.sec+"</a>"}h+="<a href=\"#card"+c.no+"\" data-i=\""+i+"\"><span class=\"no\">"+c.no+"</span>"+c.t+"</a>"});t.innerHTML=h;const mt=$("#mobTocContent");let mh="<div class=\"tt\">📑 章节导航</div>";let mcg="";CARDS.forEach((c,i)=>{if(c.sec!==mcg){mcg=c.sec;mh+="<div class=\"tt\" style=\"margin-top:10px;color:var(--ink)\">"+c.sec+"</div>"}mh+="<a href=\"#card"+c.no+"\" onclick=\"closeMobToc()\" data-i=\""+i+"\"><span class=\"no\">"+c.no+"</span>"+c.t+"</a>"});mt.innerHTML=mh;}
+function renderRef(){const m=$("#mainContent");let h="";CARDS.forEach(c=>{h+=renderCard(c)});m.innerHTML=h;const first=$("#card1");if(first)first.open=true;}
+let cur=0;const ow=document.getElementById("study-overlay");
+function toggleStudy(){const act=ow.classList.toggle("active");$("#modeToggle").textContent=act?"👀 查阅模式":"📖 学习模式";document.body.style.overflow=act?"hidden":"";if(act)showStudy();}
+function showStudy(){const c=CARDS[cur];const st=$("#study-stage");if(!c||cur>=CARDS.length){st.innerHTML="<div id=\"study-empty\"><div class=\"big\">🎉</div><h2>全部学完啦！</h2><p>你已经过关所有知识卡片，去查阅模式复习一遍吧。</p><button class=\"btn primary\" onclick=\"toggleStudy()\">回到查阅</button></div>";updateBar();$("#prevBtn").disabled=cur<=0;$("#nextBtn").disabled=true;$("#nextBtn").textContent="🎉 完成";return}const cardHtml=renderCard(c).replace('<details class="card"','<details class="card" open');st.innerHTML='<div style="width:100%;max-width:820px;margin:0 auto">'+cardHtml+"</div>";st.scrollTop=0;updateBar();$("#prevBtn").disabled=cur<=0;const isLast=cur>=CARDS.length-1;$("#nextBtn").disabled=false;$("#nextBtn").textContent=isLast?"🎉 完成":"下一张 →";}
+function updateBar(){const total=CARDS.length;const p=total?Math.min(100,(cur+1)/total*100):0;$("#progFill").style.width=p+"%";$("#progCnt").textContent=(cur+1)+" / "+total;const c=CARDS[cur];$("#studyTitle").textContent=c?"第 "+(cur+1)+" 张 · "+c.t:"🎉 已完成";$("#studyPos").textContent=(cur+1)+" / "+total;}
+function navStudy(d){if(d<0&&cur>0){cur--;showStudy()}else if(d>0&&cur<CARDS.length-1){cur++;showStudy()}else if(d>0&&cur>=CARDS.length-1){cur++;showStudy()}}
+function toggleMobToc(){$("#mob-toc").classList.toggle("active");$("#mob-overlay").classList.toggle("active")}
+function closeMobToc(){$("#mob-toc").classList.remove("active");$("#mob-overlay").classList.remove("active")}
+document.addEventListener("keydown",e=>{if(!ow.classList.contains("active"))return;if(e.key==="ArrowRight"||e.key===" "||e.key==="ArrowDown"){e.preventDefault();navStudy(1)}if(e.key==="ArrowLeft"||e.key==="ArrowUp"){e.preventDefault();navStudy(-1)}if(e.key==="Escape")toggleStudy()});
+
+/* ===== THEME TOGGLE ===== */
+function toggleTheme(){
+  const h=document.documentElement;
+  if(h.getAttribute('data-theme')==='light'){
+    h.removeAttribute('data-theme');
+    localStorage.setItem('theme','dark');
+    document.getElementById('themeToggle').textContent='🌙 深色';
+  } else {
+    h.setAttribute('data-theme','light');
+    localStorage.setItem('theme','light');
+    document.getElementById('themeToggle').textContent='☀️ 浅色';
+  }
+}
+(function(){const s=localStorage.getItem('theme');if(s==='light'){document.documentElement.setAttribute('data-theme','light');setTimeout(()=>{const bt=document.getElementById('themeToggle');if(bt)bt.textContent='☀️ 浅色';},0)}})();
+buildTOC();renderRef();
+</script>
+</body>
+</html>
