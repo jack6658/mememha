@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -39,19 +39,10 @@ h1{font-size:clamp(44px,9vw,92px);font-weight:900;letter-spacing:12px;line-heigh
 <div class="stage">
   <div class="sub">生 物 必 修 一 · 分 子 与 细 胞</div>
   <h1>欢迎学习</h1>
-  <button class="enter-btn" onclick="enterSite()">✦ 进入 ✦</button>
-  <div class="hint">选择适合你的卡片风格，开启学习之旅</div>
+  <button class="enter-btn" onclick="location.href='list.html'">✦ 进入 ✦</button>
+  <div class="hint">点击进入，浏览全部知识卡片</div>
 </div>
 <div class="corner">么么么哈tuer</div>
-<div id="choose">
-  <div class="choose-head">🎨 选择卡片风格</div>
-  <a class="choose-card" href="cards/生物必修一_分子与细胞_手账风知识卡片.html"><span class="big">📔</span>手账风知识卡片<span class="desc">记笔记 · 打卡 · 荧光笔标注 · 随机翻牌</span></a>
-  <a class="choose-card" href="cards/生物必修一_分子与细胞_闯关游戏风知识卡片.html"><span class="big">🎮</span>闯关游戏风知识卡片<span class="desc">关卡闯关 · XP经验 · 成就 · 答题测验</span></a>
-  <a class="choose-card" href="cards/生物必修一_分子与细胞_星空图谱风知识卡片.html"><span class="big">🌌</span>星空图谱风知识卡片<span class="desc">知识图谱 · 简略/详细背诵 · 记忆曲线</span></a>
-  <a class="choose-card" href="list.html"><span class="big">📚</span>查看全部卡片<span class="desc">站点内所有知识卡合集（0 张）</span></a>
-  <a class="choose-card" href="search.html"><span class="big">🔍</span>搜索卡片<span class="desc">按标题 / 标签 / 章节关键词搜索</span></a>
-  <button class="back-btn" onclick="backHome()">← 返回</button>
-</div>
 <script>
 /* ===== 礼花炮（Canvas 烟花） ===== */
 var cv=document.getElementById('fireworks');
@@ -102,18 +93,7 @@ function intro(){
   if(introCount<26){setTimeout(intro,150+Math.random()*220);}
   else{setTimeout(function(){setInterval(function(){launch();},3200+Math.random()*2600);},4000);}
 }
-/* 点击进入：再放一轮礼花后切换选择页 */
-function enterSite(){
-  for(var k=0;k<6;k++)setTimeout(launch,k*90);
-  setTimeout(function(){launch();launch();},450);
-  setTimeout(showChoose,1000);
-}
-function showChoose(){
-  document.getElementById('choose').classList.add('show');
-}
-function backHome(){
-  document.getElementById('choose').classList.remove('show');
-}
+/* 点击"✦ 进入 ✦"直接跳转至卡片列表 */
 if(ctx){tick();setTimeout(intro,80);}else{setTimeout(function(){for(var k=0;k<6;k++)launch();},80);}
 </script>
 </body>
