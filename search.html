@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -350,22 +350,85 @@ function registerUser(){
   var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
   localStorage.setItem('lb_uid',uid);
   _lbUser=uid;
-  var av=_lbUserData&&_lbUserData.avatar?_lbUserData.avatar:'😀';
-  _lbUserData={user_id:uid,user_name:name,avatar:av};
-  _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:av},{onConflict:'user_id'})
+  var avatar=_regAv+'|'+_regColor; // 注册表单里选的头像+颜色
+  _lbUserData={user_id:uid,user_name:name,avatar:avatar};
+  // 注册即生效：写 users + 同步 leaderboard
+  _lbSupabase.from('users').upsert({user_id:uid,user_name:name,avatar:avatar},{onConflict:'user_id'})
+  .then(function(){return syncCurrentUser();})
   .then(function(){
-    return syncCurrentUser(); // 注册成功立即同步到排行榜
-  })
-  .then(function(){
-    alert('注册成功！已同步到排行榜');
+    alert('注册成功！用户名「'+name+'」已上排行榜');
     loadUserProfile();
   })
   .catch(function(e){alert('注册失败: '+e.message);});
 }
+
+var _regAv='😀',_regColor='#ffd76a';
+function renderRegForm(){
+  var groups=[
+    {name:'表情',list:['😀','😎','🤓','🥳','😺','😸','🤠','🕶️','🧐','🤩','🥰','😤']},
+    {name:'动物',list:['🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐴','🦋','🐝','🐗']},
+    {name:'自然',list:['🌸','🌺','🍀','🌻','🌵','🍁','🌊','⛰️','🌙','☀️','🌈','🌟']},
+    {name:'爱好',list:['🎮','🎯','🚀','🎸','🎨','📚','⚽','🏀','🎤','💻','📷','🎲']},
+    {name:'物品',list:['💎','🔥','💡','🎁','👑','🏆','🪙','🔮','⚡','❄️','🍎','☕']}
+  ];
+  var colors=['#ffd76a','#f87171','#7dd3fc','#6ee7b7','#c084fc','#f59e0b','#34d399','#fb7185'];
+  var html='<div style="max-width:420px;margin:0 auto;text-align:center">';
+  html+='<div style="font-size:40px;margin-bottom:6px">👋</div>';
+  html+='<p style="color:#ffd76a;font-size:16px;margin-bottom:4px">注册你的账号</p>';
+  html+='<p style="color:#aeb9d4;font-size:12px;margin-bottom:14px">只需一个昵称 + 一个头像，注册即生效，自动上排行榜</p>';
+  // 头像预览
+  html+='<div id="regAvPrev" style="width:72px;height:72px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:38px;border:3px solid '+_regColor+';background:'+_regColor+'22">'+_regAv+'</div>';
+  // 分类标签
+  html+='<div style="display:flex;gap:5px;justify-content:center;margin-bottom:8px;flex-wrap:wrap" id="regAvTabs">';
+  for(var g=0;g<groups.length;g++){html+='<button class="av-tab'+(g===0?' active':'')+'" data-g="'+g+'" onclick="switchRegAvGroup(this)">'+groups[g].name+'</button>';}
+  html+='</div>';
+  // emoji 网格
+  html+='<div id="regAvGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:10px">';
+  for(var g=0;g<groups.length;g++){
+    for(var i=0;i<groups[g].list.length;i++){
+      var em=groups[g].list[i];
+      html+='<div class="avatar-item'+(em===_regAv?' selected':'')+'" data-av="'+em+'" data-g="'+g+'" onclick="regPickAv(this)"'+(g>0?' style="display:none"':'')+'>'+em+'</div>';
+    }
+  }
+  html+='</div>';
+  // 颜色
+  html+='<div style="text-align:center;margin-bottom:12px"><p style="color:#7a8ba8;font-size:11px;margin-bottom:6px">背景颜色</p><div style="display:flex;gap:7px;justify-content:center" id="regAvColors">';
+  for(var c=0;c<colors.length;c++){html+='<div class="av-color'+(colors[c]===_regColor?' selected':'')+'" data-c="'+colors[c]+'" style="background:'+colors[c]+'" onclick="regPickColor(this)"></div>';}
+  html+='</div></div>';
+  // 昵称
+  html+='<input class="name-input" id="regNameInput" placeholder="输入你的昵称" maxlength="20">';
+  html+='<button class="save-btn" id="regBtn" onclick="registerUser()" style="margin-top:10px">立即注册 🚀</button>';
+  html+='</div>';
+  return html;
+}
+function switchRegAvGroup(btn){
+  var g=parseInt(btn.getAttribute('data-g'));
+  document.querySelectorAll('#regAvTabs .av-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('#regAvGrid .avatar-item').forEach(function(el){
+    el.style.display=(parseInt(el.getAttribute('data-g'))===g)?'':'none';
+  });
+}
+function regPickAv(el){
+  document.querySelectorAll('#regAvGrid .avatar-item').forEach(function(e){e.classList.remove('selected');});
+  el.classList.add('selected');
+  _regAv=el.getAttribute('data-av');
+  var prev=document.getElementById('regAvPrev');
+  if(prev){prev.textContent=_regAv;}
+}
+function regPickColor(el){
+  document.querySelectorAll('#regAvColors .av-color').forEach(function(e){e.classList.remove('selected');});
+  el.classList.add('selected');
+  _regColor=el.getAttribute('data-c');
+  var prev=document.getElementById('regAvPrev');
+  if(prev){prev.style.borderColor=_regColor;prev.style.background=_regColor+'22';}
+}
+
 function loadUserProfile(){
   var el=document.getElementById('userInfo');
   if(!_lbUser){
-    el.innerHTML='<div style="text-align:center;padding:20px 0"><p style="color:#ffd76a;font-size:16px;margin-bottom:16px">👋 欢迎来到知识卡！</p><p style="color:#aeb9d4;font-size:13px;margin-bottom:20px">请先注册你的账号</p><input class="name-input" id="regNameInput" placeholder="输入你的昵称..." maxlength="20"><button class="save-btn" id="regBtn" onclick="registerUser()">立即注册</button></div>';
+    // 注册表单：用户名 + 头像选择 一步完成
+    el.innerHTML=renderRegForm();
     setTimeout(function(){var inp=document.getElementById('regNameInput');if(inp)inp.focus();},100);
     return;
   }
@@ -388,87 +451,31 @@ function renderUserProfile(){
   var el=document.getElementById('userInfo');
   var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀|#ffd76a'};
   var av=parseAvatar(data.avatar);
-  var groups=[
-    {name:'表情',list:['😀','😎','🤓','🥳','😺','😸','🤠','🕶️','🧐','😤','🤩','🥰']},
-    {name:'动物',list:['🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐗','🐴','🦋','🐝']},
-    {name:'自然',list:['🌸','🌺','🍀','🌻','🌵','🍁','🌊','⛰️','🌙','☀️','🌈','🌟']},
-    {name:'爱好',list:['🎮','🎯','🚀','🎸','🎨','📚','⚽','🏀','🎤','💻','📷','🎲']},
-    {name:'物品',list:['💎','🔥','💡','🎁','👑','🏆','🪙','🔮','⚡','❄️','🍎','☕']}
-  ];
-  var colors=['#ffd76a','#f87171','#7dd3fc','#6ee7b7','#c084fc','#f59e0b','#34d399','#fb7185'];
-  var html='<div style="max-width:420px;margin:0 auto">';
-  // 头像预览
-  html+='<div style="text-align:center;margin-bottom:14px"><div id="avPrev" style="width:84px;height:84px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:44px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div><p style="color:#7a8ba8;font-size:11px;margin-top:6px">选择你的头像</p></div>';
-  // 分类标签
-  html+='<div style="display:flex;gap:6px;justify-content:center;margin-bottom:10px;flex-wrap:wrap" id="avTabs">';
-  for(var g=0;g<groups.length;g++){html+='<button class="av-tab'+(g===0?' active':'')+'" data-g="'+g+'" onclick="switchAvGroup(this)">'+groups[g].name+'</button>';}
+  var html='<div style="max-width:420px;margin:0 auto;text-align:center">';
+  // 头像大预览
+  html+='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div>';
+  // 用户名（注册名）
+  html+='<p style="color:#ffd76a;font-size:20px;font-weight:bold;margin-bottom:4px">'+data.user_name+'</p>';
+  html+='<p style="color:#7a8ba8;font-size:12px;margin-bottom:16px">👤 已注册 · 已同步到排行榜</p>';
+  // 个人进度
+  var d=getCurrentData();
+  html+='<div style="background:rgba(255,255,255,.05);border:1px solid #354467;border-radius:12px;padding:14px;margin-bottom:16px;text-align:left">';
+  html+='<p style="color:#aeb9d4;font-size:12px;margin-bottom:8px">📊 我的进度</p>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#aeb9d4">浏览卡片</span><span style="color:#7dd3fc;font-weight:bold">'+d.totalPages+' 页</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#aeb9d4">答对题目</span><span style="color:#6ee7b7;font-weight:bold">'+d.correct+' 题</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:#aeb9d4">完成卡套</span><span style="color:#c084fc;font-weight:bold">'+d.completed+' 套</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#aeb9d4">连续答对</span><span style="color:#f87171;font-weight:bold">'+d.maxStreak+' 题</span></div>';
   html+='</div>';
-  // emoji 网格（所有分类，JS 切换显示）
-  html+='<div id="avGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px">';
-  for(var g=0;g<groups.length;g++){
-    for(var i=0;i<groups[g].list.length;i++){
-      var em=groups[g].list[i];
-      html+='<div class="avatar-item'+(em===av.icon?' selected':'')+'" data-av="'+em+'" data-g="'+g+'" onclick="pickAv(this)"'+(g>0?' style="display:none"':'')+'>'+em+'</div>';
-    }
-  }
-  html+='</div>';
-  // 背景色
-  html+='<div style="text-align:center;margin-bottom:14px"><p style="color:#7a8ba8;font-size:11px;margin-bottom:6px">背景颜色</p><div style="display:flex;gap:8px;justify-content:center" id="avColors">';
-  for(var c=0;c<colors.length;c++){html+='<div class="av-color'+(colors[c]===av.color?' selected':'')+'" data-c="'+colors[c]+'" style="background:'+colors[c]+'" onclick="pickColor(this)"></div>';}
-  html+='</div></div>';
-  // 用户名输入
-  html+='<label style="color:#aeb9d4;font-size:13px">用户名</label>';
-  html+='<input class="name-input" id="nameInput" value="'+(data.user_name||'')+'" placeholder="输入你的昵称" maxlength="20">';
-  html+='<button class="save-btn" onclick="saveProfile()">保存资料</button>';
-  html+='<button class="logout-btn" onclick="logoutUser()">切换账号</button>';
+  // 切换账号
+  html+='<button class="logout-btn" onclick="logoutUser()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:10px 24px;font-size:13px;color:#e8edff;cursor:pointer;width:100%">🔄 切换账号</button>';
   html+='</div>';
   el.innerHTML=html;
-  _avColor=av.color;
-}
-var _avColor='#ffd76a';
+}var _avColor='#ffd76a';
 function parseAvatar(a){
   if(a&&a.indexOf('|')>0){var p=a.split('|');return{icon:p[0],color:p[1]||'#ffd76a'};}
   return{icon:a||'😀',color:'#ffd76a'};
 }
-function switchAvGroup(btn){
-  var g=parseInt(btn.getAttribute('data-g'));
-  document.querySelectorAll('#avTabs .av-tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');
-  document.querySelectorAll('#avGrid .avatar-item').forEach(function(el){
-    el.style.display=(parseInt(el.getAttribute('data-g'))===g)?'':'none';
-  });
-}
-function pickAv(el){
-  document.querySelectorAll('#avGrid .avatar-item').forEach(function(e){e.classList.remove('selected');});
-  el.classList.add('selected');
-  document.getElementById('avPrev').textContent=el.getAttribute('data-av');
-  _lbUserData.avatar=el.getAttribute('data-av')+'|'+_avColor;
-}
-function pickColor(el){
-  document.querySelectorAll('#avColors .av-color').forEach(function(e){e.classList.remove('selected');});
-  el.classList.add('selected');
-  _avColor=el.getAttribute('data-c');
-  var prev=document.getElementById('avPrev');
-  prev.style.borderColor=_avColor;prev.style.background=_avColor+'22';prev.style.boxShadow='0 0 20px '+_avColor+'44';
-  if(_lbUserData&&_lbUserData.avatar&&_lbUserData.avatar.indexOf('|')>0){_lbUserData.avatar=_lbUserData.avatar.split('|')[0]+'|'+_avColor;}
-}function pickAv(el){
-  document.querySelectorAll('.avatar-item').forEach(function(e){e.classList.remove('selected');});
-  el.classList.add('selected');
-  document.querySelector('#userInfo div div').textContent=el.getAttribute('data-av');
-  _lbUserData.avatar=el.getAttribute('data-av');
-}
-async function saveProfile(){
-  var name=document.getElementById('nameInput').value.trim();
-  if(!name){alert('请输入用户名');return;}
-  try{
-    await _lbSupabase.from('users').upsert({user_id:_lbUser,user_name:name,avatar:_lbUserData.avatar},{onConflict:'user_id'});
-    await _lbSupabase.from('leaderboard').upsert({user_id:_lbUser,user_name:name,avatar:_lbUserData.avatar,total_pages:getCurrentData().totalPages,total_correct:getCurrentData().correct,completed_sets:getCurrentData().completed,max_streak:getCurrentData().maxStreak,total_score:calcScore(getCurrentData()),last_seen:new Date().toISOString()},{onConflict:'user_id'});
-    alert('保存成功！');
-    closeUserPanel();
-    refreshLeaderboard();
-  }catch(e){alert('保存失败: '+e.message);}
-}
-function logoutUser(){
+async function logoutUser(){
   if(confirm('确定要切换账号吗？')){
     localStorage.removeItem('lb_uid');
     _lbUser=null;
