@@ -1,0 +1,63 @@
+﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>生物知识卡 · 入口</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;color:#2c3e50;font-family:"Microsoft YaHei","PingFang SC",sans-serif;min-height:100vh}
+.hero{background:linear-gradient(135deg,#1f6f8b,#4fb3bf);color:#fff;padding:42px 20px 36px;text-align:center}
+.hero h1{font-size:26px;margin-bottom:8px;letter-spacing:2px}
+.hero p{opacity:.92;font-size:13px;line-height:1.8}
+.hero .count{display:inline-block;margin-top:14px;background:rgba(255,255,255,.18);padding:4px 16px;border-radius:999px;font-size:12px}
+.bar{display:flex;justify-content:center;gap:10px;margin:-18px auto 26px;max-width:640px;padding:0 16px}
+.bar a{flex:1;text-decoration:none;color:#1f6f8b;background:#fff;border:1px solid #d7e2e8;border-radius:10px;padding:11px 10px;font-size:13px;text-align:center;box-shadow:0 3px 10px rgba(31,111,139,.08);font-weight:700}
+.bar a:active{transform:translateY(1px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e2e9ee;border-radius:12px;padding:16px;box-shadow:0 3px 10px rgba(31,111,139,.07);transition:.15s}
+.card:hover{border-color:#4fb3bf;transform:translateY(-2px);box-shadow:0 6px 18px rgba(31,111,139,.15)}
+.card h3{font-size:14.5px;margin-bottom:6px;color:#1f6f8b;line-height:1.45}
+.card .sub{font-size:11.5px;color:#7a8b99;margin-bottom:8px}
+.card .meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.card .meta span{font-size:10px;padding:1px 7px;border-radius:999px;background:#eef5f7;color:#4a6b7a}
+.card .meta b{font-size:10px;color:#a3b3bf;font-weight:600;margin-left:auto;align-self:center}
+.empty{text-align:center;color:#9aa8b5;padding:60px 0;font-size:14px}
+footer{text-align:center;color:#a3b3bf;font-size:11px;padding:20px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>📚 生物知识卡</h1>
+  <p>分子与细胞 · 知识卡片合集（单卡独立 HTML，点卡片直接打开）</p>
+  <span class="count" id="count">正在加载…</span>
+</div>
+<div class="bar">
+  <a href="search.html">🔍 搜索卡片</a>
+  <a href="cards.json" target="_blank">📄 索引文件</a>
+</div>
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">还没有卡片，把 HTML 放进 cards/ 文件夹并运行 build_index.js</div>
+</div>
+<footer>在 GitHub Pages 上托管 · 每张卡片独立 HTML，可自由增删</footer>
+<script>
+window.CARDS=[{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46738},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46008},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49380}];
+(function(){
+  var grid=document.getElementById('grid'),empty=document.getElementById('empty');
+  var c=document.getElementById('count');
+  var cards=window.CARDS||[];
+  c.textContent='共 '+cards.length+' 张卡片';
+  if(!cards.length){empty.style.display='block';return;}
+  var html='';
+  cards.forEach(function(x){
+    var tags=(x.badges||[]).concat(x.tags||[]);
+    var tagHtml=tags.slice(0,4).map(function(t){return '<span>'+t+'</span>';}).join('');
+    html+='<a class="card" href="cards/'+encodeURIComponent(x.file)+'"><h3>'+(x.h1||x.title)+'</h3><div class="sub">'+x.title+'</div><div class="meta">'+tagHtml+'<b>'+x.cards+' 卡</b></div></a>';
+  });
+  grid.innerHTML=html;
+})();
+</script>
+</body>
+</html>
