@@ -1,0 +1,68 @@
+﻿﻿﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>搜索 · 生物知识卡</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f7fa;color:#2c3e50;font-family:"Microsoft YaHei","PingFang SC",sans-serif;min-height:100vh}
+.head{background:linear-gradient(135deg,#1f6f8b,#4fb3bf);color:#fff;padding:30px 20px;text-align:center}
+.head h1{font-size:22px;margin-bottom:14px}
+.box{max-width:640px;margin:0 auto;display:flex;gap:8px}
+.box input{flex:1;border:none;border-radius:10px;padding:13px 16px;font-size:15px;outline:none}
+.box button{background:#fff;border:none;border-radius:10px;padding:0 22px;font-size:15px;color:#1f6f8b;font-weight:800;cursor:pointer}
+.back{display:inline-block;margin-top:12px;color:#eaf6f8;text-decoration:none;font-size:12px}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+.hint{color:#9aa8b5;font-size:12px;margin-bottom:14px}
+#res{}
+.r{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e2e9ee;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(31,111,139,.06)}
+.r:hover{border-color:#4fb3bf}
+.r h3{font-size:14px;color:#1f6f8b;margin-bottom:4px}
+.r .sub{font-size:11.5px;color:#7a8b99;margin-bottom:6px}
+.r .meta{display:flex;flex-wrap:wrap;gap:4px}
+.r .meta span{font-size:10px;padding:1px 7px;border-radius:999px;background:#eef5f7;color:#4a6b7a}
+.none{text-align:center;color:#9aa8b5;padding:40px 0;font-size:14px}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>🔍 搜索知识卡</h1>
+  <div class="box">
+    <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
+    <button onclick="doSearch()">搜索</button>
+  </div>
+  <a class="back" href="index.html">← 返回入口</a>
+</div>
+<div class="wrap">
+  <div class="hint" id="hint"></div>
+  <div id="res"></div>
+  <div class="none" id="none" style="display:none">没有找到匹配的卡片，换个词试试～</div>
+</div>
+<script>
+window.CARDS=[{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46738},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46008},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49380}];
+function doSearch(){
+  var kw=document.getElementById('q').value.trim().toLowerCase();
+  var cards=window.CARDS||[];
+  var res=document.getElementById('res'),none=document.getElementById('none'),hint=document.getElementById('hint');
+  if(!kw){res.innerHTML='';none.style.display='none';hint.textContent='输入关键词开始搜索，共 '+cards.length+' 张卡片';return;}
+  var hits=cards.filter(function(x){
+    var blob=[x.title,x.h1,(x.badges||[]).join(' '),(x.tags||[]).join(' ')].join(' ').toLowerCase();
+    return kw.split(/\s+/).every(function(w){return w&&blob.indexOf(w)>=0;});
+  });
+  hint.textContent='找到 '+hits.length+' 张匹配卡片';
+  if(!hits.length){res.innerHTML='';none.style.display='block';return;}
+  none.style.display='none';
+  var html='';
+  hits.forEach(function(x){
+    var tags=(x.badges||[]).concat(x.tags||[]);
+    var tagHtml=tags.slice(0,5).map(function(t){return '<span>'+t+'</span>';}).join('');
+    html+='<a class="r" href="cards/'+encodeURIComponent(x.file)+'"><h3>'+(x.h1||x.title)+'</h3><div class="sub">'+x.title+'</div><div class="meta">'+tagHtml+'</div></a>';
+  });
+  res.innerHTML=html;
+}
+document.getElementById('q').addEventListener('input',doSearch);
+doSearch();
+</script>
+</body>
+</html>
