@@ -1,77 +1,46 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>卡片列表 · 生物知识卡</title>
+<title>知识卡 · 功能选择</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#05070f);min-height:100vh;color:#e8edff;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;overflow-x:hidden}
+html,body{height:100%}
+body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#05070f);min-height:100vh;color:#e8edff;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
 #fx{position:fixed;inset:0;z-index:0;pointer-events:none}
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-.hero{position:relative;z-index:1;text-align:center;padding:44px 20px 40px}
-.hero .sub{font-size:13px;letter-spacing:6px;color:rgba(232,237,255,.5);margin-bottom:12px}
-.hero h1{font-size:clamp(26px,5vw,42px);font-weight:900;letter-spacing:8px;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite}
+.stage{position:relative;z-index:2;text-align:center;padding:24px;animation:fadeIn 1.2s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sub{font-size:13px;letter-spacing:8px;color:rgba(232,237,255,.5);margin-bottom:16px}
+h1{font-size:clamp(30px,6vw,48px);font-weight:900;letter-spacing:10px;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite;margin-bottom:10px}
 @keyframes grad{to{background-position:300% 0}}
-.hero .count{display:inline-block;margin-top:14px;background:rgba(255,255,255,.08);border:1px solid rgba(125,211,252,.35);padding:5px 18px;border-radius:999px;font-size:12px;color:#7dd3fc;letter-spacing:2px}
-.bar{position:relative;z-index:1;display:flex;justify-content:center;gap:12px;margin:-12px auto 30px;max-width:560px;padding:0 16px}
-.bar a{flex:1;text-decoration:none;text-align:center;color:#0a0e1f;font-weight:800;font-size:13px;letter-spacing:2px;padding:12px 10px;border-radius:12px;background:linear-gradient(135deg,#7dd3fc,#c084fc);box-shadow:0 0 18px rgba(125,211,252,.4);transition:.2s}
-.bar a:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(192,132,252,.6)}
-.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 16px 70px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.card{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,.05);border:1.5px solid rgba(125,211,252,.28);border-radius:16px;padding:18px;backdrop-filter:blur(8px);transition:.2s;position:relative;overflow:hidden}
-.card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(125,211,252,.18),rgba(192,132,252,.18));opacity:0;transition:.2s}
-.card:hover{border-color:#7dd3fc;transform:translateY(-4px);box-shadow:0 0 28px rgba(125,211,252,.35),0 8px 24px rgba(0,0,0,.4)}
-.card:hover::before{opacity:1}
-.card h3{position:relative;font-size:14.5px;margin-bottom:7px;color:#e8edff;line-height:1.45;z-index:1}
-.card .sub{position:relative;z-index:1;font-size:11.5px;color:rgba(232,237,255,.55);margin-bottom:9px}
-.card .meta{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.card .meta span{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.3);color:#7dd3fc}
-.card .meta b{font-size:10px;color:rgba(232,237,255,.4);font-weight:600;margin-left:auto;align-self:center}
-.empty{text-align:center;color:rgba(232,237,255,.5);padding:60px 0;font-size:14px}
-footer{position:relative;z-index:1;text-align:center;color:rgba(232,237,255,.35);font-size:11px;padding:20px;letter-spacing:1px}
+.tip{font-size:12.5px;color:rgba(232,237,255,.55);letter-spacing:2px;margin-bottom:38px}
+.choices{display:flex;flex-direction:column;gap:18px;align-items:center}
+.ch{display:flex;align-items:center;justify-content:center;gap:14px;text-decoration:none;width:min(360px,84vw);padding:20px 22px;border-radius:18px;border:1.5px solid rgba(125,211,252,.4);background:rgba(255,255,255,.05);color:#e8edff;font-size:17px;font-weight:800;letter-spacing:3px;transition:.22s;text-align:center;position:relative;overflow:hidden}
+.ch .big{font-size:28px}
+.ch .desc{font-size:11.5px;color:rgba(232,237,255,.5);font-weight:400;letter-spacing:1px;line-height:1.6}
+.ch:hover{border-color:#7dd3fc;transform:translateY(-3px);box-shadow:0 0 30px rgba(125,211,252,.45),0 10px 28px rgba(0,0,0,.4)}
+.ch.home:hover{border-color:#ffd76a;box-shadow:0 0 30px rgba(255,215,106,.45),0 10px 28px rgba(0,0,0,.4)}
+@media(max-width:560px){h1{letter-spacing:6px}}
 </style>
 </head>
 <body>
 <canvas id="fx"></canvas>
 <div class="stars" id="stars"></div>
-<div class="hero">
+<div class="stage">
   <div class="sub">B I O · 分 子 与 细 胞</div>
-  <h1>📚 卡片列表</h1>
-  <p style="margin-top:10px;font-size:12.5px;color:rgba(232,237,255,.6);letter-spacing:2px">所有知识卡片 · 点击直接打开</p>
-  <span class="count" id="count">正在加载…</span>
+  <h1>知识卡</h1>
+  <div class="tip">选择你要前往的功能</div>
+  <div class="choices">
+    <a class="ch" href="index.html"><span class="big">🏠</span>返回欢迎入口<span class="desc">回到动画欢迎页</span></a>
+    <a class="ch" href="search.html"><span class="big">🔍</span>搜索卡片<span class="desc">输入卡片 ID 查找知识卡</span></a>
+  </div>
 </div>
-<div class="bar">
-  <a href="index.html">🏠 返回欢迎入口</a>
-  <a href="search.html">🔍 搜索卡片</a>
-</div>
-<div class="wrap">
-  <div class="grid" id="grid"></div>
-  <div class="empty" id="empty" style="display:none">还没有卡片，把 HTML 放进 cards/ 文件夹并运行 build_index.js</div>
-</div>
-<footer>GitHub Pages 托管 · 每张卡片独立 HTML，可自由增删</footer>
 <script>
-window.CARDS=[{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46738},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46008},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49380}];
+/* ===== 背景星空 ===== */
 (function(){
-  var grid=document.getElementById('grid'),empty=document.getElementById('empty');
-  var c=document.getElementById('count');
-  var cards=window.CARDS||[];
-  c.textContent='共 '+cards.length+' 张卡片';
-  if(!cards.length){empty.style.display='block';return;}
-  var html='';
-  cards.forEach(function(x){
-    var tags=(x.badges||[]).concat(x.tags||[]);
-    var tagHtml=tags.slice(0,4).map(function(t){return '<span>'+t+'</span>';}).join('');
-    html+='<a class="card" href="cards/'+encodeURIComponent(x.file)+'"><h3>'+(x.h1||x.title)+'</h3><div class="sub">'+x.title+'</div><div class="meta">'+tagHtml+'<b>'+x.cards+' 卡</b></div></a>';
-  });
-  grid.innerHTML=html;
-})();
-</script>
-<script>
-/* ===== 背景星空（静态闪烁小星星） ===== */
-(function(){
-  var box=document.getElementById('stars');
-  if(!box)return;
+  var box=document.getElementById('stars');if(!box)return;
   var n=90,html='';
   for(var i=0;i<n;i++){
     var x=Math.random()*100,y=Math.random()*100,s=0.6+Math.random()*1.6,d=Math.random()*4;
@@ -84,37 +53,15 @@ window.CARDS=[{"file":"化学必修一_深挖级拿分点_手账横向翻页知�
 })();
 /* ===== 鼠标霓虹粒子 ===== */
 (function(){
-  var cv=document.getElementById('fx');
-  if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d');
-  var W,H,pts=[],mX=-999,mY=-999;
+  var cv=document.getElementById('fx');if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d');var W,H,pts=[],mX=-999,mY=-999;
   function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
   resize();addEventListener('resize',resize);
   var colors=['#7dd3fc','#c084fc','#6ee7b7','#ffd76a','#ff9a76'];
   document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
   document.addEventListener('touchmove',function(e){if(e.touches[0]){mX=e.touches[0].clientX;mY=e.touches[0].clientY;}});
-  setInterval(function(){
-    if(mX<0)return;
-    for(var i=0;i<3;i++){
-      pts.push({x:mX+(Math.random()-0.5)*26,y:mY+(Math.random()-0.5)*26,
-        vx:(Math.random()-0.5)*1.4,vy:(Math.random()-0.5)*1.4-0.5,
-        l:1,d:0.018+Math.random()*0.025,c:colors[(Math.random()*colors.length)|0],r:1.4+Math.random()*2.6});
-    }
-    if(pts.length>300)pts.splice(0,pts.length-300);
-  },24);
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    for(var i=pts.length-1;i>=0;i--){
-      var p=pts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.02;p.vx*=0.98;p.l-=p.d;
-      if(p.l<=0){pts.splice(i,1);continue;}
-      ctx.globalAlpha=Math.max(0,p.l);
-      ctx.shadowColor=p.c;ctx.shadowBlur=14;
-      ctx.fillStyle=p.c;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+1,0,6.283);ctx.fill();
-    }
-    ctx.globalAlpha=1;ctx.shadowBlur=0;
-    requestAnimationFrame(tick);
-  }
+  setInterval(function(){if(mX<0)return;for(var i=0;i<3;i++){pts.push({x:mX+(Math.random()-0.5)*26,y:mY+(Math.random()-0.5)*26,vx:(Math.random()-0.5)*1.4,vy:(Math.random()-0.5)*1.4-0.5,l:1,d:0.018+Math.random()*0.025,c:colors[(Math.random()*colors.length)|0],r:1.4+Math.random()*2.6});}if(pts.length>300)pts.splice(0,pts.length-300);},24);
+  function tick(){ctx.clearRect(0,0,W,H);for(var i=pts.length-1;i>=0;i--){var p=pts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.02;p.vx*=0.98;p.l-=p.d;if(p.l<=0){pts.splice(i,1);continue;}ctx.globalAlpha=Math.max(0,p.l);ctx.shadowColor=p.c;ctx.shadowBlur=14;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+1,0,6.283);ctx.fill();}ctx.globalAlpha=1;ctx.shadowBlur=0;requestAnimationFrame(tick);}
   tick();
 })();
 </script>
