@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -532,11 +532,11 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
 </script>
 <script><!-- AUTH_V2_OVERRIDES -->
 (function(){
-  var AUTH_DOMAIN='llyzyvkydvcvlcnnvpox.supabase.local';
+  var AUTH_DOMAIN='example.com';
   function authClient(){if(!_lbSupabase&&window.supabase&&_lbConfig.url&&_lbConfig.key)_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);return _lbSupabase;}
   function esc(x){return String(x||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function normalizeName(n){return String(n||'').trim().toLowerCase();}
-  function syntheticEmail(n){return 'u_'+encodeURIComponent(normalizeName(n)).replace(/%/g,'_')+'@llyzyvkydvcvlcnnvpox.supabase.local';}
+  function syntheticEmail(n){return 'u_'+encodeURIComponent(normalizeName(n)).replace(/%/g,'_')+'@example.com';}
   function authForm(){return '<div style="max-width:380px;margin:0 auto;text-align:center"><div style="font-size:38px">🔐</div><h3 style="color:#ffd76a;margin:8px 0">账号登录</h3><p style="color:#aeb9d4;font-size:12px;margin-bottom:14px">登录后才能搜索、阅读卡片和同步存档</p><input class="name-input" id="authName" placeholder="用户名" maxlength="20"><input class="name-input" id="authPass" type="password" placeholder="密码（至少6位）" minlength="6"><button class="save-btn" onclick="authSubmit(false)">登录</button><button class="logout-btn" onclick="authSubmit(true)">注册新账号</button></div>';}
   window.authSubmit=async function(reg){var n=(document.getElementById('authName').value||'').trim(),pw=document.getElementById('authPass').value||'',el=document.getElementById('userInfo');if(!n||!pw){alert('请输入用户名和密码');return;}if(pw.length<6){alert('密码至少需要6位');return;}var sb=authClient();if(!sb){alert('数据库连接未初始化');return;}el.innerHTML='<p style="text-align:center;color:#aeb9d4">处理中...</p>';try{if(reg){var exists=await sb.from('users').select('user_id').ilike('user_name',n).limit(1);if(exists.error)throw exists.error;if(exists.data&&exists.data.length){throw new Error('用户名已被注册');}var a=await sb.auth.signUp({email:syntheticEmail(n),password:pw});if(a.error)throw a.error;if(!a.data.user)throw new Error('注册未完成，请检查 Supabase Auth 设置');var uid=a.data.user.id;var u=await sb.from('users').upsert({user_id:uid,user_name:n,avatar:'😀|#ffd76a'},{onConflict:'user_id'});if(u.error)throw u.error;_lbUser=uid;_lbUserData={user_id:uid,user_name:n,avatar:'😀|#ffd76a'};await syncCurrentUser();alert('注册成功，用户名就是「'+n+'」');renderUserProfile();}else{var a=await sb.auth.signInWithPassword({email:syntheticEmail(n),password:pw});if(a.error)throw a.error;var uid=a.data.user.id;_lbUser=uid;var u=await sb.from('users').select('*').eq('user_id',uid).maybeSingle();if(u.error)throw u.error;if(!u.data)throw new Error('账号资料不存在');_lbUserData=u.data;localStorage.setItem('lb_uid',uid);await restoreAllCloudSaves();alert('登录成功，云端存档已同步');renderUserProfile();}}catch(e){el.innerHTML=authForm();alert((reg?'注册失败：':'登录失败：')+(e.message||e));}};
   window.loadUserProfileData=async function(){var sb=authClient();if(!sb)return;var se=await sb.auth.getSession();var u=se.data&&se.data.session&&se.data.session.user;if(!u){_lbUser=null;_lbUserData=null;return;} _lbUser=u.id;localStorage.setItem('lb_uid',u.id);var r=await sb.from('users').select('*').eq('user_id',u.id).maybeSingle();if(r.data)_lbUserData=r.data;};
