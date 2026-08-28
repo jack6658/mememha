@@ -1,4 +1,4 @@
-﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -193,6 +193,8 @@ function judgeFactor(btn){var box=btn.closest('.factor-box');if(!box)return;var 
 function themePageChange(p){if(p===11)setLight();if(p===1)renderAtp();}
 
 (function(){if(lsGet(SAV.min,false)){document.body.classList.add('minimal');var mb=$("#minBtn");if(mb)mb.textContent="🎭 恢复动画";}if(lsGet(SAV.theme,'light')==='dark'){document.body.classList.add('dark');var tb=$("#themeBtn");if(tb)tb.textContent="☀️ 日间";}var f=Number(lsGet(SAV.font,1)||1);document.body.classList.remove('fs','fsl');if(f===1)document.body.classList.add('fs');if(f===2)document.body.classList.add('fsl');if(lsGet(SAV.arrow,false)){var r=$("#reader");if(r){r.classList.add('no-arrows');var ab=$("#arrowBtn");if(ab)ab.textContent="↔️ 显示箭头";}}syncPageLock();go(page);})();function refreshStreak(){var n=0,d=new Date();while(true){var x=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');if(checkins.indexOf(x)<0)break;n++;d.setDate(d.getDate()-1);}var s=$("#streak");if(s)s.textContent=n;}refreshStreak();
+/* ===== 手机触摸滑动翻页（阈值 60px + 水平 > 垂直 × 1.5，防表格误触） ===== */
+(function(){var r=document.getElementById('reader');if(!r)return;var sx=0,sy=0;r.addEventListener('touchstart',function(e){var t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;},{passive:true});r.addEventListener('touchend',function(e){var t=e.changedTouches[0];var dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<60)return;if(Math.abs(dx)<Math.abs(dy)*1.5)return;if(typeof change==='function')change(dx>0?-1:1);},{passive:true});})();
 </script>
 </body>
 </html>

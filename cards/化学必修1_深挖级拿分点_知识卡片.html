@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -121,7 +121,7 @@ body.fs{font-size:14px}body.fsl{font-size:17px}
 body.minimal #achBtn{display:none!important}
 body.minimal *{animation:none!important;transition:none!important}
 body.minimal #toast{opacity:0!important}
-@media(max-width:860px){.reader{padding:10px 34px 175px}.card{padding:14px 12px}.card-hd h3{font-size:14.5px}.arrow{width:30px;height:50px;font-size:30px}.arrow.left{left:3px}.arrow.right{right:3px}.progress{bottom:6px;width:94vw}.dash-grid{grid-template-columns:repeat(2,1fr)}.tbl-wrap table{min-width:300px}}
+@media(max-width:860px){.reader{padding:10px 34px 175px}.no-arrows{padding-left:10px;padding-right:10px}.card{padding:14px 12px}.card-hd h3{font-size:14.5px}.arrow{width:30px;height:50px;font-size:30px}.arrow.left{left:3px}.arrow.right{right:3px}.progress{bottom:6px;width:94vw}.dash-grid{grid-template-columns:repeat(2,1fr)}.tbl-wrap table{min-width:300px}}
 @media print{.hero,.arrow,.progress,#modal,#toast{display:none!important}.card{display:block!important;border:1px solid #999}.reader{padding:0}.no-arrows{padding:0}}
 
 /* ===== 成就墙（手账模板复刻） ===== */
@@ -220,6 +220,8 @@ function saveAwards(){lsSet(PREFIX+'titles',achievementTitles);lsSet(PREFIX+'med
 function openAchievementWall(){var wall=document.getElementById('achievementWall');if(!wall)return;updateAwards();document.getElementById('titleList').innerHTML=[['first','初入江湖','完成第1张卡片'],['forty','渐入佳境','完成40%卡片'],['seventyfive','炉火纯青','完成75%卡片'],['all','登峰造极','完成100%卡片']].map(function(x){return '<div class="title-item '+(achievementTitles.indexOf(x[0])<0?'locked':'')+'"><strong>'+(achievementTitles.indexOf(x[0])>=0?'🏆 ':'🔒 ')+x[1]+'</strong><small>'+x[2]+'</small></div>';}).join('');document.getElementById('medalGrid').innerHTML=medals.map(function(m){var on=unlockedMedals.indexOf(m[0])>=0;return '<div class="medal '+(on?'':'locked')+'"><span class="medal-icon">'+(on?m[1]:'⬛')+'</span><b>'+m[2]+'</b><small>'+m[3]+'</small></div>';}).join('');document.getElementById('titleProgress').textContent=achievementTitles.length+' / 4';document.getElementById('medalProgress').textContent=unlockedMedals.length+' / '+medals.length;wall.classList.add('show');}
 function closeAchievementWall(){var w=document.getElementById('achievementWall');if(w)w.classList.remove('show');}
 
+/* ===== 手机触摸滑动翻页（阈值 60px + 水平 > 垂直 × 1.5，防表格误触） ===== */
+(function(){var r=document.getElementById('reader');if(!r)return;var sx=0,sy=0;r.addEventListener('touchstart',function(e){var t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;},{passive:true});r.addEventListener('touchend',function(e){var t=e.changedTouches[0];var dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<60)return;if(Math.abs(dx)<Math.abs(dy)*1.5)return;if(typeof change==='function')change(dx>0?-1:1);},{passive:true});})();
 </script>
 <div id="achievementWall" onclick="if(event.target===this)closeAchievementWall()"><div class="achievement-box"><div class="achievement-head"><h2>🏆 成就与勋章</h2><button class="btn" onclick="closeAchievementWall()">✕</button></div><p>成就：<span id="titleProgress">0 / 4</span></p><div class="title-list" id="titleList"></div><p>勋章：<span id="medalProgress">0 / 12</span></p><div class="medal-grid" id="medalGrid"></div></div></div>
 </body>
