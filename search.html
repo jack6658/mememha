@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -6,33 +6,45 @@
 <title>搜索 · 生物知识卡</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#f5f7fa;color:#2c3e50;font-family:"Microsoft YaHei","PingFang SC",sans-serif;min-height:100vh}
-.head{background:linear-gradient(135deg,#1f6f8b,#4fb3bf);color:#fff;padding:30px 20px;text-align:center}
-.head h1{font-size:22px;margin-bottom:14px}
-.box{max-width:640px;margin:0 auto;display:flex;gap:8px}
-.box input{flex:1;border:none;border-radius:10px;padding:13px 16px;font-size:15px;outline:none}
-.box button{background:#fff;border:none;border-radius:10px;padding:0 22px;font-size:15px;color:#1f6f8b;font-weight:800;cursor:pointer}
-.back{display:inline-block;margin-top:12px;color:#eaf6f8;text-decoration:none;font-size:12px}
-.wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
-.hint{color:#9aa8b5;font-size:12px;margin-bottom:14px}
-#res{}
-.r{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e2e9ee;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(31,111,139,.06)}
-.r:hover{border-color:#4fb3bf}
-.r h3{font-size:14px;color:#1f6f8b;margin-bottom:4px}
-.r .sub{font-size:11.5px;color:#7a8b99;margin-bottom:6px}
-.r .meta{display:flex;flex-wrap:wrap;gap:4px}
-.r .meta span{font-size:10px;padding:1px 7px;border-radius:999px;background:#eef5f7;color:#4a6b7a}
-.none{text-align:center;color:#9aa8b5;padding:40px 0;font-size:14px}
+body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#05070f);min-height:100vh;color:#e8edff;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;overflow-x:hidden}
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.head{position:relative;z-index:1;text-align:center;padding:34px 20px 40px}
+.head .sub{font-size:13px;letter-spacing:6px;color:rgba(232,237,255,.5);margin-bottom:12px}
+.head h1{font-size:clamp(24px,4.6vw,38px);font-weight:900;letter-spacing:8px;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite}
+@keyframes grad{to{background-position:300% 0}}
+.box{max-width:620px;margin:22px auto 0;display:flex;gap:8px;padding:0 16px}
+.box input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:12px;padding:13px 16px;font-size:15px;color:#e8edff;outline:none;transition:.2s}
+.box input:focus{border-color:#7dd3fc;box-shadow:0 0 20px rgba(125,211,252,.35)}
+.box input::placeholder{color:rgba(232,237,255,.4)}
+.box button{background:linear-gradient(135deg,#7dd3fc,#c084fc);border:none;border-radius:12px;padding:0 26px;font-size:15px;color:#0a0e1f;font-weight:800;cursor:pointer;box-shadow:0 0 18px rgba(125,211,252,.4);transition:.2s}
+.box button:hover{box-shadow:0 0 30px rgba(192,132,252,.6)}
+.back{display:inline-block;margin-top:16px;color:rgba(232,237,255,.6);text-decoration:none;font-size:12px;letter-spacing:2px;transition:.2s}
+.back:hover{color:#ffd76a}
+.wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:10px 16px 70px}
+.hint{color:rgba(232,237,255,.45);font-size:12px;margin-bottom:16px;letter-spacing:1px}
+.r{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,.05);border:1.5px solid rgba(125,211,252,.25);border-radius:14px;padding:15px 18px;margin-bottom:10px;transition:.2s;position:relative;overflow:hidden}
+.r::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(125,211,252,.15),rgba(192,132,252,.15));opacity:0;transition:.2s}
+.r:hover{border-color:#7dd3fc;transform:translateY(-2px);box-shadow:0 0 24px rgba(125,211,252,.3)}
+.r:hover::before{opacity:1}
+.r h3{position:relative;z-index:1;font-size:14px;color:#e8edff;margin-bottom:4px}
+.r .sub{position:relative;z-index:1;font-size:11.5px;color:rgba(232,237,255,.55);margin-bottom:7px}
+.r .meta{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:5px}
+.r .meta span{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.3);color:#7dd3fc}
+.none{text-align:center;color:rgba(232,237,255,.5);padding:40px 0;font-size:14px}
 </style>
 </head>
 <body>
+<canvas id="fx"></canvas>
+<div class="stars" id="stars"></div>
 <div class="head">
+  <div class="sub">B I O · 搜 索</div>
   <h1>🔍 搜索知识卡</h1>
   <div class="box">
     <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
     <button onclick="doSearch()">搜索</button>
   </div>
-  <a class="back" href="index.html">← 返回入口</a>
+  <a class="back" href="index.html">← 返回欢迎入口</a>
 </div>
 <div class="wrap">
   <div class="hint" id="hint"></div>
@@ -63,6 +75,57 @@ function doSearch(){
 }
 document.getElementById('q').addEventListener('input',doSearch);
 doSearch();
+</script>
+<script>
+/* ===== 背景星空 ===== */
+(function(){
+  var box=document.getElementById('stars');
+  if(!box)return;
+  var n=90,html='';
+  for(var i=0;i<n;i++){
+    var x=Math.random()*100,y=Math.random()*100,s=0.6+Math.random()*1.6,d=Math.random()*4;
+    html+='<i style="position:absolute;left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;border-radius:50%;background:#cfe8ff;opacity:'+(0.3+Math.random()*0.6)+';animation:tw'+(d|0)+' '+(2+Math.random()*3)+'s infinite"></i>';
+  }
+  box.innerHTML=html;
+  var css='';
+  for(var k=0;k<5;k++){css+='@keyframes tw'+k+'{0%,100%{opacity:.2}50%{opacity:1}}';}
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+})();
+/* ===== 鼠标霓虹粒子 ===== */
+(function(){
+  var cv=document.getElementById('fx');
+  if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d');
+  var W,H,pts=[],mX=-999,mY=-999;
+  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+  resize();addEventListener('resize',resize);
+  var colors=['#7dd3fc','#c084fc','#6ee7b7','#ffd76a','#ff9a76'];
+  document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  document.addEventListener('touchmove',function(e){if(e.touches[0]){mX=e.touches[0].clientX;mY=e.touches[0].clientY;}});
+  setInterval(function(){
+    if(mX<0)return;
+    for(var i=0;i<3;i++){
+      pts.push({x:mX+(Math.random()-0.5)*26,y:mY+(Math.random()-0.5)*26,
+        vx:(Math.random()-0.5)*1.4,vy:(Math.random()-0.5)*1.4-0.5,
+        l:1,d:0.018+Math.random()*0.025,c:colors[(Math.random()*colors.length)|0],r:1.4+Math.random()*2.6});
+    }
+    if(pts.length>300)pts.splice(0,pts.length-300);
+  },24);
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=pts.length-1;i>=0;i--){
+      var p=pts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.02;p.vx*=0.98;p.l-=p.d;
+      if(p.l<=0){pts.splice(i,1);continue;}
+      ctx.globalAlpha=Math.max(0,p.l);
+      ctx.shadowColor=p.c;ctx.shadowBlur=14;
+      ctx.fillStyle=p.c;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+1,0,6.283);ctx.fill();
+    }
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
 </script>
 </body>
 </html>
