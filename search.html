@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -42,7 +42,7 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
   <h1>🔍 搜索知识卡</h1>
   <div class="box">
     <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
-    <button onclick="doSearch()">搜索</button>
+    <button onclick="scheduleSearch()">搜索</button>
   </div>
   <a class="back" href="index.html">← 返回欢迎入口</a>
 </div>
@@ -73,7 +73,14 @@ function doSearch(){
   res.innerHTML=html;
 }
 
-document.getElementById('q').addEventListener('input',doSearch);
+var pendingTimer=null;
+function scheduleSearch(){
+  if(pendingTimer)clearTimeout(pendingTimer);
+  var hint=document.getElementById('hint');
+  if(hint)hint.textContent='⏳ 正在扫描…';
+  pendingTimer=setTimeout(function(){pendingTimer=null;doSearch();},1500);
+}
+document.getElementById('q').addEventListener('input',scheduleSearch);
 doSearch();
 </script>
 <script>
