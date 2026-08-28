@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -17,24 +17,22 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .box input{flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:12px;padding:13px 16px;font-size:15px;color:#e8edff;outline:none;transition:.2s}
 .box input:focus{border-color:#7dd3fc;box-shadow:0 0 20px rgba(125,211,252,.35)}
 .box input::placeholder{color:rgba(232,237,255,.4)}
-.box button{background:linear-gradient(135deg,#7dd3fc,#c084fc);border:none;border-radius:12px;padding:0 26px;font-size:15px;color:#0a0e1f;font-weight:800;cursor:pointer;box-shadow:0 0 18px rgba(125,211,252,.4);transition:.2s}
-.box button:hover{box-shadow:0 0 30px rgba(192,132,252,.6)}
-.back{display:inline-block;margin-top:16px;color:rgba(232,237,255,.6);text-decoration:none;font-size:12px;letter-spacing:2px;transition:.2s}
-.back:hover{color:#ffd76a}
-.wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:10px 16px 70px}
-.hint{color:rgba(232,237,255,.45);font-size:12px;margin-bottom:16px;letter-spacing:1px}
-.r{display:block;text-decoration:none;color:inherit;background:rgba(255,255,255,.05);border:1.5px solid rgba(125,211,252,.25);border-radius:14px;padding:15px 18px;margin-bottom:10px;transition:.2s;position:relative;overflow:hidden}
-.r::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(125,211,252,.15),rgba(192,132,252,.15));opacity:0;transition:.2s}
-.r:hover{border-color:#7dd3fc;transform:translateY(-2px);box-shadow:0 0 24px rgba(125,211,252,.3)}
-.r:hover::before{opacity:1}
-.r h3{position:relative;z-index:1;font-size:14px;color:#e8edff;margin-bottom:4px}
-.r .sub{position:relative;z-index:1;font-size:11.5px;color:rgba(232,237,255,.55);margin-bottom:7px}
-.r .meta{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:5px}
-.r .meta span{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.3);color:#7dd3fc}
-.none{text-align:center;color:rgba(232,237,255,.5);padding:40px 0;font-size:14px}
-
+.box button{background:linear-gradient(135deg,#7dd3fc,#4a9fd8);border:none;border-radius:12px;padding:0 22px;font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:.2s}
+.box button:hover{transform:scale(1.04);box-shadow:0 0 18px rgba(125,211,252,.5)}
+.back{display:inline-block;margin-top:18px;color:rgba(232,237,255,.6);text-decoration:none;font-size:13px;transition:.2s}
+.back:hover{color:#7dd3fc}
 .ach-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;margin:12px auto 0;display:inline-block}
 .ach-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(245,158,11,.5)}
+.wrap{position:relative;z-index:1;max-width:620px;margin:10px auto 40px;padding:0 16px}
+.hint{font-size:13px;color:rgba(232,237,255,.5);text-align:center;margin-bottom:10px;min-height:20px}
+.r{display:block;background:rgba(255,255,255,.06);border:1px solid rgba(125,211,252,.2);border-radius:14px;padding:16px 18px;margin-bottom:10px;text-decoration:none;color:inherit;transition:.2s}
+.r:hover{background:rgba(125,211,252,.12);border-color:#7dd3fc;transform:translateY(-2px)}
+.r h3{font-size:16px;margin-bottom:4px;color:#ffd76a}
+.r .sub{font-size:12px;color:rgba(232,237,255,.6);margin-bottom:6px}
+.r .meta{display:flex;gap:6px;flex-wrap:wrap}
+.r .meta span{font-size:11px;background:rgba(125,211,252,.15);color:#7dd3fc;padding:2px 8px;border-radius:20px}
+.none{text-align:center;color:rgba(232,237,255,.4);padding:40px 0;font-size:14px}
+/* 成就墙 */
 #siteAchWall{display:none;position:fixed;inset:0;z-index:300;background:rgba(5,7,15,.94);align-items:center;justify-content:center;padding:18px}
 #siteAchWall.show{display:flex}
 .ach-box{width:min(860px,94vw);max-height:88vh;overflow:auto;background:linear-gradient(145deg,#1a1f3a,#131836);border:1.5px solid rgba(125,211,252,.25);border-radius:18px;padding:22px;color:#e8edff}
@@ -54,16 +52,22 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .am-i b{display:block;font-size:12px;margin-bottom:2px}
 .am-i small{font-size:10px;color:rgba(232,237,255,.5)}
 .am-i em{display:inline-block;font-style:normal;font-size:9px;margin-top:3px;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.1)}
-/* 等级配色：1白 2蓝 3紫 4红 5彩 */
-.lv1{border-color:#e8edff}.lv1 strong{color:#e8edff}.lv1 em{color:#e8edff}
-.lv2{border-color:#7dd3fc}.lv2 strong{color:#7dd3fc}.lv2 em{color:#7dd3fc}
-.lv3{border-color:#c084fc}.lv3 strong{color:#c084fc}.lv3 em{color:#c084fc}
-.lv4{border-color:#f87171}.lv4 strong{color:#f87171}.lv4 em{color:#f87171}
-.lv5{border-color:#ffd76a;background:linear-gradient(145deg,rgba(255,215,106,.18),rgba(192,132,252,.15),rgba(125,211,252,.15))}
-.lv5 strong{background:linear-gradient(100deg,#ffd76a,#f59e0b,#c084fc,#7dd3fc,#6ee7b7);-webkit-background-clip:text;background-clip:text;color:transparent}
-/* 未解锁遮罩（渐变模糊，遮住名称与条件） */
-.ag-i.locked,.am-i.locked{opacity:.6}
-.locked .mask{filter:blur(6px);opacity:.5;user-select:none;display:inline-block}
+.lv1{border-color:#e8edff}.lv1 strong,.lv1 b,.lv1 em{color:#e8edff}
+.lv2{border-color:#7dd3fc}.lv2 strong,.lv2 b,.lv2 em{color:#7dd3fc}
+.lv3{border-color:#c084fc}.lv3 strong,.lv3 b,.lv3 em{color:#c084fc}
+.lv4{border-color:#f87171}.lv4 strong,.lv4 b,.lv4 em{color:#f87171}
+.lv5{border-color:#ffd76a;background:linear-gradient(145deg,rgba(255,215,106,.15),rgba(192,132,252,.15),rgba(125,211,252,.15))}
+.lv5 strong,.lv5 b{background:linear-gradient(100deg,#ffd76a,#f59e0b,#c084fc,#7dd3fc,#6ee7b7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ag-i.locked,.am-i.locked{opacity:.55}
+.locked .mask{filter:blur(6px);opacity:.55;user-select:none}
+/* 特效 */
+.ach-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);padding:40px 60px;border-radius:20px;background:rgba(10,15,30,0.98);border:3px solid;z-index:1000;text-align:center;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+.ach-modal.show{transform:translate(-50%,-50%) scale(1)}
+.ach-modal h2{margin:10px 0 5px}
+.ach-modal p{color:#aeb9d4;font-size:14px}
+.ach-particle{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:999}
+.ach-confetti{position:fixed;width:12px;height:12px;pointer-events:none;z-index:997}
+.ach-flash{position:fixed;inset:0;background:white;opacity:0;pointer-events:none;z-index:998}
 </style>
 </head>
 <body>
@@ -76,16 +80,25 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
     <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
     <button onclick="scheduleSearch()">搜索</button>
   </div>
-  <a class="back" href="index.html">← 返回欢迎入口</a>
-  <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button>
+  <button class="ach-btn" onclick="openSiteAch()">🏆 成就系统</button> <button class="ach-btn" onclick="simulateTest()" style="background:linear-gradient(135deg,#7dd3fc,#4a9fd8)">🧪 测试模式</button>
+  <br><a class="back" href="index.html">← 返回欢迎入口</a>
 </div>
 <div class="wrap">
   <div class="hint" id="hint"></div>
   <div id="res"></div>
   <div class="none" id="none" style="display:none">没有找到匹配的卡片，换个词试试～</div>
 </div>
+<div id="siteAchWall" onclick="if(event.target===this)closeSiteAch()">
+  <div class="ach-box">
+    <div class="ach-head"><h2>🏆 全站成就系统</h2><button onclick="closeSiteAch()">✕</button></div>
+    <p class="ach-ttl">称号：<span id="stTitleProg">0 / 4</span></p>
+    <div class="ag" id="stTitleList"></div>
+    <p class="ach-ttl">勋章：<span id="stMedalProg">0 / 12</span></p>
+    <div class="am" id="stMedalGrid"></div>
+  </div>
+</div>
 <script>
-window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":111684,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":63892,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":47330,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46600,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49972,"id":545315}];
+window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":103043,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":58314,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46799,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46013,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49462,"id":545315}];
 function doSearch(){
   var v=document.getElementById('q').value.trim();
   var cards=window.CARDS||[];
@@ -105,7 +118,6 @@ function doSearch(){
   });
   res.innerHTML=html;
 }
-
 var pendingTimer=null;
 function scheduleSearch(){
   if(pendingTimer)clearTimeout(pendingTimer);
@@ -114,32 +126,21 @@ function scheduleSearch(){
   pendingTimer=setTimeout(function(){pendingTimer=null;doSearch();},1500);
 }
 document.getElementById('q').addEventListener('input',scheduleSearch);
-doSearch();
-
-/* ===== 全站成就系统（读取卡片共享的 site_ach 数据） ===== */
-var stTitles=[],stMedals=[];
-var stLevelLabel=['','★ 入门','★★ 进阶','★★★ 高深','★★★★ 稀有','★★★★★ 传说'];
-var stTInfo=[['t1','初入江湖','完成 1 张卡片的全部浏览',1],['t2','略有建树','完成 5 张卡片的全部浏览',2],['t3','炉火纯青','完成 15 张卡片的全部浏览',3],['t4','登峰造极','完成 30 张卡片的全部浏览',4]];
-var stMInfo=[['m1','🌱','感觉良好','任意知识卡连续答对 7 道题',2],['m2','🪙','终结币','任意知识卡连续答错 8 道题',2],['m3','⭐','渐有心得','全站累计答对 70 道题',2],['m4','🔥','手感火热','全站累计答对 100 道题',3],['m5','💡','一通百通','全站累计答对 150 道题',4],['m6','🗺️','博览群卡','浏览了 10 张卡片',2],['m7','📚','学海无涯','浏览了 30 张卡片',4],['m8','💎','满分起步','任意一张知识卡选择题全对',2],['m9','🏅','连战连捷','三套知识卡中的知识卡全部全对',3],['m10','⚡','连击大师','连续答对 20 道题',4],['m11','👑','答题封神','全站累计答对 70 道题',3],['m12','🌌','知识星河','完成 10 套知识卡套',5]];
-function getSiteAchData(){
-  try{var raw=localStorage.getItem('site_ach');if(!raw)return {};return JSON.parse(raw);}catch(e){return {};}
-}
+// 成就系统
+var stTitles=[],stMedals=[],lastTitles=null,lastMedals=null;
+var stLevelLabel=['','★入门','★★进阶','★★★高深','★★★★稀有','★★★★★传说'];
+var stTInfo=[['t1','初入江湖','浏览 1 张知识点卡片',1],['t2','略有建树','浏览 20 张知识点卡片',2],['t3','炉火纯青','浏览 50 张知识点卡片',3],['t4','登峰造极','浏览 120 张知识点卡片',4]];
+var stMInfo=[['m1','🌱','感觉良好','任意知识卡连续答对 7 道题',2],['m2','🪙','终结币','任意知识卡连续答错 8 道题',2],['m3','⭐','渐有心得','全站累计答对 70 道题',2],['m4','🔥','手感火热','全站累计答对 100 道题',3],['m5','💡','一通百通','全站累计答对 150 道题',4],['m6','🗺️','博览群卡','浏览了 10 张卡片',2],['m7','📚','学海无涯','浏览了 30 张卡片',4],['m8','💎','满分起步','任意一张知识卡选择题全对',2],['m9','🏅','连战连捷','三套知识卡中的知识卡全部全对',3],['m10','⚡','连击大师','连续答对 20 道题',4],['m11','👑','答题封神','全站累计答对 200 道题',4],['m12','🌌','知识星河','完成 10 套知识卡套',5]];
+function getSiteAchData(){try{var r=localStorage.getItem('site_ach');return r?JSON.parse(r):{};}catch(e){return {};}}
 function calcSiteAch(){
   var data=getSiteAchData();
-  var completed=0,correct=0,perfectCount=0,anyPerfect=0,maxStreak=0,maxWrong=0;
-  for(var k in data){
-    var d=data[k];
-    if(d.completed)completed++;
-    correct+=d.correct||0;
-    if(d.perfect){anyPerfect=1;perfectCount++;}
-    if((d.maxStreak||0)>maxStreak)maxStreak=d.maxStreak;
-    if((d.maxWrong||0)>maxWrong)maxWrong=d.maxWrong;
-  }
+  var completed=0,totalPages=0,correct=0,perfectCount=0,anyPerfect=0,maxStreak=0,maxWrong=0;
+  for(var k in data){var d=data[k];if(d.completed)completed++;totalPages+=(d.pages||0);correct+=d.correct||0;if(d.perfect){anyPerfect=1;perfectCount++;}if((d.maxStreak||0)>maxStreak)maxStreak=d.maxStreak;if((d.maxWrong||0)>maxWrong)maxWrong=d.maxWrong;}
   stTitles=[];
-  if(completed>=1)stTitles.push('t1');
-  if(completed>=5)stTitles.push('t2');
-  if(completed>=15)stTitles.push('t3');
-  if(completed>=30)stTitles.push('t4');
+  if(totalPages>=1)stTitles.push('t1');
+  if(totalPages>=20)stTitles.push('t2');
+  if(totalPages>=50)stTitles.push('t3');
+  if(totalPages>=120)stTitles.push('t4');
   stMedals=[];
   if(maxStreak>=7)stMedals.push('m1');
   if(maxWrong>=8)stMedals.push('m2');
@@ -151,7 +152,7 @@ function calcSiteAch(){
   if(anyPerfect)stMedals.push('m8');
   if(perfectCount>=3)stMedals.push('m9');
   if(maxStreak>=20)stMedals.push('m10');
-  if(correct>=70)stMedals.push('m11');
+  if(correct>=200)stMedals.push('m11');
   if(completed>=10)stMedals.push('m12');
 }
 function openSiteAch(){
@@ -164,63 +165,59 @@ function openSiteAch(){
   document.getElementById('stMedalGrid').innerHTML=mi;
   document.getElementById('stTitleProg').textContent=stTitles.length+' / 4';
   document.getElementById('stMedalProg').textContent=stMedals.length+' / '+stMInfo.length;
+  // 检测新解锁
+  var newT=stTitles.filter(function(t){return !lastTitles||lastTitles.indexOf(t)<0;});
+  var newM=stMedals.filter(function(m){return !lastMedals||lastMedals.indexOf(m)<0;});
+  if(lastTitles){for(var i=0;i<newT.length;i++){(function(idx){var info=stTInfo.find(function(x){return x[0]===newT[idx];});if(info)setTimeout(function(){showAchievementEffect(info[3],info[1],'🏆');},idx*400);})(i);}}
+  if(lastMedals){for(var j=0;j<newM.length;j++){(function(idx){var info=stMInfo.find(function(x){return x[0]===newM[idx];});if(info)setTimeout(function(){showAchievementEffect(info[4],info[2],info[1]);},idx*250);})(j);}}
+  lastTitles=stTitles.slice();
+  lastMedals=stMedals.slice();
   wall.classList.add('show');
 }
+function simulateTest(){
+  localStorage.setItem('site_ach',JSON.stringify({
+    "生物必修1 · 深度融合笔记 · 知识卡片":{"viewed":1,"correct":200,"wrong":0,"maxStreak":20,"streak":20,"wrongStreak":0,"maxWrong":0,"checked":1,"perfect":1,"seen":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],"total":30,"pages":30,"completed":1},
+    "化学必修1 · 深挖级拿分点 · 知识卡片":{"viewed":1,"correct":150,"wrong":8,"maxStreak":15,"streak":0,"wrongStreak":8,"maxWrong":8,"checked":1,"perfect":1,"seen":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],"total":15,"pages":15,"completed":1},
+    "细胞工厂 · 分子与细胞知识卡片":{"viewed":1,"correct":100,"wrong":0,"maxStreak":20,"streak":20,"wrongStreak":0,"maxWrong":0,"checked":1,"perfect":1,"seen":[1,2,3,4,5,6,7,8,9,10,11,12],"total":12,"pages":12,"completed":1}
+  }));
+  alert('已写入测试数据！点击 🏆 成就系统 查看效果');
+}
 function closeSiteAch(){var w=document.getElementById('siteAchWall');if(w)w.classList.remove('show');}
+function showAchievementEffect(lvl,name,icon){
+  var color=['','#e8edff','#7dd3fc','#c084fc','#f87171','#ffd76a'][lvl]||'#fff';
+  var flash=document.createElement('div');flash.className='ach-flash';document.body.appendChild(flash);
+  requestAnimationFrame(function(){flash.style.opacity=lvl>=4?'0.5':'0.3';setTimeout(function(){flash.style.opacity='0';setTimeout(function(){flash.remove();},300);},200);});
+  var modal=document.createElement('div');modal.className='ach-modal';modal.style.border='3px solid '+color;modal.style.boxShadow='0 0 '+(lvl>=4?80:40)+'px '+color+'88';
+  if(lvl===5)modal.style.background='linear-gradient(135deg,rgba(255,215,106,0.2),rgba(192,132,252,0.2),rgba(125,211,252,0.2))';
+  modal.innerHTML='<div style="font-size:'+(lvl>=4?'100px':'70px')+';margin-bottom:15px">'+icon+'</div><h2 style="color:'+color+';font-size:'+(lvl>=4?'36px':'28px')+';margin-bottom:8px">'+name+'</h2><p>'+(lvl>=4?'🏆 称号已解锁！':'🎖️ 勋章已解锁！')+'</p>';
+  document.body.appendChild(modal);
+  requestAnimationFrame(function(){modal.classList.add('show');});
+  for(var i=0;i<lvl*25;i++){setTimeout(function(){createParticle(color,lvl);},i*25);}
+  if(lvl>=4)for(var j=0;j<50;j++){setTimeout(function(){createConfetti(color);},j*40);}
+  setTimeout(function(){modal.classList.remove('show');setTimeout(function(){modal.remove();},500);},lvl>=4?4000:3000);
+}
+function createParticle(color,lvl){
+  var p=document.createElement('div');p.className='ach-particle';p.style.background=color;p.style.width=p.style.height=(lvl>=4?'14':'10')+'px';
+  p.style.left='50%';p.style.top='50%';document.body.appendChild(p);
+  var ang=Math.random()*Math.PI*2;var vel=(80+Math.random()*120)*(lvl>=4?1.5:1);
+  var vx=Math.cos(ang)*vel;var vy=Math.sin(ang)*vel;var x=0,y=0,op=1;
+  (function anim(){x+=vx*0.02;y+=vy*0.02+2;op-=0.015;p.style.transform='translate('+x+'px,'+y+'px)';p.style.opacity=op;if(op>0)requestAnimationFrame(anim);else p.remove();})();
+}
+function createConfetti(color){
+  var c=document.createElement('div');c.className='ach-confetti';c.style.background=color;c.style.left=Math.random()*100+'vw';c.style.top='-20px';
+  document.body.appendChild(c);
+  var dur=3000+Math.random()*1000;var start=Date.now();
+  (function anim(){var el=Date.now()-start;if(el>=dur){c.remove();return;}c.style.top=(el/dur*120)+'vh';c.style.transform='rotate('+(el/dur*720)+'deg)';c.style.opacity=1-el/dur;requestAnimationFrame(anim);})();
+}
+// 星空背景
+(function(){var box=document.getElementById('stars');if(!box)return;var n=('ontouchstart' in window)||innerWidth<768?45:70,html='';for(var i=0;i<n;i++){var s=Math.random()*2+1;html+='<div style="position:absolute;width:'+s+'px;height:'+s+'px;background:white;border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;opacity:'+(Math.random()*0.5+0.2)+';animation:twinkle '+(2+Math.random()*3)+'s ease-in-out infinite alternate"></div>';}box.innerHTML=html;})();
 </script>
 <script>
-/* ===== 背景星空 ===== */
-(function(){
-  var box=document.getElementById('stars');
-  if(!box)return;
-  var n=('ontouchstart' in window)||innerWidth<768?45:70,html='';
-  for(var i=0;i<n;i++){
-    var x=Math.random()*100,y=Math.random()*100,s=0.6+Math.random()*1.6,d=Math.random()*4;
-    html+='<i style="position:absolute;left:'+x+'%;top:'+y+'%;width:'+s+'px;height:'+s+'px;border-radius:50%;background:#cfe8ff;opacity:'+(0.3+Math.random()*0.6)+';animation:tw'+(d|0)+' '+(2+Math.random()*3)+'s infinite"></i>';
-  }
-  box.innerHTML=html;
-  var css='';
-  for(var k=0;k<5;k++){css+='@keyframes tw'+k+'{0%,100%{opacity:.2}50%{opacity:1}}';}
-  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
-})();
-/* ===== 鼠标霓虹粒子（轻量版：极小粒子 + 移动端自动降级） ===== */
-(function(){
-  var cv=document.getElementById('fx');
-  if(!cv||!cv.getContext)return;
-  var ctx=cv.getContext('2d');
-  var W,H,pts=[],mX=-999,mY=-999;
-  var light=('ontouchstart' in window)||innerWidth<768; /* 移动端/小屏：更轻量 */
-  var cap=light?36:70;
-  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
-  resize();addEventListener('resize',resize);
-  var colors=['#7dd3fc','#c084fc','#6ee7b7','#ffd76a'];
-  document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
-  document.addEventListener('touchmove',function(e){if(e.touches[0]){mX=e.touches[0].clientX;mY=e.touches[0].clientY;}},{passive:true});
-  setInterval(function(){
-    if(mX<0)return;
-    var n=light?1:2;
-    for(var i=0;i<n;i++){
-      pts.push({x:mX+(Math.random()-0.5)*14,y:mY+(Math.random()-0.5)*14,
-        vx:(Math.random()-0.5)*0.7,vy:(Math.random()-0.5)*0.7-0.25,
-        l:1,d:0.022+Math.random()*0.03,c:colors[(Math.random()*colors.length)|0],r:0.5+Math.random()*1.0});
-    }
-    if(pts.length>cap)pts.splice(0,pts.length-cap);
-  },light?70:40);
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    for(var i=pts.length-1;i>=0;i--){
-      var p=pts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.012;p.vx*=0.97;p.l-=p.d;
-      if(p.l<=0){pts.splice(i,1);continue;}
-      ctx.globalAlpha=Math.max(0,p.l)*0.8;
-      ctx.fillStyle=p.c;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+0.4,0,6.283);ctx.fill();
-    }
-    ctx.globalAlpha=1;
-    requestAnimationFrame(tick);
-  }
-  tick();
-})();
+// Canvas 粒子背景
+var canvas=document.getElementById('fx');if(!canvas)return;var ctx=canvas.getContext('2d');var W=canvas.width=innerWidth;var H=canvas.height=innerHeight;var pts=[];for(var i=0;i<60;i++){pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*1.5+0.5});}
+function tick(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(125,211,252,0.4)';ctx.fill();});requestAnimationFrame(tick);}
+tick();
+window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
 </script>
-<div id="siteAchWall" onclick="if(event.target===this)closeSiteAch()"><div class="ach-box"><div class="ach-head"><h2>🏆 全站成就系统</h2><button onclick="closeSiteAch()">✕</button></div><p class="ach-ttl">成就：<span id="stTitleProg">0 / 4</span></p><div class="ag" id="stTitleList"></div><p class="ach-ttl">勋章：<span id="stMedalProg">0 / 12</span></p><div class="am" id="stMedalGrid"></div></div></div>
 </body>
 </html>
