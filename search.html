@@ -255,7 +255,7 @@ function createConfetti(color){
   (function anim(){var el=Date.now()-start;if(el>=dur){c.remove();return;}c.style.top=(el/dur*120)+'vh';c.style.transform='rotate('+(el/dur*720)+'deg)';c.style.opacity=1-el/dur;requestAnimationFrame(anim);})();
 }
 var _lbSupabase=null,_lbUser=null,_lbUserData=null;
-var _lbConfig={url:'',key:''};
+var _lbConfig={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'};
 async function initLeaderboard(){
   if(!_lbConfig.url||!_lbConfig.key){
     document.getElementById('lbContent').innerHTML='<p style="color:#ffd76a;text-align:center;padding:30px">⚠️ 排行榜功能未配置<br><small>请在 search.html 中找到 <code style="background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px">_lbConfig</code> 并填入你的 Supabase URL 和 Key</small></p>';
