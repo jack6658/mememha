@@ -248,7 +248,7 @@ function createConfetti(color){
 }
 /* ===== 排行榜系统 ===== */
 var _lbSupabase=null,_lbUser=null;
-var _lbConfig={url:'',key:''}; // ← 在这里填入你的 Supabase 配置
+var _lbConfig={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'}; // ← 在这里填入你的 Supabase 配置
 async function initLeaderboard(){
   if(!_lbConfig.url||!_lbConfig.key){
     document.getElementById('lbContent').innerHTML='<p style="color:#ffd76a;text-align:center;padding:30px">⚠️ 排行榜功能未配置<br><small>请在 search.html 中找到 <code style="background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px">_lbConfig</code> 并填入你的 Supabase URL 和 Key</small></p>';
