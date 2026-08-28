@@ -1,0 +1,120 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>欢迎学习 · 生物知识卡片</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;background:radial-gradient(1200px 800px at 50% 28%,#232c52,#10162e 55%,#05070f);min-height:100dvh;overflow:hidden;color:#e8edff;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
+#fireworks{position:fixed;inset:0;z-index:0;pointer-events:none;display:block}
+.stage{position:relative;z-index:2;text-align:center;padding:24px;animation:fadeIn 1.4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sub{font-size:clamp(13px,2.2vw,17px);letter-spacing:6px;color:rgba(232,237,255,.55);margin-bottom:14px;font-weight:500}
+h1{font-size:clamp(44px,9vw,92px);font-weight:900;letter-spacing:12px;line-height:1.15;background:linear-gradient(100deg,#ffd76a,#ff9a76,#c084fc,#7dd3fc,#6ee7b7,#ffd76a);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:grad 7s linear infinite,breathe 3.2s ease-in-out infinite}
+@keyframes grad{to{background-position:300% 0}}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.enter-btn{margin-top:46px;font-size:clamp(17px,3vw,22px);font-weight:800;letter-spacing:8px;color:#0a0e1f;background:linear-gradient(135deg,#ffd76a,#ffb35c);border:none;border-radius:999px;padding:16px 52px 16px 60px;cursor:pointer;box-shadow:0 0 24px rgba(255,190,92,.55),0 8px 30px rgba(0,0,0,.45);transition:.25s;position:relative;overflow:hidden}
+.enter-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 0 42px rgba(255,200,110,.85),0 12px 36px rgba(0,0,0,.5)}
+.enter-btn:active{transform:scale(.97)}
+.enter-btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.75),transparent);animation:shine 2.6s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-80%}100%{left:140%}}
+.hint{margin-top:22px;font-size:12.5px;color:rgba(232,237,255,.4);letter-spacing:3px}
+.corner{position:fixed;left:16px;bottom:12px;z-index:3;font-size:12px;color:rgba(232,237,255,.38);letter-spacing:1.5px;font-weight:500}
+#choose{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(6,9,20,.86);backdrop-filter:blur(10px)}
+#choose.show{display:flex;animation:fadeIn .5s ease both}
+.choose-head{font-size:clamp(20px,3.6vw,30px);font-weight:800;letter-spacing:5px;margin-bottom:14px;background:linear-gradient(90deg,#7dd3fc,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.choose-card{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;width:min(320px,82vw);padding:22px 18px;border-radius:18px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#e8edff;font-size:17px;font-weight:700;letter-spacing:2px;transition:.2s;text-align:center}
+.choose-card .big{font-size:34px}
+.choose-card .desc{font-size:12px;color:rgba(232,237,255,.55);font-weight:400;letter-spacing:1px;line-height:1.6}
+.choose-card:hover{border-color:#7dd3fc;box-shadow:0 0 26px rgba(125,211,252,.35);transform:translateY(-3px)}
+.back-btn{margin-top:10px;background:none;border:1px solid rgba(255,255,255,.25);color:rgba(232,237,255,.8);border-radius:999px;padding:9px 26px;font-size:13px;letter-spacing:3px;cursor:pointer;transition:.2s}
+.back-btn:hover{border-color:#ffd76a;color:#ffd76a}
+@media(max-width:560px){h1{letter-spacing:6px}.enter-btn{padding:14px 34px 14px 42px}}
+</style>
+</head>
+<body>
+<canvas id="fireworks"></canvas>
+<div class="stage">
+  <div class="sub">生 物 必 修 一 · 分 子 与 细 胞</div>
+  <h1>欢迎学习</h1>
+  <button class="enter-btn" onclick="enterSite()">✦ 进入 ✦</button>
+  <div class="hint">选择适合你的卡片风格，开启学习之旅</div>
+</div>
+<div class="corner">么么么哈tuer</div>
+<div id="choose">
+  <div class="choose-head">🎨 选择卡片风格</div>
+  <a class="choose-card" href="cards/生物必修一_分子与细胞_手账风知识卡片.html"><span class="big">📔</span>手账风知识卡片<span class="desc">记笔记 · 打卡 · 荧光笔标注 · 随机翻牌</span></a>
+  <a class="choose-card" href="cards/生物必修一_分子与细胞_闯关游戏风知识卡片.html"><span class="big">🎮</span>闯关游戏风知识卡片<span class="desc">关卡闯关 · XP经验 · 成就 · 答题测验</span></a>
+  <a class="choose-card" href="cards/生物必修一_分子与细胞_星空图谱风知识卡片.html"><span class="big">🌌</span>星空图谱风知识卡片<span class="desc">知识图谱 · 简略/详细背诵 · 记忆曲线</span></a>
+  <a class="choose-card" href="list.html"><span class="big">📚</span>查看全部卡片<span class="desc">站点内所有知识卡合集（0 张）</span></a>
+  <a class="choose-card" href="search.html"><span class="big">🔍</span>搜索卡片<span class="desc">按标题 / 标签 / 章节关键词搜索</span></a>
+  <button class="back-btn" onclick="backHome()">← 返回</button>
+</div>
+<script>
+/* ===== 礼花炮（Canvas 烟花） ===== */
+var cv=document.getElementById('fireworks');
+var ctx=cv.getContext?cv.getContext('2d'):null;
+var W=0,H=0;
+function resize(){if(!cv)return;W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+if(ctx){resize();window.addEventListener('resize',resize);}
+var rockets=[],parts=[];
+function hue(){return Math.floor(Math.random()*360);}
+function launch(){
+  if(!ctx)return;
+  rockets.push({x:W*(0.12+Math.random()*0.76),y:H+8,ty:H*(0.10+Math.random()*0.38),vx:(Math.random()-0.5)*2.4,vy:-(9.5+Math.random()*4),c:hue()});
+}
+function boom(x,y,c){
+  if(!ctx)return;
+  var n=70+Math.floor(Math.random()*50);
+  for(var i=0;i<n;i++){
+    var a=Math.random()*6.283,s=0.9+Math.random()*4.6;
+    parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,d:0.006+Math.random()*0.015,c:c,r:1.3+Math.random()*2});
+  }
+  parts.push({x:x,y:y,vx:0,vy:0,l:1,d:0.02,c:c,r:6}); /* 中心闪光 */
+}
+function tick(){
+  if(!ctx)return;
+  ctx.fillStyle='rgba(5,7,15,0.18)';ctx.fillRect(0,0,W,H);
+  var i,j;
+  for(i=rockets.length-1;i>=0;i--){
+    var r=rockets[i];r.x+=r.vx;r.y+=r.vy;r.vy+=0.07;
+    ctx.fillStyle='hsla('+r.c+',90%,72%,0.95)';
+    ctx.beginPath();ctx.arc(r.x,r.y,2.2,0,6.283);ctx.fill();
+    if(r.y<=r.ty||r.vy>=-0.4){boom(r.x,r.y,r.c);rockets.splice(i,1);}
+  }
+  for(j=parts.length-1;j>=0;j--){
+    var p=parts[j];p.x+=p.vx;p.y+=p.vy;p.vy+=0.028;p.vx*=0.984;p.vy*=0.984;p.l-=p.d;
+    if(p.l<=0){parts.splice(j,1);continue;}
+    ctx.globalAlpha=Math.max(0,p.l);
+    ctx.fillStyle='hsla('+p.c+',100%,'+(52+p.l*36)+'%,1)';
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l,0,6.283);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(tick);
+}
+/* 开场：立即密集礼花炮，持续约 5 秒 */
+var introCount=0;
+function intro(){
+  launch();
+  introCount++;
+  if(introCount<26){setTimeout(intro,150+Math.random()*220);}
+  else{setTimeout(function(){setInterval(function(){launch();},3200+Math.random()*2600);},4000);}
+}
+/* 点击进入：再放一轮礼花后切换选择页 */
+function enterSite(){
+  for(var k=0;k<6;k++)setTimeout(launch,k*90);
+  setTimeout(function(){launch();launch();},450);
+  setTimeout(showChoose,1000);
+}
+function showChoose(){
+  document.getElementById('choose').classList.add('show');
+}
+function backHome(){
+  document.getElementById('choose').classList.remove('show');
+}
+if(ctx){tick();setTimeout(intro,80);}else{setTimeout(function(){for(var k=0;k<6;k++)launch();},80);}
+</script>
+</body>
+</html>
