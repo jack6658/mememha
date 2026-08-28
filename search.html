@@ -1,4 +1,4 @@
-﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -62,7 +62,19 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .lv5 strong,.lv5 b{background:linear-gradient(100deg,#ffd76a,#f59e0b,#c084fc,#7dd3fc,#6ee7b7);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ag-i.locked,.am-i.locked{opacity:.55}
 .locked .mask{filter:blur(6px);opacity:.55;user-select:none}
-/* 排行榜 */
+
+.lb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid #ffd76a;background:rgba(255,215,106,0.2)}
+.user-panel{max-width:400px;margin:0 auto}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0}
+.avatar-item{width:100%;aspect-ratio:1;border:2px solid #526487;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:.2s;background:rgba(255,255,255,.05)}
+.avatar-item:hover{border-color:#7dd3fc;background:rgba(125,211,252,.2)}
+.avatar-item.selected{border-color:#ffd76a;background:rgba(255,215,106,.2)}
+.name-input{width:100%;background:rgba(255,255,255,.08);border:1.5px solid rgba(125,211,252,.4);border-radius:8px;padding:10px 14px;font-size:15px;color:#e8edff;outline:none;margin:8px 0}
+.name-input:focus{border-color:#7dd3fc}
+.save-btn{background:linear-gradient(135deg,#ffd76a,#f59e0b);border:none;border-radius:10px;padding:10px 24px;font-size:14px;font-weight:700;color:#1a1a2e;cursor:pointer;transition:.2s;width:100%;margin-top:8px}
+.save-btn:hover{transform:scale(1.02);box-shadow:0 0 15px rgba(255,215,106,.5)}
+.logout-btn{background:rgba(255,255,255,.1);border:1px solid #526487;border-radius:10px;padding:8px 24px;font-size:13px;color:#e8edff;cursor:pointer;transition:.2s;width:100%;margin-top:8px}
+  /* 排行榜 */
 .lb-tabs{display:flex;gap:8px;margin-bottom:16px;justify-content:center;flex-wrap:wrap}
 .lb-tab{padding:6px 16px;border:1.5px solid #526487;border-radius:20px;background:rgba(255,255,255,.05);color:#e8edff;font-size:13px;cursor:pointer;transition:.2s}
 .lb-tab.active{background:#d97706;border-color:#ffd76a;color:#fff}
@@ -126,7 +138,16 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
       <span id="lbLastUpdate" style="font-size:11px;color:#7a8ba8;margin-left:8px"></span>
     </div>
     <p class="lb-note">📌 每完成一张卡片或答题时自动同步，其他用户也能看到你的成绩</p>
+  
+<!-- 用户面板 -->
+<div id="userWall" onclick="if(event.target===this)closeUserPanel()">
+  <div class="ach-box">
+    <div class="ach-head"><h2>👤 个人信息</h2><button onclick="closeUserPanel()">✕</button></div>
+    <div id="userInfo" style="padding:16px 0">
+      <p style="color:#aeb9d4;text-align:center">加载中...</p>
+    </div>
   </div>
+</div></div>
 </div>
 <script>
 window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":103043,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":58314,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46799,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46013,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49462,"id":545315}];
@@ -248,7 +269,7 @@ function createConfetti(color){
 }
 /* ===== 排行榜系统 ===== */
 var _lbSupabase=null,_lbUser=null;
-var _lbConfig={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'}; // ← 在这里填入你的 Supabase 配置
+var _lbConfig={url:'',key:''}; // ← 在这里填入你的 Supabase 配置
 async function initLeaderboard(){
   if(!_lbConfig.url||!_lbConfig.key){
     document.getElementById('lbContent').innerHTML='<p style="color:#ffd76a;text-align:center;padding:30px">⚠️ 排行榜功能未配置<br><small>请在 search.html 中找到 <code style="background:rgba(255,255,255,.1);padding:2px 6px;border-radius:4px">_lbConfig</code> 并填入你的 Supabase URL 和 Key</small></p>';
@@ -301,20 +322,22 @@ function renderLeaderboard(list){
   var el=document.getElementById('lbContent');
   if(!list.length){el.innerHTML='<div class="lb-empty">暂无记录，快来刷分吧！</div>';return;}
   var html='<div class="lb-tabs">';
-  html+='<button class="lb-tab active" onclick="switchLbTab("score",this)">🏆 总分</button>';
-  html+='<button class="lb-tab" onclick="switchLbTab("pages",this)">📖 浏览</button>';
-  html+='<button class="lb-tab" onclick="switchLbTab("correct",this)">✅ 答题</button>';
+  html+='<button class="lb-tab active" onclick="switchLbTab(\"score\",this)">🏆 总分</button>';
+  html+='<button class="lb-tab" onclick="switchLbTab(\"pages\",this)">📖 浏览</button>';
+  html+='<button class="lb-tab" onclick="switchLbTab(\"correct\",this)">✅ 答题</button>';
   html+='</div>';
   list.forEach(function(item,i){
     var rank=i+1;
     var rc=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
     var isMe=item.user_id===_lbUser;
     var bgStyle=isMe?' style="border-color:#ffd76a;background:rgba(255,215,106,.1)"':'';
+    var avatar=item.avatar||'😀';
     var nameTag=(item.user_name||'匿名用户')+(isMe?' (你)':'');
-    html+='<div class="lb-item"'+bgStyle+'><div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
+    html+='<div class="lb-item"'+bgStyle+'><div class="lb-avatar">'+avatar+'</div><div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
   });
   el.innerHTML=html;
-}function switchLbTab(type,btn){
+}
+function switchLbTab(type,btn){
   document.querySelectorAll('.lb-tab').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
   if(!_lbSupabase)return;
@@ -326,6 +349,85 @@ function openLeaderboard(){
   if(!_lbSupabase)initLeaderboard();
   else refreshLeaderboard();
 }
+
+var _lbUserData=null;
+function openUserPanel(){
+  document.getElementById('userWall').classList.add('show');
+  loadUserProfile();
+}
+function closeUserPanel(){document.getElementById('userWall').classList.remove('show');}
+async function loadUserProfile(){
+  var el=document.getElementById('userInfo');
+  if(!_lbUser){
+    el.innerHTML='<p style="color:#aeb9d4;text-align:center">请先注册账号</p>'+
+      '<input class="name-input" id="regNameInput" placeholder="输入用户名...">'+
+      '<button class="save-btn" onclick="registerUser()">注册</button>';
+    return;
+  }
+  el.innerHTML='<p style="color:#aeb9d4;text-align:center">加载中...</p>';
+  try{
+    var r=await _lbSupabase.from('users').select('*').eq('user_id',_lbUser).single();
+    if(r.data){
+      _lbUserData=r.data;
+      renderUserProfile();
+    }else{
+      // 新用户，初始化
+      _lbUserData={user_id:_lbUser,user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
+      await _lbSupabase.from('users').insert(_lbUserData);
+      renderUserProfile();
+    }
+  }catch(e){
+    el.innerHTML='<p style="color:#f87171">加载失败: '+e.message+'</p>';
+  }
+}
+function renderUserProfile(){
+  var el=document.getElementById('userInfo');
+  var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀'};
+  var avatars=['😀','😎','🤓','😺','🦊','🐼','🐨','🦁','🐯','🐸','🐙','🦄','🐲','🦅','🦉','🐺','🐗','🐴','🦋','🐝','🌸','🌺','🍀','⭐','🔥','💎','🎮','🎯','🚀','🎸','🎨','📚'];
+var avHtml="";avatars.forEach(function(a){var sel=(a===data.avatar?" selected":"");avHtml+='<div class="avatar-item"'+sel+' data-av="'+a+'" onclick="pickAv(this)">'+a+"</div>";});
+  el.innerHTML='<div class="user-panel">'+
+    '<div style="text-align:center;margin-bottom:16px">'+
+      '<div style="font-size:60px;margin-bottom:8px">'+data.avatar+'</div>'+
+      '<div class="avatar-grid">'+avHtml+'</div>'+
+    '</div>'+
+    '<label style="color:#aeb9d4;font-size:13px">用户名</label>'+
+    '<input class="name-input" id="nameInput" value="'+(data.user_name||'')+'" placeholder="输入你的昵称">'+
+    '<button class="save-btn" onclick="saveProfile()">保存资料</button>'+
+    '<button class="logout-btn" onclick="logoutUser()">切换账号</button>'+
+  '</div>';
+}
+function pickAv(el){selectAvatar(el.getAttribute("data-av"));
+}
+function selectAvatar(a){
+  document.querySelectorAll('.avatar-item').forEach(function(el){el.classList.remove('selected');});
+  event.target.classList.add('selected');
+  document.querySelector('#userInfo div div').textContent=a;
+  _lbUserData.avatar=a;
+}
+async function saveProfile(){
+  var name=document.getElementById('nameInput').value.trim();
+  if(!name){alert('请输入用户名');return;}
+  try{
+    await _lbSupabase.from('users').upsert({user_id:_lbUser,user_name:name,avatar:_lbUserData.avatar},{onConflict:'user_id'});
+    await _lbSupabase.from('leaderboard').upsert({user_id:_lbUser,user_name:name,total_pages:getCurrentData().totalPages,total_correct:getCurrentData().correct,completed_sets:getCurrentData().completed,max_streak:getCurrentData().maxStreak,total_score:calcScore(getCurrentData()),last_seen:new Date().toISOString()},{onConflict:'user_id'});
+    alert('保存成功！');
+    closeUserPanel();
+    refreshLeaderboard();
+  }catch(e){alert('保存失败: '+e.message);}
+}
+function logoutUser(){
+  if(confirm('确定要切换账号吗？')){
+    localStorage.removeItem('lb_uid');
+    _lbUser=null;
+    _lbSupabase=null;
+    closeUserPanel();
+    location.reload();
+  }
+}
+// 添加到导航栏
+var navBtn='<button class="ach-btn" onclick="openUserPanel()" style="background:linear-gradient(135deg,#7dd3fc,#4a9fd8)">👤 我的</button>';
+var lbBtnIdx=document.querySelector('.ach-btn.secondary');
+if(lbBtnIdx)lbBtnIdx.insertAdjacentHTML('beforebegin',navBtn);
 function closeLeaderboard(){document.getElementById('leaderboardWall').classList.remove('show');}
 /* ===== 星空背景 ===== */
 (function(){var box=document.getElementById('stars');if(!box)return;var n=('ontouchstart' in window)||innerWidth<768?45:70,html='';for(var i=0;i<n;i++){var s=Math.random()*2+1;html+='<div style="position:absolute;width:'+s+'px;height:'+s+'px;background:white;border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;opacity:'+(Math.random()*0.5+0.2)+';animation:twinkle '+(2+Math.random()*3)+'s ease-in-out infinite alternate"></div>';}box.innerHTML=html;})();
