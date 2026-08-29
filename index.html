@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -42,6 +42,16 @@ h1 small{display:block;font-size:clamp(12px,1.8vw,15px);letter-spacing:14px;colo
 .corner{position:fixed;left:18px;bottom:14px;z-index:6;font-size:12px;color:#a69c85;letter-spacing:2px}
 .seal-mark{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;letter-spacing:1px;color:#c0392b;border:2px solid rgba(192,57,43,.85);background:rgba(255,250,238,.6);box-shadow:0 0 12px rgba(192,57,43,.3);pointer-events:none}
 @media(max-width:560px){h1{letter-spacing:8px}.enter-btn{padding:12px 30px 12px 40px}}
+
+/* ===== 双端性能策略 ===== */
+html[data-device="desktop"] .ink-scroll{animation:inkCanvasDrift 80s ease-in-out infinite alternate;will-change:transform}
+@keyframes inkCanvasDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-.8%,0,0)}}
+html[data-device="desktop"] .walker,html[data-device="desktop"] .ink-walker{will-change:transform}
+html[data-device="desktop"] .seal-mark,html[data-device="desktop"] .ink-seal{animation:sealBreath 6s ease-in-out infinite}
+@keyframes sealBreath{0%,100%{transform:translateX(-50%) scale(1);opacity:.86}50%{transform:translateX(-50%) scale(1.035);opacity:1}}
+html[data-device="mobile"] .ink-scroll{animation:none!important}
+html[data-device="mobile"] .walker,html[data-device="mobile"] .ink-walker,html[data-device="mobile"] .seal-mark,html[data-device="mobile"] .ink-seal{animation:none!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -124,5 +134,6 @@ h1 small{display:block;font-size:clamp(12px,1.8vw,15px);letter-spacing:14px;colo
 </div>
 <div class="corner">么么么哈tuer</div>
 <div class="seal-mark">知行</div>
+<script>/* DUAL_DEVICE_ANIM_V1 */(function(){var mobile=('ontouchstart' in window)||window.innerWidth<768;document.documentElement.setAttribute('data-device',mobile?'mobile':'desktop');})();</script>
 </body>
 </html>
