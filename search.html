@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -358,7 +358,7 @@ html[data-device="mobile"] .walker,html[data-device="mobile"] .ink-walker,html[d
   <div class="sub">B I O · 搜 索</div>
   <h1>🔍 搜索定制知识卡</h1>
   <div class="box">
-    <input id="q" type="text" placeholder="输入标题 / 标签 / 关键词…" autocomplete="off">
+    <input id="q" type="text" placeholder="输入卡片 ID" autocomplete="off">
     <button onclick="scheduleSearch()">搜索</button>
   </div>
   <div class="top-actions">
@@ -996,17 +996,168 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 </script>
-<div id="checkinWall" onclick="if(event.target===this)closeCheckin()"><div class="check-box"><div class="check-head"><h2>📅 每日签到</h2><button onclick="closeCheckin()">✕</button></div><div class="points" id="checkPoints">积分：0</div><div class="cal-title" id="calTitle"></div><div class="cal" id="calGrid"></div></div></div><div id="drawWall"><div class="draw-stage" id="drawStage"></div></div><div id="bagWall" onclick="if(event.target===this)closeBag()"><div class="check-box"><div class="check-head"><h2>🎒 我的背包</h2><button onclick="closeBag()">✕</button></div><div class="bag-list" id="bagList"></div></div></div><div id="redeemWall" onclick="if(event.target===this)closeRedeem()"><div class="check-box"><div class="check-head"><h2>🎟️ 兑换码</h2><button onclick="closeRedeem()">✕</button></div><p style="color:#aeb9d4;font-size:13px;text-align:center;margin:10px 0">输入兑换码（知识卡数字 ID），即可在背包中获得对应卡片</p><input class="name-input" id="redeemInput" placeholder="输入兑换码，如 691553" inputmode="numeric" maxlength="20"><button class="save-btn" onclick="redeemCode()">兑换</button><div id="redeemMsg" style="text-align:center;font-size:13px;margin-top:12px;color:#aeb9d4"></div></div></div>
+<div id="checkinWall" onclick="if(event.target===this)closeCheckin()"><div class="check-box"><div class="check-head"><h2>📅 每日签到</h2><button onclick="closeCheckin()">✕</button></div><div class="points" id="checkPoints">积分：0</div><div class="cal-title" id="calTitle"></div><div class="cal" id="calGrid"></div></div></div><div id="drawWall"><div class="draw-stage" id="drawStage"></div></div><style id="bag-book-style">
+#bagWall{display:none;position:fixed;inset:0;z-index:500;overflow:hidden}
+#bagWall.show{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.bag-nebula{position:absolute;inset:0;z-index:0;overflow:hidden;background:radial-gradient(120% 100% at 50% 0%,#1a1240 0%,#0d0a2c 45%,#08071e 100%)}
+.bag-blob{position:absolute;border-radius:50%;filter:blur(70px);mix-blend-mode:screen;opacity:.55;will-change:transform}
+.bag-b1{width:48vw;height:48vw;left:-6vw;top:-8vh;background:radial-gradient(circle,rgba(150,120,220,.85),rgba(120,90,200,0) 65%);animation:bagD1 26s ease-in-out infinite}
+.bag-b2{width:52vw;height:52vw;right:-10vw;top:-6vh;background:radial-gradient(circle,rgba(90,140,230,.8),rgba(70,120,210,0) 65%);animation:bagD2 32s ease-in-out infinite}
+.bag-b3{width:44vw;height:44vw;left:18vw;bottom:-12vh;background:radial-gradient(circle,rgba(230,150,200,.7),rgba(210,120,180,0) 65%);animation:bagD3 30s ease-in-out infinite}
+.bag-b4{width:40vw;height:40vw;right:6vw;bottom:-10vh;background:radial-gradient(circle,rgba(160,130,235,.7),rgba(140,110,220,0) 65%);animation:bagD1 36s ease-in-out infinite reverse}
+@keyframes bagD1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4vw,3vh) scale(1.08)}}
+@keyframes bagD2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-3vw,4vh) scale(1.06)}}
+@keyframes bagD3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-4vw,-3vh) scale(1.1)}}
+.bag-stars{position:absolute;inset:0;z-index:1;pointer-events:none}
+.bag-star{position:absolute;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9);animation:bagTw linear infinite}
+@keyframes bagTw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1)}}
+.bag-stage{position:relative;z-index:2;height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.bag-header{position:relative;z-index:3;text-align:center;margin-bottom:10px}
+.bag-header h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(20px,3.5vw,30px);color:#fff;letter-spacing:6px;text-shadow:0 0 14px rgba(255,255,255,.6)}
+.bag-sub{font-size:12px;color:rgba(255,255,255,.5);letter-spacing:4px;margin-top:4px}
+.bag-close{position:fixed;top:18px;right:140px;z-index:10;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.5);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 0 12px rgba(255,255,255,.3);transition:.3s}
+.bag-close:hover{background:rgba(255,255,255,.18);box-shadow:0 0 20px rgba(255,255,255,.5)}
+.bag-shelf{position:relative;width:100%;height:420px;overflow:hidden;touch-action:none}
+.bag-track{position:absolute;top:50%;left:0;display:flex;align-items:center;gap:80px;transform:translate(0,-50%);transition:transform .7s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.bag-book{position:relative;display:block;width:210px;height:290px;opacity:.72;filter:saturate(.85) brightness(.9);transition:opacity .6s,filter .6s;flex:0 0 auto;cursor:pointer}
+.bag-book.active{opacity:1;filter:none}
+.bag-float{width:100%;height:100%;animation:bagFl 6s ease-in-out infinite;will-change:transform}
+@keyframes bagFl{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.bag-track.no-trans .bag-book,.bag-track.no-trans .bag-3d{transition:none!important}
+.bag-3d{--d:30px;position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:perspective(1600px) rotateY(28deg) rotateX(7deg);transition:transform .6s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.bag-book.active .bag-3d{transform:perspective(1600px) rotateY(28deg) rotateX(7deg) scale3d(1.05,1.05,1.05)}
+.bag-face{position:absolute;transform-style:preserve-3d}
+.bag-cover{inset:0;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(255,255,255,.78);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 22px 2px rgba(255,255,255,.4),0 0 55px 10px rgba(255,255,255,.18),0 20px 45px rgba(8,4,30,.55)}
+.bag-cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 60% at 30% 18%,rgba(255,255,255,.3),transparent 60%),radial-gradient(120% 100% at 70% 95%,rgba(0,0,0,.3),transparent 60%)}
+.bag-frame{position:absolute;inset:14px;border:1px solid rgba(255,255,255,.45);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;box-shadow:inset 0 0 18px rgba(255,255,255,.12);text-align:center;gap:6px}
+.bag-frame .bag-id{font-size:40px;line-height:1;font-weight:600;color:#fff;text-shadow:0 0 14px rgba(255,255,255,.85),0 0 30px rgba(255,255,255,.5);font-family:Georgia,serif}
+.bag-frame .bag-name{font-size:11px;line-height:1.3;color:rgba(255,255,255,.92);text-shadow:0 0 8px rgba(255,255,255,.6);max-height:3em;overflow:hidden;font-family:"Microsoft YaHei",sans-serif}
+.bag-frame .bag-sect{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.8);text-shadow:0 0 10px rgba(255,255,255,.6);font-family:system-ui,sans-serif}
+.bag-spine{left:0;top:0;width:var(--d);height:100%;border-radius:10px 0 0 10px;transform-origin:left center;transform:rotateY(90deg);box-shadow:inset -3px 0 8px rgba(0,0,0,.45)}
+.bag-spine::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,transparent 14%,rgba(255,255,255,.42) 14.4% 15%,transparent 15.4%,transparent 84%,rgba(255,255,255,.42) 84.4% 85%,transparent 85.4%),linear-gradient(90deg,rgba(0,0,0,.28),transparent 45%,transparent 55%,rgba(0,0,0,.28))}
+.bag-edge{background:repeating-linear-gradient(var(--lines,90deg),rgba(255,255,255,.98) 0 1px,rgba(228,228,245,.85) 1px 2.6px),linear-gradient(var(--shade,180deg),#fbfbff,#d6d6e8)}
+.bag-top-edge{top:5px;left:0;right:5px;height:var(--d);transform-origin:top center;transform:rotateX(-90deg);--lines:90deg;--shade:180deg}
+.bag-bottom-edge{bottom:5px;left:0;right:5px;height:var(--d);transform-origin:bottom center;transform:rotateX(90deg);--lines:90deg;--shade:0deg}
+.bag-fore-edge{right:5px;top:5px;bottom:5px;width:var(--d);transform-origin:right center;transform:rotateY(-90deg);--lines:0deg;--shade:90deg}
+.bag-back{inset:0;border-radius:12px;transform:translateZ(calc(-1*var(--d)));background:linear-gradient(135deg,#241a44,#160e30)}
+.bag-nav{display:grid;grid-template-columns:50px minmax(170px,220px) 50px;align-items:center;column-gap:40px;justify-content:center;margin-top:28px}
+.bag-arrow{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.7);backdrop-filter:blur(4px);box-shadow:0 0 16px rgba(255,255,255,.45),0 0 34px rgba(255,255,255,.25),inset 0 0 10px rgba(255,255,255,.15);transition:transform .3s,box-shadow .3s,background .3s;cursor:pointer;color:#fff}
+.bag-arrow svg{width:22px;height:22px;filter:drop-shadow(0 0 5px rgba(255,255,255,.95))}
+.bag-arrow:hover{transform:translateY(-3px);background:rgba(255,255,255,.16);box-shadow:0 0 22px rgba(255,255,255,.7),0 0 48px rgba(255,255,255,.35),inset 0 0 12px rgba(255,255,255,.25)}
+.bag-read-btn{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;min-width:170px;padding:13px 22px;border:1px solid rgba(255,255,255,.6);border-radius:999px;color:rgba(255,255,255,.96);font-family:system-ui,sans-serif;font-size:15px;font-weight:500;letter-spacing:6px;white-space:nowrap;background:linear-gradient(110deg,rgba(255,255,255,.22),rgba(205,174,255,.16) 32%,rgba(109,210,255,.15) 66%,rgba(255,177,224,.2)),rgba(255,255,255,.08);backdrop-filter:blur(18px) saturate(160%);box-shadow:inset 0 1px 1px rgba(255,255,255,.62),inset 0 -10px 24px rgba(139,106,214,.12),0 0 16px rgba(255,255,255,.28),0 0 38px rgba(190,142,255,.24),0 12px 30px rgba(8,4,35,.3);text-shadow:0 0 10px rgba(255,255,255,.88),0 0 24px rgba(190,158,255,.72);overflow:hidden;transition:transform .35s,box-shadow .35s;cursor:pointer}
+.bag-read-btn::before{content:"";position:absolute;z-index:-1;width:58%;height:150%;left:-12%;top:-35%;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(183,137,255,.38),rgba(98,215,255,.3));filter:blur(14px);opacity:.65;transform:rotate(-18deg);animation:bagLiq 7s ease-in-out infinite}
+.bag-read-btn:hover{transform:translateY(-4px);box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -10px 28px rgba(139,106,214,.18),0 0 22px rgba(255,255,255,.55),0 0 55px rgba(190,142,255,.4),0 14px 34px rgba(8,4,35,.36)}
+@keyframes bagLiq{0%,100%{transform:translate(-8%,0) rotate(-18deg) scale(1)}50%{transform:translate(95%,8%) rotate(-18deg) scale(1.16)}}
+.bag-empty{position:relative;z-index:2;text-align:center;color:rgba(255,255,255,.6);font-size:15px;padding:40px;display:none}
+.bag-empty span{font-size:48px;display:block;margin-bottom:16px}
+@media(max-width:720px){.bag-book{width:175px;height:245px}.bag-3d{--d:24px}.bag-nav{grid-template-columns:44px minmax(140px,175px) 44px;column-gap:16px}.bag-arrow{width:44px;height:44px}.bag-read-btn{min-width:140px;padding:11px 14px;font-size:13px;letter-spacing:4px}.bag-shelf{height:360px}}
+</style>
+<div id="bagWall"><div class="bag-nebula"><span class="bag-blob bag-b1"></span><span class="bag-blob bag-b2"></span><span class="bag-blob bag-b3"></span><span class="bag-blob bag-b4"></span></div><div class="bag-stars" id="bagStars"></div><button class="bag-close" onclick="closeBag()">✕</button><div class="bag-stage"><div class="bag-header"><h2>🎒 我的背包</h2><div class="bag-sub" id="bagSub">共 0 张知识卡</div></div><div class="bag-shelf" id="bagShelf"><div class="bag-track" id="bagTrack"></div></div><div class="bag-nav" id="bagNav" style="display:none"><button class="bag-arrow bag-prev" onclick="bagGo(bagPos-1)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="bag-read-btn" id="bagReadBtn" onclick="bagOpenCard()">开始阅读</button><button class="bag-arrow bag-next" onclick="bagGo(bagPos+1)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="bag-empty" id="bagEmpty"><span>🎴</span>背包还是空的，先去抽一张卡吧</div></div></div><div id="redeemWall" onclick="if(event.target===this)closeRedeem()"><div class="check-box"><div class="check-head"><h2>🎟️ 兑换码</h2><button onclick="closeRedeem()">✕</button></div><p style="color:#aeb9d4;font-size:13px;text-align:center;margin:10px 0">输入兑换码（知识卡数字 ID），即可在背包中获得对应卡片</p><input class="name-input" id="redeemInput" placeholder="输入兑换码，如 691553" inputmode="numeric" maxlength="20"><button class="save-btn" onclick="redeemCode()">兑换</button><div id="redeemMsg" style="text-align:center;font-size:13px;margin-top:12px;color:#aeb9d4"></div></div></div>
 <script>/* CHECKIN_DRAW_V1 */
 (function(){var featureKey="account_features",today=function(){return new Date().toISOString().slice(0,10)},data={points:0,days:[],bag:[]},loaded=false;function logged(){return !!_lbUser&&!!_lbSupabase;}async function load(){if(!logged())return false;try{var r=await _lbSupabase.from("user_saves").select("state").eq("user_id",_lbUser).eq("app_id",featureKey).maybeSingle();if(r.error)throw r.error;if(r.data&&r.data.state){try{data=Object.assign({points:0,days:[],bag:[]},r.data.state);}catch(e){}}loaded=true;}catch(e){console.warn("读取存档失败(使用本地默认):",e.message||e);}return true;}async function save(){if(!logged())return false;var payload={user_id:_lbUser,app_id:featureKey,schema_version:1,state:data,updated_at:new Date().toISOString()};var r=await _lbSupabase.from("user_saves").upsert(payload,{onConflict:"user_id,app_id"});if(r.error){console.error("签到数据保存失败：",r.error);return {ok:false,error:r.error};}return {ok:true};}function fireworks(){for(var i=0;i<28;i++){var x=document.createElement("i");x.textContent=["✦","✧","◆","★","❖"][i%5];x.style.cssText="position:fixed;left:50%;top:45%;z-index:900;color:hsl("+(i*31)+",90%,65%);font-size:22px;pointer-events:none;transition:transform 1s,opacity 1s";document.body.appendChild(x);setTimeout((function(y,j){return function(){y.style.transform="translate("+((j%2?1:-1)*(80+Math.random()*180))+"px,"+((j%3-1)*120+Math.random()*80)+"px) rotate(360deg)";y.style.opacity=0;setTimeout(function(){y.remove();},1000);};})(x,i),20);} }function render(){var d=new Date(),y=d.getFullYear(),m=d.getMonth(),first=new Date(y,m,1).getDay(),max=new Date(y,m+1,0).getDate(),grid=document.getElementById("calGrid");document.getElementById("calTitle").textContent=y+"年 "+(m+1)+"月";document.getElementById("checkPoints").textContent="积分："+data.points;grid.innerHTML=["日","一","二","三","四","五","六"].map(function(x){return "<div class=week>"+x+"</div>";}).join("");for(var i=0;i<first;i++)grid.innerHTML+="<div></div>";for(var n=1;n<=max;n++){var key=y+"-"+String(m+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"),on=data.days.indexOf(key)>=0;grid.innerHTML+="<div class=day "+(on?"signed ":"")+(key===today()?"today":"")+">"+n+(on?"<br>✓":"")+"</div>";}}window.openCheckin=async function(){if(!logged()){alert("请先登录账号才能签到");openUserPanel();return;}await load();render();document.getElementById("checkinWall").classList.add("show");var t=today();if(data.days.indexOf(t)<0){data.days.push(t);data.points++;var saved=await save();if(!saved||!saved.ok){data.days.pop();data.points--;var se=saved&&saved.error?((saved.error.message||"")+((saved.error.code)?" ["+saved.error.code+"]":"")):"数据库连接不可用";alert("签到保存失败："+se+"\n\n请先在 Supabase SQL Editor 执行 user_saves权限策略SQL.txt");return;}render();fireworks();}};window.closeCheckin=function(){document.getElementById("checkinWall").classList.remove("show")};window.openDrawCard=async function(){if(!logged()){alert("请先登录账号才能抽卡");openUserPanel();return;}await load();if(data.points<3){alert("积分不足，抽卡一次需要3积分");return;}data.points-=3;await save();var list=window.CARDS||[],owned={};data.bag=data.bag||[];data.bag.forEach(function(b){owned[b.id]=1;});var avail=list.filter(function(x){return !owned[x.id];});if(!avail.length){alert("恭喜！你已集齐全部知识卡，暂无新卡可抽");document.getElementById("drawWall").classList.remove("show");return;}var item=avail[Math.floor(Math.random()*avail.length)],id=item?item.id:"暂无",name=item?(item.h1||item.title||"").replace(/<[^>]*>/g,""):"知识卡",sect=(item&&item.badges&&item.badges[0])?item.badges[0]:"知识卡",tags=(item&&item.tags)?item.tags.slice(0,4).join("、"):"综合";data.bag.push({id:id,name:name,section:sect,tags:tags,got:today()});await save();var wall=document.getElementById("drawWall"),stage=document.getElementById("drawStage");stage.innerHTML='<div class="magic"></div><div class="draw-card" id="gachaCard"><button class="draw-x" onclick="closeDrawCard()">×</button><div class="draw-id">'+id+'</div><div class="draw-name">'+name+'</div><div class="draw-sec">'+sect+'</div><div class="draw-tags">'+tags+'</div><span class="draw-info" data-tip="类型：知识卡\n知识板块：'+sect+'\n知识点：'+tags+'">?</span><div class="draw-link" onclick="drawSearch('+id+')">点击搜索这张卡</div></div>';wall.classList.add("show");var touched=false,card=document.getElementById("gachaCard");card.addEventListener("pointerdown",function(){touched=true;card.classList.add("touched");});setTimeout(function(){if(!touched)closeDrawCard();},8000);};
 
 window.drawSearch=function(id){closeDrawCard();document.getElementById("q").value=id;doSearch();};window.updateBagCount=function(){var n=document.getElementById("bagCount"),c=(data.bag||[]).length;if(n)n.textContent="("+c+")";};
-window.openBag=async function(){if(!logged()){alert("请先登录账号");openUserPanel();return;}await load();var el=document.getElementById("bagList");if(!el)return;if(!(data.bag||[]).length){el.innerHTML='<p style="text-align:center;color:#8492b8;padding:24px">背包还是空的，先去抽一张卡吧 🎴</p>';}else{el.innerHTML=data.bag.slice().reverse().map(function(x){return '<div style="display:flex;align-items:center;gap:10px;background:#171d38;border:1px solid #3a4a74;border-radius:12px;padding:10px 12px;margin-bottom:8px"><span style="color:#ffd76a;font-weight:900;font-size:16px;min-width:80px">'+x.id+'</span><span style="flex:1;font-size:13px">'+x.name+'</span><span style="font-size:10px;color:#ffd76a;background:#ffd76a1c;border-radius:999px;padding:2px 8px">'+x.section+'</span></div>';}).join('');}updateBagCount();document.getElementById("bagWall").classList.add("show");};
+var bagPos=0,bagBusy=false,bagBusyT=null,bagItems=[],bagSelectedCard=null;
+var _bagColors=[
+  ['radial-gradient(circle at 28% 30%,rgba(200,150,235,.9),transparent 60%),radial-gradient(circle at 75% 70%,rgba(235,150,205,.85),transparent 60%),linear-gradient(135deg,#3a2560,#5a3270 60%,#2a1a4a)','linear-gradient(180deg,#5a3270,#3a2560 50%,#2a1a4a)'],
+  ['radial-gradient(circle at 30% 25%,rgba(120,160,235,.92),transparent 60%),radial-gradient(circle at 72% 75%,rgba(150,130,230,.8),transparent 60%),linear-gradient(135deg,#223366,#2c2a6a 60%,#161a44)','linear-gradient(180deg,#2c2a6a,#223366 50%,#161a44)'],
+  ['radial-gradient(circle at 25% 35%,rgba(240,170,215,.9),transparent 60%),radial-gradient(circle at 78% 65%,rgba(165,150,235,.85),transparent 60%),linear-gradient(135deg,#5a2a5a,#6e2f55 60%,#3a1f48)','linear-gradient(180deg,#6e2f55,#5a2a5a 50%,#3a1f48)'],
+  ['radial-gradient(circle at 32% 28%,rgba(90,140,230,.92),transparent 62%),radial-gradient(circle at 70% 72%,rgba(120,110,210,.8),transparent 60%),linear-gradient(135deg,#1b2a52,#243066 60%,#121a3c)','linear-gradient(180deg,#243066,#1b2a52 50%,#121a3c)'],
+  ['radial-gradient(circle at 28% 30%,rgba(220,130,200,.9),transparent 60%),radial-gradient(circle at 74% 68%,rgba(150,120,225,.85),transparent 60%),linear-gradient(135deg,#4a2266,#5e2a72 60%,#2e1748)','linear-gradient(180deg,#5e2a72,#4a2266 50%,#2e1748)'],
+  ['radial-gradient(circle at 30% 32%,rgba(120,200,225,.88),transparent 60%),radial-gradient(circle at 72% 70%,rgba(235,150,205,.85),transparent 60%),linear-gradient(135deg,#1f4a60,#2a4a78 60%,#15243f)','linear-gradient(180deg,#2a4a78,#1f4a60 50%,#15243f)'],
+  ['radial-gradient(circle at 26% 30%,rgba(170,140,235,.92),transparent 60%),radial-gradient(circle at 76% 66%,rgba(120,160,235,.85),transparent 60%),linear-gradient(135deg,#332a66,#3f3280 60%,#1d1850)','linear-gradient(180deg,#3f3280,#332a66 50%,#1d1850)'],
+  ['radial-gradient(circle at 30% 28%,rgba(235,155,210,.9),transparent 60%),radial-gradient(circle at 72% 72%,rgba(140,150,225,.85),transparent 60%),linear-gradient(135deg,#4a2a6a,#5a3580 60%,#2a1850)','linear-gradient(180deg,#5a3580,#4a2a6a 50%,#2a1850)']
+];
+function _bagBookHTML(x,i){
+  var c=_bagColors[i%_bagColors.length];
+  return '<div class="bag-book" data-idx="'+i+'"><div class="bag-float" style="animation-delay:'+(-i)+'s"><div class="bag-3d">'
+    +'<div class="bag-face bag-cover" style="background:'+c[0]+'"><div class="bag-frame"><span class="bag-id">'+x.id+'</span><span class="bag-name">'+(x.name||'').replace(/</g,'&lt;')+'</span><span class="bag-sect">'+(x.section||x.tags||'知识卡')+'</span></div></div>'
+    +'<div class="bag-face bag-spine" style="background:'+c[1]+'"></div>'
+    +'<div class="bag-face bag-edge bag-top-edge"></div>'
+    +'<div class="bag-face bag-edge bag-bottom-edge"></div>'
+    +'<div class="bag-face bag-edge bag-fore-edge"></div>'
+    +'<div class="bag-face bag-back"></div>'
+    +'</div></div></div>';
+}
+function _bagStars(){
+  var w=document.getElementById('bagStars');if(!w||w.children.length)return;
+  for(var i=0;i<100;i++){var s=document.createElement('span');s.className='bag-star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';var sz=Math.random()*2+.5;s.style.width=sz+'px';s.style.height=sz+'px';s.style.opacity=(Math.random()*.6+.2).toFixed(2);s.style.animationDuration=(Math.random()*3+2).toFixed(2)+'s';s.style.animationDelay=(Math.random()*5).toFixed(2)+'s';w.appendChild(s);}
+}
+function _bagDims(){
+  var shelf=document.getElementById('bagShelf');if(!shelf)return{cardW:210,gap:80,vp:800};
+  var books=document.querySelectorAll('#bagTrack .bag-book');
+  var cardW=books.length?books[0].offsetWidth:210;
+  var gap=parseFloat(getComputedStyle(document.getElementById('bagTrack')).gap)||80;
+  return{cardW:cardW,gap:gap,vp:shelf.offsetWidth};
+}
+function _bagApply(p,anim,dur){
+  var d=_bagDims(),track=document.getElementById('bagTrack');
+  var center=p*(d.cardW+d.gap)+d.cardW/2;
+  var x=d.vp/2-center;
+  track.style.transition=anim?'transform '+(dur||'.7s')+' cubic-bezier(.22,.61,.36,1)':'none';
+  track.style.transform='translate('+x+'px,-50%)';
+}
+function _bagSync(p){
+  bagItems.forEach(function(b,i){b.classList.toggle('active',i===p)});
+  var cur=bagItems[p];if(cur){var idx=parseInt(cur.getAttribute('data-idx'));bagSelectedCard=(data.bag||[])[idx]||null;}
+}
+function _bagRelease(){
+  bagBusy=false;var N=(data.bag||[]).length;
+  if(N<2)return;
+  var track=document.getElementById('bagTrack');
+  if(bagPos<N){track.classList.add('no-trans');bagPos+=N;_bagApply(bagPos,false);_bagSync(bagPos);requestAnimationFrame(function(){requestAnimationFrame(function(){track.classList.remove('no-trans')})});}
+  else if(bagPos>=2*N){track.classList.add('no-trans');bagPos-=N;_bagApply(bagPos,false);_bagSync(bagPos);requestAnimationFrame(function(){requestAnimationFrame(function(){track.classList.remove('no-trans')})});}
+}
+window.bagGo=function(target){
+  if(bagBusy)return;bagPos=target;bagBusy=true;
+  _bagApply(bagPos,true);_bagSync(bagPos);
+  clearTimeout(bagBusyT);bagBusyT=setTimeout(_bagRelease,760);
+};
+window.bagOpenCard=function(){
+  if(!bagSelectedCard)return;
+  var list=window.CARDS||[];var item=null;
+  list.forEach(function(c){if(String(c.id)===String(bagSelectedCard.id))item=c;});
+  if(item){closeBag();document.getElementById('q').value=item.id;doSearch();}
+  else{alert('未找到对应卡片 ID: '+bagSelectedCard.id);}
+};
+window.openBag=async function(){
+  if(!logged()){alert('请先登录账号');openUserPanel();return;}
+  await load();_bagStars();
+  var bag=data.bag||[];
+  var track=document.getElementById('bagTrack'),nav=document.getElementById('bagNav'),empty=document.getElementById('bagEmpty'),sub=document.getElementById('bagSub');
+  track.innerHTML='';bagItems=[];bagPos=0;bagSelectedCard=null;
+  if(!bag.length){empty.style.display='block';nav.style.display='none';sub.textContent='共 0 张知识卡';}
+  else{
+    empty.style.display='none';nav.style.display='grid';
+    sub.textContent='共 '+bag.length+' 张知识卡';
+    var html='';
+    /* left clones */
+    if(bag.length>1)bag.forEach(function(x,i){html+=_bagBookHTML(x,i).replace('class="bag-book"','class="bag-book clone"');});
+    /* real */
+    bag.forEach(function(x,i){html+=_bagBookHTML(x,i);});
+    /* right clones */
+    if(bag.length>1)bag.forEach(function(x,i){html+=_bagBookHTML(x,i).replace('class="bag-book"','class="bag-book clone"');});
+    track.innerHTML=html;
+    bagItems=Array.from(track.children);
+    bagPos=bag.length>1?bag.length:0;
+    requestAnimationFrame(function(){_bagApply(bagPos,false);_bagSync(bagPos);});
+  }
+  updateBagCount();
+  document.getElementById('bagWall').classList.add('show');
+  /* shelf interactions */
+  var shelf=document.getElementById('bagShelf');
+  shelf.onwheel=function(e){if(Math.abs(e.deltaY)>=Math.abs(e.deltaX)){e.preventDefault();bagGo(bagPos+(e.deltaY>0?1:-1));}};
+  var sx=null,mv=false;
+  shelf.onpointerdown=function(e){sx=e.clientX;mv=false;};
+  shelf.onpointermove=function(e){if(sx!==null&&Math.abs(e.clientX-sx)>8)mv=true;};
+  shelf.onpointerup=function(e){if(sx===null)return;var dx=e.clientX-sx;sx=null;if(mv&&Math.abs(dx)>50)bagGo(bagPos+(dx<0?1:-1));else _bagApply(bagPos,true);};
+  track.onclick=function(e){var b=e.target.closest('.bag-book');if(!b||mv)return;var idx=bagItems.indexOf(b);if(idx<0||idx===bagPos)return;bagPos=idx;bagBusy=true;_bagApply(bagPos,true,'.38s');_bagSync(bagPos);clearTimeout(bagBusyT);bagBusyT=setTimeout(_bagRelease,450);};
+};
 window.openRedeem=async function(){if(!logged()){alert("请先登录账号");openUserPanel();return;}await load();document.getElementById("redeemWall").classList.add("show");document.getElementById("redeemMsg").textContent="";document.getElementById("redeemInput").value="";};
 window.closeRedeem=function(){document.getElementById("redeemWall").classList.remove("show");};
 window.redeemCode=async function(){if(!logged()){alert("请先登录账号");openUserPanel();return;}var code=(document.getElementById("redeemInput").value||"").trim();var msg=document.getElementById("redeemMsg");if(!/^\d+$/.test(code)){msg.innerHTML="<span style=color:#f87171>请输入纯数字兑换码</span>";return;}var list=window.CARDS||[],item=null;list.forEach(function(x){if(String(x.id)===String(code).replace(/^0+/,""))item=x;});if(!item){msg.innerHTML="<span style=color:#f87171>兑换码无效，未找到对应知识卡</span>";return;}await load();data.bag=data.bag||[];var dup=data.bag.some(function(b){return String(b.id)===String(item.id);});if(dup){msg.innerHTML="<span style=color:#f59e0b>你已经拥有这张卡了，无需重复兑换</span>";return;}var name=(item.h1||item.title||"").replace(/<[^>]*>/g,""),sect=(item.badges&&item.badges[0])?item.badges[0]:"知识卡",tags=(item.tags)?item.tags.slice(0,4).join("、"):"综合";data.bag.push({id:item.id,name:name,section:sect,tags:tags,got:today(),from:"redeem"});var r=await save();updateBagCount();if(r){msg.innerHTML="<span style=color:#6ee7b7>✅ 兑换成功！背包已获得：ID "+item.id+" "+name+"</span>";}else{msg.innerHTML="<span style=color:#f87171>兑换数据保存失败</span>";}};
 
-window.closeBag=function(){document.getElementById("bagWall").classList.remove("show");};
+window.closeBag=function(){document.getElementById('bagWall').classList.remove('show');var t=document.getElementById('bagTrack');if(t)t.innerHTML='';bagItems=[];};
 
 window.closeDrawCard=function(){document.getElementById("drawWall").classList.remove("show");document.getElementById("drawStage").innerHTML=""};})();
 </script>
