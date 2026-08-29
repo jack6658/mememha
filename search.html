@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -798,32 +798,207 @@ function tick(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.
 tick();
 window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
 </script>
-<script><!-- AUTH_V2_OVERRIDES -->
+<script><!-- AUTH_V3_USERNAME_PASSWORD -->
 (function(){
-  var AUTH_DOMAIN='example.com';
   function authClient(){if(!_lbSupabase&&window.supabase&&_lbConfig.url&&_lbConfig.key)_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);return _lbSupabase;}
   function esc(x){return String(x||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function authForm(){return '<div style="max-width:380px;margin:0 auto;text-align:center"><div style="font-size:38px">🔐</div><h3 style="color:#ffd76a;margin:8px 0">账号登录 / 注册</h3><p style="color:#aeb9d4;font-size:12px;margin-bottom:14px">Supabase 密码账号必须使用真实邮箱</p><input class="name-input" id="authEmail" type="email" placeholder="真实邮箱地址" maxlength="200"><input class="name-input" id="authName" placeholder="网站显示昵称（注册时填写）" maxlength="40"><input class="name-input" id="authPass" type="password" placeholder="密码（至少6位）" minlength="6"><button class="save-btn" onclick="authSubmit(false)">使用邮箱登录</button><button class="logout-btn" onclick="authSubmit(true)">注册新账号</button></div>'; }
-  window.authSubmit=async function(reg){var email=(document.getElementById('authEmail').value||'').trim(),name=(document.getElementById('authName').value||'').trim(),pw=document.getElementById('authPass').value||'',el=document.getElementById('userInfo');if(!email||!email.includes('@')){alert('请输入合法的真实邮箱地址');return;}if(!pw){alert('请输入密码');return;}if(pw.length<6){alert('密码至少需要6位');return;}if(reg&&!name){alert('请输入网站显示昵称');return;}var sb=authClient();if(!sb){alert('数据库连接未初始化');return;}el.innerHTML='<p style="text-align:center;color:#aeb9d4">处理中...</p>';try{if(reg){var exists=await sb.from('users').select('user_id').ilike('user_name',name).limit(1);if(exists.error)throw exists.error;if(exists.data&&exists.data.length)throw new Error('网站昵称已被注册');var a=await sb.auth.signUp({email:email,password:pw});if(a.error)throw a.error;if(!a.data.user)throw new Error('注册未完成');if(!a.data.session)throw new Error('注册成功，但需要先验证邮箱；请在 Supabase Authentication 中关闭 Confirm email 后再注册');var uid=a.data.user.id;var u=await sb.from('users').upsert({user_id:uid,user_name:name,avatar:'😀|#ffd76a'},{onConflict:'user_id'});if(u.error)throw u.error;_lbUser=uid;_lbUserData={user_id:uid,user_name:name,avatar:'😀|#ffd76a'};await syncCurrentUser();alert('注册成功，网站昵称就是「'+name+'」');renderUserProfile();}else{var a=await sb.auth.signInWithPassword({email:email,password:pw});if(a.error)throw a.error;var uid=a.data.user.id;_lbUser=uid;var u=await sb.from('users').select('*').eq('user_id',uid).maybeSingle();if(u.error)throw u.error;if(!u.data)throw new Error('该 Auth 账号尚未绑定 users 表，请先添加对应 UID 和昵称');_lbUserData=u.data;localStorage.setItem('lb_uid',uid);alert('登录成功，打开知识卡时将自动恢复对应云端存档');renderUserProfile();}}catch(e){el.innerHTML=authForm();alert((reg?'注册失败：':'登录失败：')+(e.message||e));}};
-  window.loadUserProfileData=async function(){var sb=authClient();if(!sb)return;var se=await sb.auth.getSession();var u=se.data&&se.data.session&&se.data.session.user;if(!u){_lbUser=null;_lbUserData=null;return;} _lbUser=u.id;localStorage.setItem('lb_uid',u.id);var r=await sb.from('users').select('*').eq('user_id',u.id).maybeSingle();if(r.data)_lbUserData=r.data;};
-  window.loadUserProfile=async function(){var el=document.getElementById('userInfo');if(!el)return;await loadUserProfileData();if(!_lbUser){el.innerHTML=authForm();return;}renderUserProfile();};
-  window.renderUserProfile=function(){var el=document.getElementById('userInfo'),d=_lbUserData||{},x=getCurrentData();el.innerHTML='<div style="text-align:center"><div style="font-size:64px">'+esc((d.avatar||'😀').split('|')[0])+'</div><h3 style="color:#ffd76a">'+esc(d.user_name)+'</h3><p style="color:#7dd3fc;font-size:12px">✅ 已登录 · 云端存档同步中</p><div style="text-align:left;background:rgba(255,255,255,.05);padding:14px;border-radius:12px;margin:14px 0;color:#aeb9d4;font-size:13px">📖 浏览 '+x.totalPages+' 页<br>✅ 答对 '+x.correct+' 题<br>🎯 完成 '+x.completed+' 套</div><button class="logout-btn" onclick="logoutUser()">退出登录</button></div>';};
-  window.logoutUser=async function(){var sb=authClient();if(sb)await sb.auth.signOut({scope:'local'});localStorage.removeItem('lb_uid');Object.keys(localStorage).forEach(function(k){if(k!=='theme'&&k.indexOf('sb-')!==0&&k.indexOf('supabase')!==0)localStorage.removeItem(k);});_lbUser=null;_lbUserData=null;location.href='search.html?login=1';};
-  window.initLeaderboard=async function(){var sb=authClient();if(!sb)return;var q=await sb.auth.getSession();var u=q.data&&q.data.session&&q.data.session.user;_lbUser=u?u.id:null;if(u){var pr=await sb.from('users').select('*').eq('user_id',u.id).maybeSingle();if(pr.data)_lbUserData=pr.data;await syncCurrentUser();}await refreshLeaderboard();};
-  window.refreshLeaderboard=async function(){var sb=authClient();if(!sb)return;var r=await sb.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);if(r.error){document.getElementById('lbContent').innerHTML='<p style="color:#f87171">排行榜读取失败：'+esc(r.error.message)+'</p>';return;}renderLeaderboard(r.data||[]);};
-  if(window.supabase&&_lbConfig.url){_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);_lbSupabase.auth.onAuthStateChange(function(e){if(e==='SIGNED_OUT'){_lbUser=null;_lbUserData=null;}});}
+
+  // 简易密码哈希（SHA-256）
+  async function hashPw(pw){
+    var buf=new TextEncoder().encode(pw+'_知识卡_salt_2024');
+    var hash=await crypto.subtle.digest('SHA-256',buf);
+    return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  }
+
+  // 注册/登录表单
+  function authForm(){
+    return '<div style="max-width:380px;margin:0 auto;text-align:center">'
+      +'<div style="font-size:38px">🔑</div>'
+      +'<h3 style="color:#ffd76a;margin:8px 0">账号登录 / 注册</h3>'
+      +'<p style="color:#aeb9d4;font-size:12px;margin-bottom:14px">用户名 + 密码，无需邮箱</p>'
+      +'<input class="name-input" id="authName" placeholder="用户名（昵称）" maxlength="40">'
+      +'<input class="name-input" id="authPass" type="password" placeholder="密码（至少6位）" minlength="6">'
+      +'<div style="display:flex;gap:8px;margin-top:10px">'
+      +'<button class="save-btn" style="flex:1" onclick="authLogin()">登录</button>'
+      +'<button class="save-btn" style="flex:1;background:linear-gradient(135deg,#c084fc,#7dd3fc);" onclick="authRegister()">注册新账号</button>'
+      +'</div></div>';
+  }
+
+  // === 注册 ===
+  window.authRegister=async function(){
+    var name=(document.getElementById('authName').value||'').trim();
+    var pw=document.getElementById('authPass').value||'';
+    var el=document.getElementById('userInfo');
+    if(!name){alert('请输入用户名');return;}
+    if(pw.length<6){alert('密码至少需要6位');return;}
+    var sb=authClient();
+    if(!sb){alert('数据库连接未初始化');return;}
+    el.innerHTML='<p style="text-align:center;color:#aeb9d4">注册中...</p>';
+    try{
+      // 查重
+      var exists=await sb.from('users').select('user_id').ilike('user_name',name).limit(1);
+      if(exists.error)throw exists.error;
+      if(exists.data&&exists.data.length)throw new Error('用户名「'+name+'」已被注册，请换一个');
+      // 生成 uid 并写入
+      var uid='u_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+      var pwHash=await hashPw(pw);
+      var avatar=(_regAv||'😀')+'|'+(_regColor||'#ffd76a');
+      var ins=await sb.from('users').insert({user_id:uid,user_name:name,avatar:avatar,password_hash:pwHash});
+      if(ins.error)throw ins.error;
+      // 登录态
+      localStorage.setItem('lb_uid',uid);
+      _lbUser=uid;
+      _lbUserData={user_id:uid,user_name:name,avatar:avatar};
+      await syncCurrentUser();
+      alert('注册成功！欢迎「'+name+'」');
+      renderUserProfile();
+    }catch(e){
+      el.innerHTML=authForm();
+      alert('注册失败：'+(e.message||e));
+    }
+  };
+
+  // === 登录 ===
+  window.authLogin=async function(){
+    var name=(document.getElementById('authName').value||'').trim();
+    var pw=document.getElementById('authPass').value||'';
+    var el=document.getElementById('userInfo');
+    if(!name){alert('请输入用户名');return;}
+    if(!pw){alert('请输入密码');return;}
+    var sb=authClient();
+    if(!sb){alert('数据库连接未初始化');return;}
+    el.innerHTML='<p style="text-align:center;color:#aeb9d4">登录中...</p>';
+    try{
+      var r=await sb.from('users').select('*').ilike('user_name',name).limit(1);
+      if(r.error)throw r.error;
+      if(!r.data||!r.data.length)throw new Error('用户名不存在，请先注册');
+      var user=r.data[0];
+      // 验证密码
+      var pwHash=await hashPw(pw);
+      if(user.password_hash!==pwHash)throw new Error('密码错误');
+      // 登录态
+      localStorage.setItem('lb_uid',user.user_id);
+      _lbUser=user.user_id;
+      _lbUserData=user;
+      // 恢复云存档
+      await restoreCloudSaves(sb,user.user_id);
+      await syncCurrentUser();
+      alert('登录成功！欢迎回来「'+user.user_name+'」');
+      renderUserProfile();
+    }catch(e){
+      el.innerHTML=authForm();
+      alert('登录失败：'+(e.message||e));
+    }
+  };
+
+  // === 恢复云存档 ===
+  async function restoreCloudSaves(sb,uid){
+    try{
+      var r=await sb.from('user_saves').select('app_id,state').eq('user_id',uid);
+      if(r.error||!r.data)return;
+      r.data.forEach(function(row){
+        if(row.state&&typeof row.state==='object'){
+          Object.keys(row.state).forEach(function(k){
+            if(k!=='lb_uid')localStorage.setItem(k,row.state[k]);
+          });
+        }
+      });
+    }catch(e){console.warn('恢复云存档失败:',e);}
+  }
+
+  // === 退出登录（先保存云存档） ===
+  window.logoutUser=async function(){
+    if(!confirm('确定退出？退出前会自动保存云存档。'))return;
+    var sb=authClient();
+    if(sb&&_lbUser){
+      try{
+        // 保存当前 localStorage 到云端
+        var state={};
+        for(var i=0;i<localStorage.length;i++){
+          var k=localStorage.key(i);
+          if(k&&k!=='lb_uid'&&k.indexOf('sb-')!==0&&k.indexOf('supabase')!==0)
+            state[k]=localStorage.getItem(k);
+        }
+        var appId='search_main';
+        await sb.from('user_saves').upsert({user_id:_lbUser,app_id:appId,schema_version:1,state:state,updated_at:new Date().toISOString()},{onConflict:'user_id,app_id'});
+      }catch(e){console.warn('退出前保存云存档失败:',e);}
+    }
+    // 清理本地
+    localStorage.removeItem('lb_uid');
+    Object.keys(localStorage).forEach(function(k){
+      if(k!=='theme'&&k.indexOf('sb-')!==0&&k.indexOf('supabase')!==0)localStorage.removeItem(k);
+    });
+    _lbUser=null;_lbUserData=null;
+    location.href='search.html?login=1';
+  };
+
+  // === 加载用户信息 ===
+  window.loadUserProfileData=async function(){
+    var sb=authClient();if(!sb)return;
+    var uid=localStorage.getItem('lb_uid');
+    if(!uid){_lbUser=null;_lbUserData=null;return;}
+    var r=await sb.from('users').select('*').eq('user_id',uid).maybeSingle();
+    if(r.data){_lbUser=uid;_lbUserData=r.data;}else{_lbUser=null;_lbUserData=null;localStorage.removeItem('lb_uid');}
+  };
+  window.loadUserProfile=async function(){
+    var el=document.getElementById('userInfo');if(!el)return;
+    await loadUserProfileData();
+    if(!_lbUser){el.innerHTML=authForm();return;}
+    renderUserProfile();
+  };
+  window.renderUserProfile=function(){
+    var el=document.getElementById('userInfo'),d=_lbUserData||{},x=getCurrentData();
+    el.innerHTML='<div style="text-align:center">'
+      +'<div style="font-size:64px">'+esc((d.avatar||'😀').split('|')[0])+'</div>'
+      +'<h3 style="color:#ffd76a">'+esc(d.user_name)+'</h3>'
+      +'<p style="color:#7dd3fc;font-size:12px">✅ 已登录 · 云端存档同步中</p>'
+      +'<div style="text-align:left;background:rgba(255,255,255,.05);padding:14px;border-radius:12px;margin:14px 0;color:#aeb9d4;font-size:13px">'
+      +'📖 浏览 '+x.totalPages+' 页<br>✅ 答对 '+x.correct+' 题<br>🎯 完成 '+x.completed+' 套</div>'
+      +'<button class="logout-btn" onclick="logoutUser()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:10px 24px;font-size:13px;color:#e8edff;cursor:pointer;width:100%">🚪 退出登录（自动保存云存档）</button>'
+      +'</div>';
+  };
+
+  // === 排行榜 ===
+  window.initLeaderboard=async function(){
+    var sb=authClient();if(!sb)return;
+    _lbUser=localStorage.getItem('lb_uid')||null;
+    if(_lbUser){
+      var pr=await sb.from('users').select('*').eq('user_id',_lbUser).maybeSingle();
+      if(pr.data)_lbUserData=pr.data;
+      await syncCurrentUser();
+    }
+    await refreshLeaderboard();
+  };
+  window.refreshLeaderboard=async function(){
+    var sb=authClient();if(!sb)return;
+    var r=await sb.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);
+    if(r.error){document.getElementById('lbContent').innerHTML='<p style="color:#f87171">排行榜读取失败：'+esc(r.error.message)+'</p>';return;}
+    renderLeaderboard(r.data||[]);
+  };
+
+  // 初始化
+  if(window.supabase&&_lbConfig.url){_lbSupabase=window.supabase.createClient(_lbConfig.url,_lbConfig.key);}
 })();
 </script>
 <script>
-/* AUTH_AUTO_INIT_V2: restore Supabase Auth session before search is usable */
+/* AUTH_AUTO_INIT_V3: restore session from localStorage uid */
 (function(){
-  async function start(){try{if(window._lbSupabase&&window._lbSupabase.auth){await window.loadUserProfileData();}else if(window.supabase&&window._lbConfig){window._lbSupabase=window.supabase.createClient(window._lbConfig.url,window._lbConfig.key);await window.loadUserProfileData();}if(new URLSearchParams(location.search).get('login')==='1')window.openUserPanel();}catch(e){console.warn('auth session init failed',e);}}
+  async function start(){
+    try{
+      if(window._lbSupabase){await window.loadUserProfileData();}
+      else if(window.supabase&&window._lbConfig){
+        window._lbSupabase=window.supabase.createClient(window._lbConfig.url,window._lbConfig.key);
+        await window.loadUserProfileData();
+      }
+      if(new URLSearchParams(location.search).get('login')==='1')window.openUserPanel();
+    }catch(e){console.warn('auth session init failed',e);}
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 </script>
 <div id="checkinWall" onclick="if(event.target===this)closeCheckin()"><div class="check-box"><div class="check-head"><h2>📅 每日签到</h2><button onclick="closeCheckin()">✕</button></div><div class="points" id="checkPoints">积分：0</div><div class="cal-title" id="calTitle"></div><div class="cal" id="calGrid"></div></div></div><div id="drawWall"><div class="draw-stage" id="drawStage"></div></div><div id="bagWall" onclick="if(event.target===this)closeBag()"><div class="check-box"><div class="check-head"><h2>🎒 我的背包</h2><button onclick="closeBag()">✕</button></div><div class="bag-list" id="bagList"></div></div></div><div id="redeemWall" onclick="if(event.target===this)closeRedeem()"><div class="check-box"><div class="check-head"><h2>🎟️ 兑换码</h2><button onclick="closeRedeem()">✕</button></div><p style="color:#aeb9d4;font-size:13px;text-align:center;margin:10px 0">输入兑换码（知识卡数字 ID），即可在背包中获得对应卡片</p><input class="name-input" id="redeemInput" placeholder="输入兑换码，如 691553" inputmode="numeric" maxlength="20"><button class="save-btn" onclick="redeemCode()">兑换</button><div id="redeemMsg" style="text-align:center;font-size:13px;margin-top:12px;color:#aeb9d4"></div></div></div>
 <script>/* CHECKIN_DRAW_V1 */
-(function(){var featureKey="account_features",today=function(){return new Date().toISOString().slice(0,10)},data={points:0,days:[],bag:[]},loaded=false;function logged(){return !!_lbUser&&!!_lbSupabase;}async function load(){if(!logged())return false;try{var r=await _lbSupabase.from("user_saves").select("state").eq("user_id",_lbUser).eq("app_id",featureKey).maybeSingle();if(r.error)throw r.error;if(r.data&&r.data.state){try{data=Object.assign({points:0,days:[],bag:[]},r.data.state);}catch(e){}}loaded=true;}catch(e){console.warn("读取存档失败(使用本地默认):",e.message||e);}return true;}async function save(){if(!logged())return false;var payload={user_id:_lbUser,app_id:featureKey,schema_version:1,state:data,updated_at:new Date().toISOString()};var r=await _lbSupabase.from("user_saves").upsert(payload,{onConflict:"user_id,app_id"});if(r.error){console.warn("签到数据保存失败：",r.error.message);return false;}return true;}function fireworks(){for(var i=0;i<28;i++){var x=document.createElement("i");x.textContent=["✦","✧","◆","★","❖"][i%5];x.style.cssText="position:fixed;left:50%;top:45%;z-index:900;color:hsl("+(i*31)+",90%,65%);font-size:22px;pointer-events:none;transition:transform 1s,opacity 1s";document.body.appendChild(x);setTimeout((function(y,j){return function(){y.style.transform="translate("+((j%2?1:-1)*(80+Math.random()*180))+"px,"+((j%3-1)*120+Math.random()*80)+"px) rotate(360deg)";y.style.opacity=0;setTimeout(function(){y.remove();},1000);};})(x,i),20);} }function render(){var d=new Date(),y=d.getFullYear(),m=d.getMonth(),first=new Date(y,m,1).getDay(),max=new Date(y,m+1,0).getDate(),grid=document.getElementById("calGrid");document.getElementById("calTitle").textContent=y+"年 "+(m+1)+"月";document.getElementById("checkPoints").textContent="积分："+data.points;grid.innerHTML=["日","一","二","三","四","五","六"].map(function(x){return "<div class=week>"+x+"</div>";}).join("");for(var i=0;i<first;i++)grid.innerHTML+="<div></div>";for(var n=1;n<=max;n++){var key=y+"-"+String(m+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"),on=data.days.indexOf(key)>=0;grid.innerHTML+="<div class=day "+(on?"signed ":"")+(key===today()?"today":"")+">"+n+(on?"<br>✓":"")+"</div>";}}window.openCheckin=async function(){if(!logged()){alert("请先登录账号才能签到");openUserPanel();return;}await load();render();document.getElementById("checkinWall").classList.add("show");var t=today();if(data.days.indexOf(t)<0){data.days.push(t);data.points++;var saved=await save();if(!saved){data.days.pop();data.points--;alert("签到保存失败，请检查数据库权限或稍后重试");return;}render();fireworks();}};window.closeCheckin=function(){document.getElementById("checkinWall").classList.remove("show")};window.openDrawCard=async function(){if(!logged()){alert("请先登录账号才能抽卡");openUserPanel();return;}await load();if(data.points<3){alert("积分不足，抽卡一次需要3积分");return;}data.points-=3;await save();var list=window.CARDS||[],owned={};data.bag=data.bag||[];data.bag.forEach(function(b){owned[b.id]=1;});var avail=list.filter(function(x){return !owned[x.id];});if(!avail.length){alert("恭喜！你已集齐全部知识卡，暂无新卡可抽");document.getElementById("drawWall").classList.remove("show");return;}var item=avail[Math.floor(Math.random()*avail.length)],id=item?item.id:"暂无",name=item?(item.h1||item.title||"").replace(/<[^>]*>/g,""):"知识卡",sect=(item&&item.badges&&item.badges[0])?item.badges[0]:"知识卡",tags=(item&&item.tags)?item.tags.slice(0,4).join("、"):"综合";data.bag.push({id:id,name:name,section:sect,tags:tags,got:today()});await save();var wall=document.getElementById("drawWall"),stage=document.getElementById("drawStage");stage.innerHTML='<div class="magic"></div><div class="draw-card" id="gachaCard"><button class="draw-x" onclick="closeDrawCard()">×</button><div class="draw-id">'+id+'</div><div class="draw-name">'+name+'</div><div class="draw-sec">'+sect+'</div><div class="draw-tags">'+tags+'</div><span class="draw-info" data-tip="类型：知识卡\n知识板块：'+sect+'\n知识点：'+tags+'">?</span><div class="draw-link" onclick="drawSearch('+id+')">点击搜索这张卡</div></div>';wall.classList.add("show");var touched=false,card=document.getElementById("gachaCard");card.addEventListener("pointerdown",function(){touched=true;card.classList.add("touched");});setTimeout(function(){if(!touched)closeDrawCard();},8000);};
+(function(){var featureKey="account_features",today=function(){return new Date().toISOString().slice(0,10)},data={points:0,days:[],bag:[]},loaded=false;function logged(){return !!_lbUser&&!!_lbSupabase;}async function load(){if(!logged())return false;try{var r=await _lbSupabase.from("user_saves").select("state").eq("user_id",_lbUser).eq("app_id",featureKey).maybeSingle();if(r.error)throw r.error;if(r.data&&r.data.state){try{data=Object.assign({points:0,days:[],bag:[]},r.data.state);}catch(e){}}loaded=true;}catch(e){console.warn("读取存档失败(使用本地默认):",e.message||e);}return true;}async function save(){if(!logged())return false;var payload={user_id:_lbUser,app_id:featureKey,schema_version:1,state:data,updated_at:new Date().toISOString()};var r=await _lbSupabase.from("user_saves").upsert(payload,{onConflict:"user_id,app_id"});if(r.error){console.error("签到数据保存失败：",r.error);return {ok:false,error:r.error};}return {ok:true};}function fireworks(){for(var i=0;i<28;i++){var x=document.createElement("i");x.textContent=["✦","✧","◆","★","❖"][i%5];x.style.cssText="position:fixed;left:50%;top:45%;z-index:900;color:hsl("+(i*31)+",90%,65%);font-size:22px;pointer-events:none;transition:transform 1s,opacity 1s";document.body.appendChild(x);setTimeout((function(y,j){return function(){y.style.transform="translate("+((j%2?1:-1)*(80+Math.random()*180))+"px,"+((j%3-1)*120+Math.random()*80)+"px) rotate(360deg)";y.style.opacity=0;setTimeout(function(){y.remove();},1000);};})(x,i),20);} }function render(){var d=new Date(),y=d.getFullYear(),m=d.getMonth(),first=new Date(y,m,1).getDay(),max=new Date(y,m+1,0).getDate(),grid=document.getElementById("calGrid");document.getElementById("calTitle").textContent=y+"年 "+(m+1)+"月";document.getElementById("checkPoints").textContent="积分："+data.points;grid.innerHTML=["日","一","二","三","四","五","六"].map(function(x){return "<div class=week>"+x+"</div>";}).join("");for(var i=0;i<first;i++)grid.innerHTML+="<div></div>";for(var n=1;n<=max;n++){var key=y+"-"+String(m+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"),on=data.days.indexOf(key)>=0;grid.innerHTML+="<div class=day "+(on?"signed ":"")+(key===today()?"today":"")+">"+n+(on?"<br>✓":"")+"</div>";}}window.openCheckin=async function(){if(!logged()){alert("请先登录账号才能签到");openUserPanel();return;}await load();render();document.getElementById("checkinWall").classList.add("show");var t=today();if(data.days.indexOf(t)<0){data.days.push(t);data.points++;var saved=await save();if(!saved||!saved.ok){data.days.pop();data.points--;var se=saved&&saved.error?((saved.error.message||"")+((saved.error.code)?" ["+saved.error.code+"]":"")):"数据库连接不可用";alert("签到保存失败："+se+"\n\n请先在 Supabase SQL Editor 执行 user_saves权限策略SQL.txt");return;}render();fireworks();}};window.closeCheckin=function(){document.getElementById("checkinWall").classList.remove("show")};window.openDrawCard=async function(){if(!logged()){alert("请先登录账号才能抽卡");openUserPanel();return;}await load();if(data.points<3){alert("积分不足，抽卡一次需要3积分");return;}data.points-=3;await save();var list=window.CARDS||[],owned={};data.bag=data.bag||[];data.bag.forEach(function(b){owned[b.id]=1;});var avail=list.filter(function(x){return !owned[x.id];});if(!avail.length){alert("恭喜！你已集齐全部知识卡，暂无新卡可抽");document.getElementById("drawWall").classList.remove("show");return;}var item=avail[Math.floor(Math.random()*avail.length)],id=item?item.id:"暂无",name=item?(item.h1||item.title||"").replace(/<[^>]*>/g,""):"知识卡",sect=(item&&item.badges&&item.badges[0])?item.badges[0]:"知识卡",tags=(item&&item.tags)?item.tags.slice(0,4).join("、"):"综合";data.bag.push({id:id,name:name,section:sect,tags:tags,got:today()});await save();var wall=document.getElementById("drawWall"),stage=document.getElementById("drawStage");stage.innerHTML='<div class="magic"></div><div class="draw-card" id="gachaCard"><button class="draw-x" onclick="closeDrawCard()">×</button><div class="draw-id">'+id+'</div><div class="draw-name">'+name+'</div><div class="draw-sec">'+sect+'</div><div class="draw-tags">'+tags+'</div><span class="draw-info" data-tip="类型：知识卡\n知识板块：'+sect+'\n知识点：'+tags+'">?</span><div class="draw-link" onclick="drawSearch('+id+')">点击搜索这张卡</div></div>';wall.classList.add("show");var touched=false,card=document.getElementById("gachaCard");card.addEventListener("pointerdown",function(){touched=true;card.classList.add("touched");});setTimeout(function(){if(!touched)closeDrawCard();},8000);};
 
 window.drawSearch=function(id){closeDrawCard();document.getElementById("q").value=id;doSearch();};window.updateBagCount=function(){var n=document.getElementById("bagCount"),c=(data.bag||[]).length;if(n)n.textContent="("+c+")";};
 window.openBag=async function(){if(!logged()){alert("请先登录账号");openUserPanel();return;}await load();var el=document.getElementById("bagList");if(!el)return;if(!(data.bag||[]).length){el.innerHTML='<p style="text-align:center;color:#8492b8;padding:24px">背包还是空的，先去抽一张卡吧 🎴</p>';}else{el.innerHTML=data.bag.slice().reverse().map(function(x){return '<div style="display:flex;align-items:center;gap:10px;background:#171d38;border:1px solid #3a4a74;border-radius:12px;padding:10px 12px;margin-bottom:8px"><span style="color:#ffd76a;font-weight:900;font-size:16px;min-width:80px">'+x.id+'</span><span style="flex:1;font-size:13px">'+x.name+'</span><span style="font-size:10px;color:#ffd76a;background:#ffd76a1c;border-radius:999px;padding:2px 8px">'+x.section+'</span></div>';}).join('');}updateBagCount();document.getElementById("bagWall").classList.add("show");};
