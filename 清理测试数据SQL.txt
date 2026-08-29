@@ -1,0 +1,17 @@
+﻿-- ============================================
+-- 1. 删除我的测试残留数据（小明/测试用户）
+-- ============================================
+delete from leaderboard where user_id like 'test_%';
+delete from users where user_id like 'test_%';
+
+-- ============================================
+-- 2. 补充 delete 策略（方便以后用 API 清理数据）
+-- ============================================
+create policy "users_public_delete" on users for delete using (true);
+create policy "lb_public_delete" on leaderboard for delete using (true);
+
+-- ============================================
+-- 3. 验证
+-- ============================================
+select (select count(*) from users) as users_count,
+       (select count(*) from leaderboard) as lb_count;

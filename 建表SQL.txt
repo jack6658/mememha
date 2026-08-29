@@ -1,0 +1,45 @@
+﻿-- ============================================
+-- 全站排行榜 + 用户系统 建表脚本（修正版）
+-- 已修复: policy 不能用 for upsert，改用 select/insert/update
+-- 使用方法: Supabase Dashboard -> SQL Editor -> New query -> 粘贴运行
+-- ============================================
+
+-- 1. 创建 users 表（存储用户名和头像）
+create table if not exists users (
+  id bigint primary key generated always as identity,
+  user_id text unique not null,
+  user_name text,
+  avatar text default '😀|#ffd76a',
+  created_at timestamptz default now()
+);
+
+-- 2. 创建 leaderboard 表（存储排行榜数据）
+create table if not exists leaderboard (
+  id bigint primary key generated always as identity,
+  user_id text unique not null,
+  user_name text,
+  avatar text default '😀|#ffd76a',
+  total_pages int default 0,
+  total_correct int default 0,
+  completed_sets int default 0,
+  max_streak int default 0,
+  total_score int default 0,
+  last_seen timestamptz default now()
+);
+
+-- 3. 开启行级安全 (RLS)
+alter table users enable row level security;
+alter table leaderboard enable row level security;
+
+-- 4. users 表策略：所有人可读、可插入、可更新
+create policy "users_public_read" on users for select using (true);
+create policy "users_public_insert" on users for insert with check (true);
+create policy "users_public_update" on users for update using (true);
+
+-- 5. leaderboard 表策略：所有人可读、可插入、可更新
+create policy "lb_public_read" on leaderboard for select using (true);
+create policy "lb_public_insert" on leaderboard for insert with check (true);
+create policy "lb_public_update" on leaderboard for update using (true);
+
+-- 6. 验证
+select '建表成功！' as result;

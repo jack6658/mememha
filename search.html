@@ -1,9 +1,9 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>搜索 · 生物知识卡</title>
+<title>知识长卷 · 搜索卡片</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -278,8 +278,9 @@ html[data-device="mobile"] .ink-scroll{animation:none!important}
 html[data-device="mobile"] .walker,html[data-device="mobile"] .ink-walker,html[data-device="mobile"] .seal-mark,html[data-device="mobile"] .ink-seal{animation:none!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+<link rel="stylesheet" href="theme-switcher.css">
 </head>
-<body>
+<body><button id="themeButton" type="button">主题选项</button><div id="themePanel"><div class="theme-box"><div class="theme-head"><strong>主题选项</strong><button class="theme-close" type="button">×</button></div><div class="theme-list"><button data-theme="ink"><i class="theme-dot" style="background:#668b73"></i>水墨长卷<small>宣纸山水与留白</small></button><button data-theme="glass"><i class="theme-dot" style="background:#8de0ff"></i>星夜玻璃<small>深蓝星空与透明光晕</small></button><button data-theme="swiss"><i class="theme-dot" style="background:#d13b32"></i>瑞士网格<small>黑白秩序与朱红强调</small></button><button data-theme="fluid"><i class="theme-dot" style="background:#6fbea9"></i>有机流体<small>蓝青渐变与流动形态</small></button><button data-theme="eco"><i class="theme-dot" style="background:#e07a3f"></i>暮色森林<small>深林剪影与朝阳光芒</small></button></div></div></div>
 <div id="inkLayer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
   <defs>
     <filter id="paper-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .93 0 0 0 0 .9 0 0 0 0 .83 0 0 0 .05 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
@@ -854,5 +855,6 @@ window.closeDrawCard=function(){document.getElementById("drawWall").classList.re
 })();
 </script>
 <script>/* DUAL_DEVICE_ANIM_V1 */(function(){var mobile=('ontouchstart' in window)||window.innerWidth<768;document.documentElement.setAttribute('data-device',mobile?'mobile':'desktop');})();</script>
+<script src="theme-switcher.js"></script>
 </body>
 </html>

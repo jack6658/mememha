@@ -1,0 +1,7 @@
+﻿﻿﻿create table if not exists public.user_saves (user_id uuid not null, app_id text not null, schema_version int not null default 1, state jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now(), primary key (user_id, app_id));
+alter table public.user_saves enable row level security;
+
+create unique index if not exists users_user_name_unique on public.users (lower(user_name));
+create policy "user_saves_read_own" on public.user_saves for select using (auth.uid() = user_id);
+create policy "user_saves_insert_own" on public.user_saves for insert with check (auth.uid() = user_id);
+create policy "user_saves_update_own" on public.user_saves for update using (auth.uid() = user_id) with check (auth.uid() = user_id);

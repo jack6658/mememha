@@ -123,6 +123,33 @@ body.recite-detail .bt.tbl .tbl-wrap thead th{filter:none !important}
   body{background:#fff;color:#000}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* Card login gate + per-file cloud save. Uses the same identity/config as search.html. */
+(function(){
+  document.documentElement.style.opacity='0';
+  var cfg={url:'https://llyzyvkydvcvlcnnvpox.supabase.co',key:'sb_publishable_5GqnvHgsRqQGasfcht5j6Q_taOzntOP'};
+  var uid=localStorage.getItem('lb_uid'), appId=decodeURIComponent(location.pathname.split('/').pop()||'card.html');
+  var client=null, last='';
+  function goLogin(){location.replace('../search.html');}
+  function safeState(){var s={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k!=='lb_uid')s[k]=localStorage.getItem(k);}return s;}
+  function fingerprint(s){try{return JSON.stringify(s);}catch(e){return '';}}
+  async function boot(){
+    if(!uid||!window.supabase){goLogin();return;}
+    try{
+      client=window.supabase.createClient(cfg.url,cfg.key);
+      var u=await client.from('users').select('user_id').eq('user_id',uid).single();
+      if(u.error||!u.data){localStorage.removeItem('lb_uid');goLogin();return;}
+      var r=await client.from('user_saves').select('state').eq('user_id',uid).eq('app_id',appId).maybeSingle();
+      if(r.data&&r.data.state&&typeof r.data.state==='object'){Object.keys(r.data.state).forEach(function(k){if(k!=='lb_uid')localStorage.setItem(k,r.data.state[k]);});}
+      last=fingerprint(safeState()); document.documentElement.style.opacity='';
+      setInterval(function(){sync(false);},1000); window.addEventListener('pagehide',function(){sync(true);});
+    }catch(e){console.warn('card auth/sync failed',e);goLogin();}
+  }
+  async function sync(force){if(!client||!uid)return;var state=safeState(),now=fingerprint(state);if(!force&&now===last)return;last=now;try{await client.from('user_saves').upsert({user_id:uid,app_id:appId,state:state},{onConflict:'user_id,app_id'});}catch(e){console.warn('cloud save failed',e);}}
+  boot();
+})();
+</script>
 </head>
 <body>
 <div class="stars"></div>

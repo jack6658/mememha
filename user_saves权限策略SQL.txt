@@ -1,0 +1,5 @@
+﻿-- user_saves 权限策略（Table Editor 建表后需要执行）
+-- 如果已经执行过会报 "already exists"，可忽略或加 do 块
+create policy if not exists "user_saves_read_own" on public.user_saves for select using (auth.uid() = user_id);
+create policy if not exists "user_saves_insert_own" on public.user_saves for insert with check (auth.uid() = user_id);
+create policy if not exists "user_saves_update_own" on public.user_saves for update using (auth.uid() = user_id) with check (auth.uid() = user_id);

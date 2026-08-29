@@ -1,0 +1,2 @@
+﻿-- 给 users 表昵称加唯一约束（禁止相同昵称注册）
+alter table users add constraint users_name_unique unique (user_name);

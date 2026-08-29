@@ -1,0 +1,9 @@
+﻿-- 给 user_saves 表补上缺失的 app_id 列（text 类型，不能为空）
+alter table public.user_saves add column if not exists app_id text;
+
+-- 把 app_id 设置为不能为空
+alter table public.user_saves alter column app_id set not null;
+
+-- 补上联合主键（user_id + app_id），如果之前没设
+create unique index if not exists user_saves_pkey
+on public.user_saves (user_id, app_id);

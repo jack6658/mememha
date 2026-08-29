@@ -1,0 +1,3 @@
+﻿-- ============ 只删除测试数据 ============
+delete from leaderboard where user_id like 'test_%';
+delete from users where user_id like 'test_%';
