@@ -629,6 +629,7 @@ function renderLeaderboard(list,type){
     html+='<div class="lb-item'+bgStyle+'">'+avHtml+'<div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-item-body"><div class="lb-name">'+nameTag+'</div>'+mainHtml+subHtml+'</div></div>';
   }
   el.innerHTML=html;
+  fixAvatarText();
 }
 function switchLbTab(type,btn){
   document.querySelectorAll('.lb-tab').forEach(function(b){b.classList.remove('active');});
@@ -809,7 +810,7 @@ function loadUserProfile(){
   .then(function(r){
     if(r.data){
       _lbUserData=r.data;
-      renderUserProfile();
+      renderUserProfileNew();
     }else{
       // 数据库没有该用户记录 → 说明是残留的本地 uid，回到注册界面
       localStorage.removeItem('lb_uid');
@@ -819,7 +820,8 @@ function loadUserProfile(){
   })
   .catch(function(e){el.innerHTML='<p style="color:#f87171">加载失败: '+e.message+'</p>';});
 }
-function renderUserProfile(){
+function renderUserProfile(){if(typeof renderUserProfileNew==='function'){renderUserProfileNew();}}
+function renderUserProfileNew(){
   var el=document.getElementById('userInfo');
   var data=_lbUserData||{user_name:'用户_'+_lbUser.slice(-4),avatar:'😀|#ffd76a'};
   var av=parseAvatar(data.avatar);
@@ -875,6 +877,22 @@ function renderAvatarHTML(av){
   }
   var icon=(av&&av.icon?av.icon:'😀');
   return '<div class="lb-avatar" style="border-color:'+color+';background:'+color+'22">'+icon+'</div>';
+}
+
+function fixAvatarText(){
+  try{
+    var el=document.getElementById('userInfo');
+    if(!el)return;
+    var raw=el.innerHTML;
+    if(/data:image\/[a-z]+;base64,/.test(raw)&&raw.indexOf('<img')<0){
+      var m=raw.match(/data:image\/[a-z]+;base64,[A-Za-z0-9+/=]+/);
+      if(m&&m[0].length>50){
+        var colors='#ffd76a';
+        var div='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid '+colors+';background:'+colors+'22;box-shadow:0 0 20px '+colors+'44"><img src="'+m[0]+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="avFallback(this)"></div>';
+        el.innerHTML=raw.replace(m[0],div);
+      }
+    }
+  }catch(e){}
 }
 function renderBigAvatar(av){
   var src='',color=av&&av.color?av.color:'#ffd76a';
@@ -1038,7 +1056,7 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
       _lbUserData={user_id:uid,user_name:name,avatar:avatar};
       await syncCurrentUser();
       alert('注册成功！欢迎「'+name+'」');
-      renderUserProfile();
+      renderUserProfileNew();
     }catch(e){
       el.innerHTML=authForm();
       alert('注册失败：'+(e.message||e));
@@ -1071,7 +1089,7 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
       await restoreCloudSaves(sb,user.user_id);
       await syncCurrentUser();
       alert('登录成功！欢迎回来「'+user.user_name+'」');
-      renderUserProfile();
+      renderUserProfileNew();
     }catch(e){
       el.innerHTML=authForm();
       alert('登录失败：'+(e.message||e));
@@ -1134,9 +1152,24 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
     renderUserProfile();
   };
   window.renderUserProfile=function(){
+    // 头像必须显示为图片：直接调用全局新版 renderUserProfile（block1 定义）
+    if(typeof renderUserProfileNew==='function'){
+      renderUserProfileNew();
+      return;
+    }
     var el=document.getElementById('userInfo'),d=_lbUserData||{},x=getCurrentData();
+    var avCol='#ffd76a';
+    var avatarHtml='😀';
+    var raw=d.avatar||'';
+    if(/^data:image\//.test(raw)){
+      avatarHtml='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid '+avCol+';background:'+avCol+'22"><img src="'+raw+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="avFallback(this)"></div>';
+    }else if(raw.indexOf('|')>0){
+      var p=raw.split('|');avatarHtml='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+avCol+';background:'+avCol+'22">'+esc(p[0])+'</div>';
+    }else{
+      avatarHtml='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+avCol+';background:'+avCol+'22">'+esc(raw||'😀')+'</div>';
+    }
     el.innerHTML='<div style="text-align:center">'
-      +'<div style="font-size:64px">'+esc((d.avatar||'😀').split('|')[0])+'</div>'
+      +avatarHtml
       +'<h3 style="color:#ffd76a">'+esc(d.user_name)+'</h3>'
       +'<p style="color:#7dd3fc;font-size:12px">✅ 已登录 · 云端存档同步中</p>'
       +'<div style="text-align:left;background:rgba(255,255,255,.05);padding:14px;border-radius:12px;margin:14px 0;color:#aeb9d4;font-size:13px">'
@@ -1144,7 +1177,6 @@ window.addEventListener('resize',function(){W=canvas.width=innerWidth;H=canvas.h
       +'<button class="logout-btn" onclick="logoutUser()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:10px 24px;font-size:13px;color:#e8edff;cursor:pointer;width:100%">🚪 退出登录（自动保存云存档）</button>'
       +'</div>';
   };
-
   // === 排行榜 ===
   window.initLeaderboard=async function(){
     var sb=authClient();if(!sb)return;
