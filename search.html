@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -412,9 +412,11 @@ html[data-device="mobile"] .walker,html[data-device="mobile"] .ink-walker,html[d
 <div id="userWall" onclick="if(event.target===this)closeUserPanel()">
   <div class="ach-box">
     <div class="ach-head"><h2>👤 个人信息</h2><button onclick="closeUserPanel()">✕</button></div>
+    <div id="userQuick" style="display:flex;gap:8px;padding:0 0 4px"></div>
     <div id="userInfo" style="padding:16px 0"><p style="color:#aeb9d4;text-align:center">加载中...</p></div>
   </div>
 </div>
+<div id="renameWall" onclick="if(event.target===this)closeRename()"><div class="check-box"><div class="check-head"><h2>✏️ 更换昵称</h2><button onclick="closeRename()">✕</button></div><div style="padding:6px 0 2px"><p style="color:var(--ui-muted,#8492b8);font-size:13px;line-height:1.7;margin:0 0 12px">输入新的昵称（不能与已注册用户重名）</p><input id="renameInput" type="text" maxlength="12" placeholder="请输入新昵称" style="width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid #526487;background:rgba(255,255,255,.06);color:#e8edff;font-size:15px;box-sizing:border-box;outline:none;margin-bottom:14px"><div id="renameMsg" style="font-size:12px;margin-bottom:10px"></div><button class="save-btn" onclick="doRename()" style="background:linear-gradient(135deg,#7dd3fc,#38bdf8);border:none;color:#0a1322;font-weight:bold;border-radius:10px;padding:11px 20px;font-size:14px;cursor:pointer;width:100%">✅ 确认修改</button></div></div></div>
 <script>
 window.CARDS=[{"file":"生物必修1_深度融合笔记_知识卡片.html","title":"生物必修1 · 深度融合笔记 · 知识卡片","h1":"🧬 生物必修1 深度融合笔记 · 学术风","badges":["模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","难点专讲"],"tags":["组成细胞的分子","元素","水与无机盐","糖类与脂质","蛋白质","结构与计算","核酸","细胞膜的结构与功能"],"cards":30,"size":103043,"id":691553},{"file":"化学必修1_深挖级拿分点_知识卡片.html","title":"化学必修1 · 深挖级拿分点 · 知识卡片","h1":"🧪 化学必修1 深挖级拿分点 · 实验室风","badges":["模块一 化学物质及其变化","模块二 从实验学化学","模块三 金属及其化合物","模块四 非金属及其化合物","模块五 难点专讲"],"tags":["分类","同素异形体","电解质","离子共存","氧化还原","四大规律","物质的量","NA"],"cards":15,"size":58314,"id":176707},{"file":"化学必修一_深挖级拿分点_手账横向翻页知识卡片.html","title":"化学必修一·深挖级拿分点·横向手账知识卡片","h1":"🧪 化学必修一 · 深挖级拿分点","badges":[],"tags":[],"cards":13,"size":40173,"id":461566},{"file":"能量中枢_酶与代谢_知识卡片.html","title":"能量中枢 · 酶与代谢知识卡片","h1":"⚡ 能量中枢 酶 · ATP · 呼吸 · 光合","badges":["总控台","催化剂","细胞呼吸","光合作用","光呼综合"],"tags":["ATP","能量","酶","曲线","呼吸","糖酵解","线粒体","氧化磷酸化"],"cards":12,"size":46799,"id":702218},{"file":"生命档案局_细胞生命历程_知识卡片.html","title":"生命档案局 · 细胞生命历程知识卡片","h1":"📁 生命档案局 细胞增殖 · 分化 · 衰老 · 癌变","badges":["案件卷宗","档案一","档案二","档案三","档案四","档案五","训练营","档案六"],"tags":["周期","总览","间期","DNA","前期","中期","后期","末期"],"cards":12,"size":46013,"id":823839},{"file":"生物必修1_分子与细胞_知识卡片.html","title":"生物必修1 · 分子与细胞 · 知识卡片","h1":"🧬 生物必修1 · 知识卡片","badges":[],"tags":[],"cards":0,"size":45696,"id":860247},{"file":"生物必修一_分子与细胞_闯关游戏风知识卡片.html","title":"生物必修一 · 分子与细胞 · 闯关知识卡","h1":"","badges":[],"tags":[],"cards":0,"size":97390,"id":446228},{"file":"生物必修一_分子与细胞_手账风知识卡片.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":94994,"id":741451},{"file":"生物必修一_分子与细胞_手账横向翻页记忆版.html","title":"生物必修一 · 分子与细胞 · 手账风知识卡片","h1":"📒 生物必修一 分子与细胞 · 手账笔记","badges":["🗺️ 知识地图","模块一 细胞的结构基础","模块二 细胞代谢","模块三 细胞的生命历程","🎯 难点专讲","📌 学习工具"],"tags":["总览","概念","计算","流程","曲线","图像","分子机制","陷阱"],"cards":19,"size":101216,"id":883120},{"file":"生物必修一_分子与细胞_星空图谱风知识卡片.html","title":"生物必修一 · 分子与细胞 · 星空知识图谱","h1":"🌌 生物必修一 分子与细胞 · 知识图谱","badges":[],"tags":[],"cards":19,"size":95333,"id":491788},{"file":"生物必修一_深度拿分点_知识卡片.html","title":"生物必修一 · 深度拿分点 · 知识卡片","h1":"🧬 生物必修一 · 知识卡片","badges":[],"tags":[],"cards":0,"size":47313,"id":273324},{"file":"细胞工厂_分子与细胞_知识卡片.html","title":"细胞工厂 · 分子与细胞知识卡片","h1":"🏭 细胞工厂 分子与细胞 · 工业蓝图","badges":["工厂地图","原料仓","数据库","组装线","膜材料","供能系统","质检部","调度中心"],"tags":["总览","分工","元素","水","糖","脂质","蛋白质","计算"],"cards":12,"size":49462,"id":545315}];
 function doSearch(){
@@ -649,9 +651,34 @@ function openLeaderboard(){
   }
 }
 function closeLeaderboard(){document.getElementById('leaderboardWall').classList.remove('show');}
+function renderUserQuick(){
+  var q=document.getElementById('userQuick');
+  if(!q)return;
+  var logged=!!_lbUser;
+  var html='';
+  // 两个永远可见的大按钮
+  html+='<button class="uq-btn" onclick="quickAvatar()" style="flex:1;background:rgba(125,211,252,.15);border:2px solid #7dd3fc;border-radius:12px;padding:10px 8px;font-size:13px;color:#7dd3fc;cursor:pointer;font-weight:bold">🖼️ 更换头像</button>';
+  html+='<button class="uq-btn" onclick="quickRename()" style="flex:1;background:rgba(251,191,36,.12);border:2px solid #fbbf24;border-radius:12px;padding:10px 8px;font-size:13px;color:#fbbf24;cursor:pointer;font-weight:bold">✏️ 更换昵称</button>';
+  // 状态条
+  if(logged){
+    html+='<span style="flex-basis:100%;font-size:11px;color:#6ee7b7;text-align:center;padding:2px 0 6px">✅ 已登录：'+((_lbUserData&&_lbUserData.user_name)||'')+'</span>';
+  }else{
+    html+='<span style="flex-basis:100%;font-size:11px;color:#fbbf24;text-align:center;padding:2px 0 6px">👤 请先注册/登录后使用</span>';
+  }
+  q.innerHTML=html;
+}
 function openUserPanel(){
   document.getElementById('userWall').classList.add('show');
+  renderUserQuick();
   loadUserProfile();
+}
+function quickAvatar(){
+  if(!_lbUser){alert('请先注册/登录账号，登录后才能更换头像');loadUserProfile();return;}
+  openAvatarPicker();
+}
+function quickRename(){
+  if(!_lbUser){alert('请先注册/登录账号，登录后才能更换昵称');loadUserProfile();return;}
+  openRename();
 }
 function closeUserPanel(){document.getElementById('userWall').classList.remove('show');}
 function registerUser(){
@@ -768,6 +795,7 @@ function loadUserProfileData(){
 
 function loadUserProfile(){
   var el=document.getElementById('userInfo');
+  renderUserQuick();
   if(!_lbUser){
     // 注册表单：用户名 + 头像选择 一步完成
     el.innerHTML=renderRegForm();
@@ -797,8 +825,16 @@ function renderUserProfile(){
   var html='<div style="max-width:420px;margin:0 auto;text-align:center">';
   // 头像大预览
   html+=renderBigAvatar(av);
-  // 用户名（注册名）
-  html+='<p style="color:#ffd76a;font-size:20px;font-weight:bold;margin-bottom:4px">'+data.user_name+'</p>';
+  // 更换头像（醒目入口）
+  html+='<div style="margin:0 auto 12px;max-width:280px">';
+  html+='<button class="logout-btn" onclick="openAvatarPicker()" style="background:rgba(125,211,252,.15);border:2px solid #7dd3fc;border-radius:999px;padding:9px 28px;font-size:14px;color:#7dd3fc;cursor:pointer;width:100%;font-weight:bold">🖼️ 更换头像</button>';
+  html+='<p style="color:#7a8ba8;font-size:11px;margin-top:6px">从「📤 上传」的图片中选择</p>';
+  html+='</div>';
+  // 用户名（注册名）+ 更换昵称
+  html+='<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px">';
+  html+='<p style="color:#ffd76a;font-size:20px;font-weight:bold">'+data.user_name+'</p>';
+  html+='<button onclick="openRename()" title="更换昵称" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:8px;padding:3px 8px;font-size:12px;color:#aeb9d4;cursor:pointer">✏️</button>';
+  html+='</div>';
   html+='<p style="color:#7a8ba8;font-size:12px;margin-bottom:16px">👤 已注册 · 已同步到排行榜</p>';
   // 个人进度
   var d=getCurrentData();
@@ -810,7 +846,6 @@ function renderUserProfile(){
   html+='<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#aeb9d4">连续答对</span><span style="color:#f87171;font-weight:bold">'+d.maxStreak+' 题</span></div>';
   html+='</div>';
   // 切换账号
-  html+='<button class="logout-btn" onclick="openAvatarPicker()" style="background:rgba(125,211,252,.12);border:1px solid #7dd3fc;border-radius:10px;padding:10px 24px;font-size:13px;color:#7dd3fc;cursor:pointer;width:100%;margin-bottom:8px">🖼️ 更改头像</button>';
   html+='<button class="logout-btn" onclick="logoutUser()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:10px 24px;font-size:13px;color:#e8edff;cursor:pointer;width:100%">🔄 切换账号</button>';
   html+='</div>';
   el.innerHTML=html;
@@ -833,6 +868,44 @@ function renderBigAvatar(av){
   return '<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div>';
 }
 var _avPickImgs=[];
+function openRename(){
+  var w=document.getElementById('renameWall');
+  if(!w){alert('弹窗加载失败');return;}
+  var inp=document.getElementById('renameInput');
+  var msg=document.getElementById('renameMsg');
+  if(inp&&_lbUserData)inp.value=_lbUserData.user_name||'';
+  if(msg)msg.innerHTML='';
+  w.classList.add('show');
+  setTimeout(function(){if(inp)inp.focus();},100);
+}
+function closeRename(){document.getElementById('renameWall').classList.remove('show');}
+function doRename(){
+  var inp=document.getElementById('renameInput');
+  var msg=document.getElementById('renameMsg');
+  if(!inp||!_lbUser){alert('请先登录');return;}
+  var name=inp.value.trim();
+  if(!name){if(msg)msg.innerHTML='<span style="color:#f87171">请输入新昵称</span>';return;}
+  if(name.length>12){if(msg)msg.innerHTML='<span style="color:#f87171">昵称最长 12 个字符</span>';return;}
+  if(!_lbSupabase){alert('未连接数据库');return;}
+  if(msg)msg.innerHTML='<span style="color:#7dd3fc">⏳ 检查昵称...</span>';
+  _lbSupabase.from('users').select('user_id').eq('user_name',name).then(function(r){
+    if(r.error){if(msg)msg.innerHTML='<span style="color:#f87171">查询失败：'+r.error.message+'</span>';return;}
+    if(r.data&&r.data.length>0){
+      var mine=r.data.some(function(x){return x.user_id===_lbUser;});
+      if(!mine){if(msg)msg.innerHTML='<span style="color:#f87171">❌ 昵称「'+name+'」已被注册，请换一个</span>';return;}
+    }
+    if(msg)msg.innerHTML='<span style="color:#6ee7b7">⏳ 正在保存...</span>';
+    _lbSupabase.from('users').update({user_name:name}).eq('user_id',_lbUser).then(function(u){
+      if(u.error){if(msg)msg.innerHTML='<span style="color:#f87171">保存失败：'+u.error.message+'</span>';return;}
+      // 同步排行榜昵称（尽力而为）
+      try{if(_lbSupabase) _lbSupabase.from('leaderboard').update({user_name:name}).eq('user_id',_lbUser).then(function(){});}catch(e){}
+      if(_lbUserData)_lbUserData.user_name=name;
+      closeRename();
+      alert('🎉 昵称已更新为「'+name+'」！');
+      loadUserProfile();
+    }).catch(function(e){if(msg)msg.innerHTML='<span style="color:#f87171">保存失败：'+(e.message||e)+'</span>';});
+  }).catch(function(e){if(msg)msg.innerHTML='<span style="color:#f87171">查询失败：'+(e.message||e)+'</span>';});
+}
 function openAvatarPicker(){
   var el=document.getElementById('userInfo');
   if(!el)return;
