@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!doctype html>
+﻿﻿﻿﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -103,6 +103,9 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .lb-rank.gold{background:#ffd76a;color:#1a1a2e}.lb-rank.silver{background:#c0c0c0;color:#1a1a2e}.lb-rank.bronze{background:#cd7f32;color:#fff}
 .lb-name{flex:1;font-weight:bold;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb-stats{font-size:12px;color:#aeb9d4;flex-shrink:0}
+.lb-item-body{flex:1;min-width:0;padding:0 8px}
+.lb-main{font-size:15px;color:#ffd76a;font-weight:bold;margin-top:3px}
+.lb-sub{font-size:11px;color:#7a8ba8;margin-top:2px}
 .lb-stats span{color:#ffd76a;margin-left:4px}
 .lb-empty{text-align:center;color:#7a8ba8;padding:40px 0;font-size:14px}
 .lb-note{text-align:center;font-size:11px;color:#7a8ba8;margin-top:12px}
@@ -375,7 +378,7 @@ html[data-device="mobile"] .walker,html[data-device="mobile"] .ink-walker,html[d
     <div class="rank-row">
       <button class="ach-btn secondary rank-btn" onclick="openLeaderboard()">🏅 排行榜</button>
       <button class="ach-btn secondary rank-btn notice-rank-btn" onclick="openNotice()">📢 公告</button>
-      <button class="ach-btn secondary rank-btn pack-rank-btn" onclick="openUploadPack()">📦 上传卡包</button>
+      <button class="ach-btn secondary rank-btn pack-rank-btn" onclick="openUploadPack()">📦 上传</button>
       <button class="ach-btn secondary rank-btn upload-rank-btn" onclick="openUploadOpt()">📤 上传选项</button>
     </div>
   </div>
@@ -547,8 +550,10 @@ async function refreshLeaderboard(){
   if(!_lbSupabase)return;
   // 仅注册用户才同步写入；未注册只读
   if(_lbUser&&_lbUserData){await syncCurrentUser();}
-  var r=await _lbSupabase.from('leaderboard').select('*').order('total_score',{ascending:false}).limit(50);
-  renderLeaderboard(r.data||[]);
+  var cur=_lbCurTab||'score';
+  var col=cur==='time'?'total_time':cur==='correct'?'total_correct':cur==='pages'?'total_pages':'total_score';
+  var r=await _lbSupabase.from('leaderboard').select('*').order(col,{ascending:false}).limit(50);
+  renderLeaderboard(r.data||[],cur);
   document.getElementById('lbLastUpdate').textContent='更新: '+new Date().toLocaleTimeString('zh-CN');
 }
 async function syncCurrentUser(){
@@ -559,7 +564,7 @@ async function syncCurrentUser(){
       user_id:_lbUser,
       user_name:(_lbUserData&&_lbUserData.user_name)?_lbUserData.user_name:'用户_'+_lbUser.slice(-4),
       avatar:(_lbUserData&&_lbUserData.avatar)?_lbUserData.avatar:'😀',
-      total_pages:d.totalPages,total_correct:d.correct,
+      total_pages:d.totalPages,total_correct:d.correct,total_time:d.totalTime,
       completed_sets:d.completed,max_streak:d.maxStreak,
       total_score:calcScore(d),last_seen:new Date().toISOString()
     },{onConflict:'user_id'});
@@ -568,38 +573,67 @@ async function syncCurrentUser(){
 function getCurrentData(){
   try{
     var data=JSON.parse(localStorage.getItem('site_ach')||'{}');
-    var c=0,tp=0,cr=0,ms=0;
-    for(var k in data){var v=data[k];if(v.completed)c++;tp+=(v.pages||0);cr+=(v.correct||0);if((v.maxStreak||0)>ms)ms=v.maxStreak;}
-    return{totalPages:tp,correct:cr,completed:c,maxStreak:ms};
-  }catch(e){return{totalPages:0,correct:0,completed:0,maxStreak:0};}
+    var c=0,tp=0,cr=0,ms=0,tt=0;
+    for(var k in data){var v=data[k];if(v.completed)c++;tp+=(v.pages||0);cr+=(v.correct||0);tt+=(v.time||0);if((v.maxStreak||0)>ms)ms=v.maxStreak;}
+    return{totalPages:tp,correct:cr,completed:c,maxStreak:ms,totalTime:Math.round(tt/1000)};
+  }catch(e){return{totalPages:0,correct:0,completed:0,maxStreak:0,totalTime:0};}
 }
-function calcScore(d){return d.totalPages*2+d.correct*1+d.completed*10+d.maxStreak*5;}
-function renderLeaderboard(list){
+function calcScore(d){return (d.totalTime||0)*1+(d.correct||0)*10+(d.totalPages||0)*50;}
+function fmtDuration(sec){
+  try{
+    sec=Math.max(0,Math.floor(Number(sec)||0));
+    var d=Math.floor(sec/86400);sec%=86400;
+    var h=Math.floor(sec/3600);sec%=3600;
+    var m=Math.floor(sec/60);var s=sec%60;
+    var out='';
+    if(d>0)out+=d+'d ';
+    if(h>0||d>0)out+=h+'h ';
+    if(m>0||h>0||d>0)out+=m+'m ';
+    out+=s+'s';
+    return out;
+  }catch(e){return '0s';}
+}
+function renderLeaderboard(list,type){
   var el=document.getElementById('lbContent');
   if(!list.length){el.innerHTML='<div class="lb-empty">暂无记录，快来刷分吧！</div>';return;}
+  type=type||'score';
+  _lbCurTab=type;
+  var tabs=[['score','🏆 总分'],['time','⏱ 时间'],['correct','✅ 答题'],['pages','📖 浏览']];
   var html='<div class="lb-tabs">';
-  html+='<button class="lb-tab active" onclick="switchLbTab(\"score\",this)">🏆 总分</button>';
-  html+='<button class="lb-tab" onclick="switchLbTab(\"pages\",this)">📖 浏览</button>';
-  html+='<button class="lb-tab" onclick="switchLbTab(\"correct\",this)">✅ 答题</button>';
+  for(var ti=0;ti<tabs.length;ti++){
+    var t=tabs[ti];
+    html+='<button class="lb-tab'+(t[0]===type?' active':'')+'" onclick="switchLbTab(\''+t[0]+'\',this)">'+t[1]+'</button>';
+  }
   html+='</div>';
-  list.forEach(function(item,i){
-    var rank=i+1;
+  for(var i=0;i<list.length;i++){
+    var item=list[i],rank=i+1;
     var rc=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
     var isMe=item.user_id===_lbUser;
     var bgStyle=isMe?' style="border-color:#ffd76a;background:rgba(255,215,106,.1)"':'';
     var avInfo=parseAvatar(item.avatar||'😀|#ffd76a');
-    var avHtml='<div class="lb-avatar" style="border-color:'+avInfo.color+';background:'+avInfo.color+'22">'+avInfo.icon+'</div>';
+    var avHtml=renderAvatarHTML(avInfo);
     var nameTag=(item.user_name||'匿名用户')+(isMe?' (你)':'');
-    html+='<div class="lb-item'+bgStyle+'">'+avHtml+'<div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-name">'+nameTag+'</div><div class="lb-stats">📖'+item.total_pages+'页 <span>✅'+item.total_correct+'答</span> <span>🎯'+item.completed_sets+'套</span></div></div>';
-  });
+    var mainHtml='';
+    if(type==='time'){
+      mainHtml='<div class="lb-main">⏱ '+fmtDuration(item.total_time||0)+'</div>';
+    }else if(type==='correct'){
+      mainHtml='<div class="lb-main">✅ '+(item.total_correct||0)+' 题</div>';
+    }else if(type==='pages'){
+      mainHtml='<div class="lb-main">📖 '+(item.total_pages||0)+' 页</div>';
+    }else{
+      mainHtml='<div class="lb-main">🏆 '+(item.total_score||0)+' 分</div>';
+    }
+    var subHtml='<div class="lb-sub">'+fmtDuration(item.total_time||0)+' · ✅'+(item.total_correct||0)+'答 · 📖'+(item.total_pages||0)+'页</div>';
+    html+='<div class="lb-item'+bgStyle+'">'+avHtml+'<div class="lb-rank '+rc+'">'+rank+'</div><div class="lb-item-body"><div class="lb-name">'+nameTag+'</div>'+mainHtml+subHtml+'</div></div>';
+  }
   el.innerHTML=html;
 }
 function switchLbTab(type,btn){
   document.querySelectorAll('.lb-tab').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
   if(!_lbSupabase)return;
-  var col=type==='score'?'total_score':type==='pages'?'total_pages':'total_correct';
-  _lbSupabase.from('leaderboard').select('*').order(col,{ascending:false}).limit(50).then(function(r){renderLeaderboard(r.data||[]);});
+  var col=type==='score'?'total_score':type==='time'?'total_time':type==='pages'?'total_pages':'total_correct';
+  _lbSupabase.from('leaderboard').select('*').order(col,{ascending:false}).limit(50).then(function(r){renderLeaderboard(r.data||[],type);});
 }
 function openLeaderboard(){
   document.getElementById('leaderboardWall').classList.add('show');
@@ -762,7 +796,7 @@ function renderUserProfile(){
   var av=parseAvatar(data.avatar);
   var html='<div style="max-width:420px;margin:0 auto;text-align:center">';
   // 头像大预览
-  html+='<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div>';
+  html+=renderBigAvatar(av);
   // 用户名（注册名）
   html+='<p style="color:#ffd76a;font-size:20px;font-weight:bold;margin-bottom:4px">'+data.user_name+'</p>';
   html+='<p style="color:#7a8ba8;font-size:12px;margin-bottom:16px">👤 已注册 · 已同步到排行榜</p>';
@@ -776,13 +810,60 @@ function renderUserProfile(){
   html+='<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#aeb9d4">连续答对</span><span style="color:#f87171;font-weight:bold">'+d.maxStreak+' 题</span></div>';
   html+='</div>';
   // 切换账号
+  html+='<button class="logout-btn" onclick="openAvatarPicker()" style="background:rgba(125,211,252,.12);border:1px solid #7dd3fc;border-radius:10px;padding:10px 24px;font-size:13px;color:#7dd3fc;cursor:pointer;width:100%;margin-bottom:8px">🖼️ 更改头像</button>';
   html+='<button class="logout-btn" onclick="logoutUser()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:10px 24px;font-size:13px;color:#e8edff;cursor:pointer;width:100%">🔄 切换账号</button>';
   html+='</div>';
   el.innerHTML=html;
 }var _avColor='#ffd76a';
 function parseAvatar(a){
+  if(a&&(/^data:image\//.test(a)||/^https?:\/\//.test(a))){return{icon:'IMG:'+a,color:'#ffd76a'};}
   if(a&&a.indexOf('|')>0){var p=a.split('|');return{icon:p[0],color:p[1]||'#ffd76a'};}
   return{icon:a||'😀',color:'#ffd76a'};
+}
+function renderAvatarHTML(av){
+  if(av.icon&&av.icon.indexOf('IMG:')===0){
+    return '<div class="lb-avatar" style="overflow:hidden;border-color:'+av.color+';background:'+av.color+'22"><img src="'+av.icon.slice(4)+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+  }
+  return '<div class="lb-avatar" style="border-color:'+av.color+';background:'+av.color+'22">'+av.icon+'</div>';
+}
+function renderBigAvatar(av){
+  if(av.icon&&av.icon.indexOf('IMG:')===0){
+    return '<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44"><img src="'+av.icon.slice(4)+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+  }
+  return '<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div>';
+}
+var _avPickImgs=[];
+function openAvatarPicker(){
+  var el=document.getElementById('userInfo');
+  if(!el)return;
+  if(!_lbSupabase){alert('未连接数据库');return;}
+  el.innerHTML='<p style="color:#aeb9d4;text-align:center">加载头像列表...</p>';
+  _lbSupabase.from('user_saves').select('state').eq('user_id',_lbUser).eq('app_id','card_packs').maybeSingle().then(function(r){
+    var uploads=(r.data&&r.data.state&&r.data.state.uploads)||[];
+    _avPickImgs=uploads.filter(function(u){return u.dataUrl&&/^data:image\//.test(u.dataUrl);});
+    if(!_avPickImgs.length){
+      el.innerHTML='<div style="text-align:center;padding:10px"><p style="color:#aeb9d4;margin:6px 0 12px">还没有可用的图片头像</p><p style="color:#7a8ba8;font-size:13px;line-height:1.7;margin-bottom:14px">请先通过「📤 上传」上传一张<b>图片</b>（png/jpg/gif/webp，≤150KB），<br>再回到这里选择它作为头像。</p><button class="logout-btn" onclick="loadUserProfile()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:9px 24px;font-size:13px;color:#e8edff;cursor:pointer">← 返回个人信息</button></div>';
+      return;
+    }
+    var html='<div style="text-align:center"><p style="color:#aeb9d4;margin-bottom:12px">🖼️ 从你的上传中选择头像</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">';
+    for(var i=0;i<_avPickImgs.length;i++){
+      var u=_avPickImgs[i];
+      html+='<div style="aspect-ratio:1;border-radius:12px;overflow:hidden;border:2px solid #526487;cursor:pointer;transition:.15s" onclick="applyAvatar('+i+')" title="'+esc(u.name)+'"><img src="'+u.dataUrl+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+    }
+    html+='</div><button class="logout-btn" onclick="loadUserProfile()" style="background:rgba(255,255,255,.08);border:1px solid #526487;border-radius:10px;padding:9px 24px;font-size:13px;color:#e8edff;cursor:pointer">← 返回个人信息</button></div>';
+    el.innerHTML=html;
+  }).catch(function(e){el.innerHTML='<p style="color:#f87171;text-align:center">加载失败: '+(e.message||e)+'</p>';});
+}
+function applyAvatar(i){
+  var u=_avPickImgs[i];
+  if(!u){alert('未知头像');return;}
+  if(!_lbSupabase){alert('未连接数据库');return;}
+  _lbSupabase.from('users').update({avatar:u.dataUrl}).eq('user_id',_lbUser).then(function(r){
+    if(r.error){alert('头像更新失败: '+r.error.message);return;}
+    if(_lbUserData)_lbUserData.avatar=u.dataUrl;
+    alert('🎉 头像已更新！');
+    loadUserProfile();
+  }).catch(function(e){alert('头像更新失败: '+(e.message||e));});
 }
 async function logoutUser(){
   if(confirm('确定要切换账号吗？')){
@@ -1087,7 +1168,7 @@ html[data-site-theme] .notice-body{color:var(--ui-text,#171717)}
 .up-pack-item.pack-click:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.25)}
 html[data-site-theme] .up-file-btn{background:linear-gradient(135deg,var(--ui-main),color-mix(in srgb,var(--ui-main) 70%,#fff));color:var(--ui-panel,#fff)}
 </style>
-<div id="bagWall"><div class="bag-nebula"><span class="bag-blob bag-b1"></span><span class="bag-blob bag-b2"></span><span class="bag-blob bag-b3"></span><span class="bag-blob bag-b4"></span></div><div class="bag-stars" id="bagStars"></div><button class="bag-close" onclick="closeBag()">✕</button><div class="bag-stage"><div class="bag-header"><h2>🎒 我的背包</h2><div class="bag-sub" id="bagSub">共 0 张知识卡</div></div><div class="bag-shelf" id="bagShelf"><div class="bag-track" id="bagTrack"></div></div><div class="bag-nav" id="bagNav" style="display:none"><button class="bag-arrow bag-prev" onclick="bagGo(bagPos-1)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="bag-read-btn" id="bagReadBtn" onclick="bagOpenCard()">开始阅读</button><button class="bag-arrow bag-next" onclick="bagGo(bagPos+1)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="bag-empty" id="bagEmpty"><span>🎴</span>背包还是空的，先去抽一张卡吧</div></div></div><div id="redeemWall" onclick="if(event.target===this)closeRedeem()"><div class="check-box"><div class="check-head"><h2>🎟️ 兑换码</h2><button onclick="closeRedeem()">✕</button></div><p style="color:#aeb9d4;font-size:13px;text-align:center;margin:10px 0">输入兑换码（知识卡数字 ID），即可在背包中获得对应卡片</p><input class="name-input" id="redeemInput" placeholder="输入兑换码，如 691553" inputmode="numeric" maxlength="20"><button class="save-btn" onclick="redeemCode()">兑换</button><div id="redeemMsg" style="text-align:center;font-size:13px;margin-top:12px;color:#aeb9d4"></div></div></div><div id="noticeWall" onclick="if(event.target===this)closeNotice()"><div class="check-box"><div class="check-head"><h2>📢 公告</h2><button onclick="closeNotice()">✕</button></div><div class="notice-body"><p class="notice-main">📤 可以上传自己制作的知识卡片，有知识卡制作需求的可以加联系方式</p><div class="notice-divider"></div><div class="notice-line"><span class="notice-label">联系方式：</span><span class="notice-value">QQ群号：<b>1107196394</b></span></div><div class="notice-line"><span class="notice-label">【闲鱼】</span><a class="notice-link" href="https://m.tb.cn/h.8Os4bNv?tk=6maST43GUX3" target="_blank" rel="noopener">https://m.tb.cn/h.8Os4bNv?tk=6maST43GUX3</a></div><p class="notice-tip">「这是我的闲鱼号，快来看看吧～」点击链接直接打开。</p></div></div></div><div id="uploadOptWall" onclick="if(event.target===this)closeUploadOpt()"><div class="check-box"><div class="check-head"><h2>📤 上传选项</h2><button onclick="closeUploadOpt()">✕</button></div><p style="color:var(--ui-muted,#8492b8);font-size:13px;line-height:1.7;margin:6px 0 10px">上传自己制作的知识卡片。每周可上传 <b style="color:var(--ui-main,#ffd76a)">1</b> 次，单个文件不超过 <b style="color:var(--ui-main,#ffd76a)">50KB</b>。</p><div class="up-status" id="upStatus"></div><label class="up-file-btn" for="upInput">📎 选择文件</label><input type="file" id="upInput" style="display:none" onchange="onPickFile(this)"><div class="up-file-info" id="upFileInfo"></div><button class="save-btn" id="upSubmit" onclick="doUpload()" disabled>🚀 上传</button></div></div><div id="uploadPackWall" onclick="if(event.target===this)closeUploadPack()"><div class="check-box"><div class="check-head"><h2>📦 上传卡包</h2><button onclick="closeUploadPack()">✕</button></div><div id="upPackList" style="max-height:55vh;overflow:auto"></div></div></div>
+<div id="bagWall"><div class="bag-nebula"><span class="bag-blob bag-b1"></span><span class="bag-blob bag-b2"></span><span class="bag-blob bag-b3"></span><span class="bag-blob bag-b4"></span></div><div class="bag-stars" id="bagStars"></div><button class="bag-close" onclick="closeBag()">✕</button><div class="bag-stage"><div class="bag-header"><h2>🎒 我的背包</h2><div class="bag-sub" id="bagSub">共 0 张知识卡</div></div><div class="bag-shelf" id="bagShelf"><div class="bag-track" id="bagTrack"></div></div><div class="bag-nav" id="bagNav" style="display:none"><button class="bag-arrow bag-prev" onclick="bagGo(bagPos-1)"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="bag-read-btn" id="bagReadBtn" onclick="bagOpenCard()">开始阅读</button><button class="bag-arrow bag-next" onclick="bagGo(bagPos+1)"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="bag-empty" id="bagEmpty"><span>🎴</span>背包还是空的，先去抽一张卡吧</div></div></div><div id="redeemWall" onclick="if(event.target===this)closeRedeem()"><div class="check-box"><div class="check-head"><h2>🎟️ 兑换码</h2><button onclick="closeRedeem()">✕</button></div><p style="color:#aeb9d4;font-size:13px;text-align:center;margin:10px 0">输入兑换码（知识卡数字 ID），即可在背包中获得对应卡片</p><input class="name-input" id="redeemInput" placeholder="输入兑换码，如 691553" inputmode="numeric" maxlength="20"><button class="save-btn" onclick="redeemCode()">兑换</button><div id="redeemMsg" style="text-align:center;font-size:13px;margin-top:12px;color:#aeb9d4"></div></div></div><div id="noticeWall" onclick="if(event.target===this)closeNotice()"><div class="check-box"><div class="check-head"><h2>📢 公告</h2><button onclick="closeNotice()">✕</button></div><div class="notice-body"><p class="notice-main">📤 可以上传自己制作的知识卡片，有知识卡制作需求的可以加联系方式</p><div class="notice-divider"></div><div class="notice-line"><span class="notice-label">联系方式：</span><span class="notice-value">QQ群号：<b>1107196394</b></span></div><div class="notice-line"><span class="notice-label">【闲鱼】</span><a class="notice-link" href="https://m.tb.cn/h.8Os4bNv?tk=6maST43GUX3" target="_blank" rel="noopener">https://m.tb.cn/h.8Os4bNv?tk=6maST43GUX3</a></div><p class="notice-tip">「这是我的闲鱼号，快来看看吧～」点击链接直接打开。</p></div></div></div><div id="uploadOptWall" onclick="if(event.target===this)closeUploadOpt()"><div class="check-box"><div class="check-head"><h2>📤 上传</h2><button onclick="closeUploadOpt()">✕</button></div><p style="color:var(--ui-muted,#8492b8);font-size:13px;line-height:1.7;margin:6px 0 10px">可以上传知识卡包、头像图片等内容。每周可上传 <b style="color:var(--ui-main,#ffd76a)">1</b> 次，单个文件不超过 <b style="color:var(--ui-main,#ffd76a)">150KB</b>。</p><div class="up-status" id="upStatus"></div><label class="up-file-btn" for="upInput">📎 选择文件</label><input type="file" id="upInput" style="display:none" onchange="onPickFile(this)"><div class="up-file-info" id="upFileInfo"></div><button class="save-btn" id="upSubmit" onclick="doUpload()" disabled>🚀 上传</button></div></div><div id="uploadPackWall" onclick="if(event.target===this)closeUploadPack()"><div class="check-box"><div class="check-head"><h2>📦 上传</h2><button onclick="closeUploadPack()">✕</button></div><div id="upPackList" style="max-height:55vh;overflow:auto"></div></div></div>
 <script>/* CHECKIN_DRAW_V1 */
 (function(){var featureKey="account_features",today=function(){return new Date().toISOString().slice(0,10)},data={points:0,days:[],bag:[]},loaded=false;function logged(){return !!_lbUser&&!!_lbSupabase;}async function load(){if(!logged())return false;try{var r=await _lbSupabase.from("user_saves").select("state").eq("user_id",_lbUser).eq("app_id",featureKey).maybeSingle();if(r.error)throw r.error;if(r.data&&r.data.state){try{data=Object.assign({points:0,days:[],bag:[]},r.data.state);}catch(e){}}loaded=true;}catch(e){console.warn("读取存档失败(使用本地默认):",e.message||e);}return true;}async function save(){if(!logged())return false;var payload={user_id:_lbUser,app_id:featureKey,schema_version:1,state:data,updated_at:new Date().toISOString()};var r=await _lbSupabase.from("user_saves").upsert(payload,{onConflict:"user_id,app_id"});if(r.error){console.error("签到数据保存失败：",r.error);return {ok:false,error:r.error};}return {ok:true};}function fireworks(){for(var i=0;i<28;i++){var x=document.createElement("i");x.textContent=["✦","✧","◆","★","❖"][i%5];x.style.cssText="position:fixed;left:50%;top:45%;z-index:900;color:hsl("+(i*31)+",90%,65%);font-size:22px;pointer-events:none;transition:transform 1s,opacity 1s";document.body.appendChild(x);setTimeout((function(y,j){return function(){y.style.transform="translate("+((j%2?1:-1)*(80+Math.random()*180))+"px,"+((j%3-1)*120+Math.random()*80)+"px) rotate(360deg)";y.style.opacity=0;setTimeout(function(){y.remove();},1000);};})(x,i),20);} }function render(){var d=new Date(),y=d.getFullYear(),m=d.getMonth(),first=new Date(y,m,1).getDay(),max=new Date(y,m+1,0).getDate(),grid=document.getElementById("calGrid");document.getElementById("calTitle").textContent=y+"年 "+(m+1)+"月";document.getElementById("checkPoints").textContent="积分："+data.points;grid.innerHTML=["日","一","二","三","四","五","六"].map(function(x){return "<div class=week>"+x+"</div>";}).join("");for(var i=0;i<first;i++)grid.innerHTML+="<div></div>";for(var n=1;n<=max;n++){var key=y+"-"+String(m+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"),on=data.days.indexOf(key)>=0;grid.innerHTML+="<div class=day "+(on?"signed ":"")+(key===today()?"today":"")+">"+n+(on?"<br>✓":"")+"</div>";}}window.openCheckin=async function(){if(!logged()){alert("请先登录账号才能签到");openUserPanel();return;}await load();render();document.getElementById("checkinWall").classList.add("show");var t=today();if(data.days.indexOf(t)<0){data.days.push(t);data.points++;var saved=await save();if(!saved||!saved.ok){data.days.pop();data.points--;var se=saved&&saved.error?((saved.error.message||"")+((saved.error.code)?" ["+saved.error.code+"]":"")):"数据库连接不可用";alert("签到保存失败："+se+"\n\n请先在 Supabase SQL Editor 执行 user_saves权限策略SQL.txt");return;}render();fireworks();}};window.closeCheckin=function(){document.getElementById("checkinWall").classList.remove("show")};window.openDrawCard=async function(){if(!logged()){alert("请先登录账号才能抽卡");openUserPanel();return;}await load();if(data.points<3){alert("积分不足，抽卡一次需要3积分");return;}data.points-=3;await save();var list=window.CARDS||[],owned={};data.bag=data.bag||[];data.bag.forEach(function(b){owned[b.id]=1;});var avail=list.filter(function(x){return !owned[x.id];});if(!avail.length){alert("恭喜！你已集齐全部知识卡，暂无新卡可抽");document.getElementById("drawWall").classList.remove("show");return;}var item=avail[Math.floor(Math.random()*avail.length)],id=item?item.id:"暂无",name=item?(item.h1||item.title||"").replace(/<[^>]*>/g,""):"知识卡",sect=(item&&item.badges&&item.badges[0])?item.badges[0]:"知识卡",tags=(item&&item.tags)?item.tags.slice(0,4).join("、"):"综合";data.bag.push({id:id,name:name,section:sect,tags:tags,got:today()});await save();var wall=document.getElementById("drawWall"),stage=document.getElementById("drawStage");stage.innerHTML='<div class="magic"></div><div class="draw-card" id="gachaCard"><button class="draw-x" onclick="closeDrawCard()">×</button><div class="draw-id">'+id+'</div><div class="draw-name">'+name+'</div><div class="draw-sec">'+sect+'</div><div class="draw-tags">'+tags+'</div><span class="draw-info" data-tip="类型：知识卡\n知识板块：'+sect+'\n知识点：'+tags+'">?</span><div class="draw-link" onclick="drawSearch('+id+')">点击搜索这张卡</div></div>';wall.classList.add("show");var touched=false,card=document.getElementById("gachaCard");card.addEventListener("pointerdown",function(){touched=true;card.classList.add("touched");});setTimeout(function(){if(!touched)closeDrawCard();},8000);};
 
@@ -1217,7 +1298,7 @@ window.closeDrawCard=function(){document.getElementById("drawWall").classList.re
 </script>
 <script>/* UPLOAD_V1 */
 (function(){
-  var packKey="card_packs",WEEK=7*24*3600*1000,MAX=50*1024;
+  var packKey="card_packs",WEEK=7*24*3600*1000,MAX=150*1024;
   var pdata={uploads:[],lastUploadAt:0},picked=null;
   function logged(){return !!_lbUser&&!!_lbSupabase;}
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -1248,7 +1329,7 @@ window.closeDrawCard=function(){document.getElementById("drawWall").classList.re
     await loadPack();
     var st=document.getElementById("upStatus"),sub=document.getElementById("upSubmit"),info=document.getElementById("upFileInfo");
     var remain=weekRemain();
-    st.innerHTML=remain>0?'<span class="bad">⏳ 本周已上传过，还剩 '+remain+' 天可再上传</span>':'<span class="ok">✅ 本周可上传（每周 1 次，单文件 ≤50KB）</span>';
+    st.innerHTML=remain>0?'<span class="bad">⏳ 本周已上传过，还剩 '+remain+' 天可再上传</span>':'<span class="ok">✅ 本周可上传（每周 1 次，单文件 ≤150KB）</span>';
     if(info)info.innerHTML="";
     if(document.getElementById("upInput"))document.getElementById("upInput").value="";
     picked=null;
@@ -1262,7 +1343,7 @@ window.closeDrawCard=function(){document.getElementById("drawWall").classList.re
     if(!files||!files.length){picked=null;if(info)info.innerHTML="";if(sub)sub.disabled=true;return;}
     var f=files[0];
     if(f.size>MAX){
-      if(info)info.innerHTML='<span class="bad">❌ 文件超过 50KB（当前 '+esc((f.size/1024).toFixed(1))+'KB）</span>';
+      if(info)info.innerHTML='<span class="bad">❌ 文件超过 150KB（当前 '+esc((f.size/1024).toFixed(1))+'KB）</span>';
       picked=null;if(sub)sub.disabled=true;return;
     }
     picked=f;
