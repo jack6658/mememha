@@ -67,8 +67,8 @@ body{background:radial-gradient(1200px 800px at 50% 20%,#232c52,#10162e 55%,#050
 .r .meta{display:flex;gap:6px;flex-wrap:wrap}
 .r .meta span{font-size:11px;background:rgba(125,211,252,.15);color:#7dd3fc;padding:2px 8px;border-radius:20px}
 .none{text-align:center;color:rgba(232,237,255,.4);padding:40px 0;font-size:14px}
-#siteAchWall,#leaderboardWall,#userWall{display:none;position:fixed;inset:0;z-index:300;background:rgba(5,7,15,.94);align-items:center;justify-content:center;padding:18px}
-#siteAchWall.show,#leaderboardWall.show,#userWall.show{display:flex}
+#siteAchWall,#leaderboardWall,#userWall,#renameWall{display:none;position:fixed;inset:0;z-index:300;background:rgba(5,7,15,.94);align-items:center;justify-content:center;padding:18px}
+#siteAchWall.show,#leaderboardWall.show,#userWall.show,#renameWall.show{display:flex}
 .ach-box{width:min(860px,94vw);max-height:88vh;overflow:auto;background:linear-gradient(145deg,#1a1f3a,#131836);border:1.5px solid rgba(125,211,252,.25);border-radius:18px;padding:22px;color:#e8edff}
 .ach-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .ach-head h2{font-size:20px;background:linear-gradient(100deg,#ffd76a,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -651,6 +651,7 @@ function openLeaderboard(){
   }
 }
 function closeLeaderboard(){document.getElementById('leaderboardWall').classList.remove('show');}
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderUserQuick(){
   var q=document.getElementById('userQuick');
   if(!q)return;
@@ -855,17 +856,40 @@ function parseAvatar(a){
   if(a&&a.indexOf('|')>0){var p=a.split('|');return{icon:p[0],color:p[1]||'#ffd76a'};}
   return{icon:a||'😀',color:'#ffd76a'};
 }
+function avFallback(img){
+  // 图片加载失败时：显示一个 emoji 笑脸占位，保证头像位置不显示原始代码
+  try{
+    var p=img.parentNode;
+    if(p){p.innerHTML='<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:inherit">😀</span>';}
+  }catch(e){}
+}
 function renderAvatarHTML(av){
-  if(av.icon&&av.icon.indexOf('IMG:')===0){
-    return '<div class="lb-avatar" style="overflow:hidden;border-color:'+av.color+';background:'+av.color+'22"><img src="'+av.icon.slice(4)+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+  var src='',color=av&&av.color?av.color:'#ffd76a';
+  if(av&&av.icon){
+    if(av.icon.indexOf('IMG:')===0){src=av.icon.slice(4);}
+    else if(/^data:image\//.test(av.icon)){src=av.icon;}
+    else if(/^https?:\/\//.test(av.icon)){src=av.icon;}
   }
-  return '<div class="lb-avatar" style="border-color:'+av.color+';background:'+av.color+'22">'+av.icon+'</div>';
+  if(src){
+    return '<div class="lb-avatar" style="overflow:hidden;border-color:'+color+';background:'+color+'22"><img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="avFallback(this)"></div>';
+  }
+  var icon=(av&&av.icon?av.icon:'😀');
+  return '<div class="lb-avatar" style="border-color:'+color+';background:'+color+'22">'+icon+'</div>';
 }
 function renderBigAvatar(av){
-  if(av.icon&&av.icon.indexOf('IMG:')===0){
-    return '<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44"><img src="'+av.icon.slice(4)+'" style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+  var src='',color=av&&av.color?av.color:'#ffd76a';
+  // 多路径识别图片数据：IMG: 前缀 / data:image 开头 / http(s) 图片
+  if(av&&av.icon){
+    if(av.icon.indexOf('IMG:')===0){src=av.icon.slice(4);}
+    else if(/^data:image\//.test(av.icon)){src=av.icon;}
+    else if(/^https?:\/\//.test(av.icon)){src=av.icon;}
   }
-  return '<div style="width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:46px;border:3px solid '+av.color+';background:'+av.color+'22;box-shadow:0 0 20px '+av.color+'44">'+av.icon+'</div>';
+  var box='width:90px;height:90px;border-radius:50%;margin:0 auto 10px;overflow:hidden;border:3px solid '+color+';background:'+color+'22;box-shadow:0 0 20px '+color+'44';
+  if(src){
+    return '<div style="'+box+'"><img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block" onerror="avFallback(this)"></div>';
+  }
+  var icon=(av&&av.icon?av.icon:'😀');
+  return '<div style="'+box+';display:flex;align-items:center;justify-content:center;font-size:46px">'+icon+'</div>';
 }
 var _avPickImgs=[];
 function openRename(){
@@ -934,6 +958,12 @@ function applyAvatar(i){
   _lbSupabase.from('users').update({avatar:u.dataUrl}).eq('user_id',_lbUser).then(function(r){
     if(r.error){alert('头像更新失败: '+r.error.message);return;}
     if(_lbUserData)_lbUserData.avatar=u.dataUrl;
+    // 同步排行榜头像（数据库 leaderboard 表）
+    try{
+      _lbSupabase.from('leaderboard').update({avatar:u.dataUrl}).eq('user_id',_lbUser).then(function(r2){
+        if(!r2.error&&typeof refreshLeaderboard==='function'){refreshLeaderboard();}
+      });
+    }catch(e){}
     alert('🎉 头像已更新！');
     loadUserProfile();
   }).catch(function(e){alert('头像更新失败: '+(e.message||e));});
